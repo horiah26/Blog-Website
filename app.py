@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-
+import quoteGenerator
 app = Flask(__name__)
 
 @app.route("/")
@@ -8,12 +8,14 @@ def index():
 
 @app.route("/hello/<name>")
 def hello(name):
+
+    quote = quoteGenerator.quote()
     return render_template(
-    'test.html',name=name)
+    'test.html',**locals())
 
 @app.route("/members")
 def members():
-    return "Members"
+    return render_template("members.html")
 
 @app.route("/members/<string:username>")
 def getMember(username):
@@ -21,3 +23,5 @@ def getMember(username):
 
 if __name__ == "__main__":
     app.run()
+
+

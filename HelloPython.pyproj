@@ -30,12 +30,18 @@
     <Compile Include="app.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quoteGenerator.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="templates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="templates\layout.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="templates\members.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="templates\test.html" />
