@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "HelloPython", "HelloPython.pyproj", "{AB37116B-754B-4FAF-9C53-0359C80EA667}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Blog", "Blog\Blog.pyproj", "{8240F03D-7973-466B-BA0A-16189D1A5EBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AB37116B-754B-4FAF-9C53-0359C80EA667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB37116B-754B-4FAF-9C53-0359C80EA667}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB37116B-754B-4FAF-9C53-0359C80EA667}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB37116B-754B-4FAF-9C53-0359C80EA667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8240F03D-7973-466B-BA0A-16189D1A5EBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8240F03D-7973-466B-BA0A-16189D1A5EBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8240F03D-7973-466B-BA0A-16189D1A5EBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8240F03D-7973-466B-BA0A-16189D1A5EBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
