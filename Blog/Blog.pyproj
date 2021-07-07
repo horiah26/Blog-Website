@@ -45,6 +45,21 @@
     <Compile Include="main.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="tests\conftest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_auth.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_blog.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_db.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tests\test_factory.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="flaskr\" />
@@ -77,6 +92,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="flaskr\templates\blog\update.html">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="tests\data.sql">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>
