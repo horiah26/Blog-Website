@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Create a new Post{% endblock %}
+
+{% block header %}<h1>Create a new Post</h1>{% endblock %}
+
+{% block content %}
+	<form method="POST">
+		<label for="title"> Title: </label> <br>
+		<input type="text" id="title" name = "title" size="30"><br>
+		<label for="text"> Text: </label> <br>
+		<textarea type="text" id="text" name = "text" rows="6" cols="60"> </textarea><br>
+		<input type="submit" value="Save">
+	</form>
+{% endblock %}

@@ -1,4 +1,3 @@
-
 from models.post import Post
 
 post_list =[]
@@ -12,3 +11,4 @@ post_list.append(post1)
 post_list.append(post2)
 post_list.append(post3)
 post_list.append(post4)
+
