@@ -5,7 +5,7 @@ def create_app():
     app.config.from_mapping(
         SECRET_KEY="secret")  
 
-    import blog
+    import blueprints.blog as blog
     app.register_blueprint(blog.bp)
     return app
 

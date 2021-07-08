@@ -1,6 +1,8 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
+import datetime
+
 
 from repos.list import post_list as posts
 from models.post import Post
@@ -15,15 +17,25 @@ def home():
 def create():
     if request.method == 'POST':
         title = request.form['title']
-        text = request.form['text']
+        text = request.form['text']        
+        error = None
 
-        if(len(posts) == 0):
-            id = 1
+        if not title:
+            error = "Title is required"
+        if not text:
+            error = "Text is required"
+        if error is not None:
+            flash(error)
         else:
-            id = max(post.id for post in posts) + 1 
-        posts.append(Post(id, title, text))
+            if(len(posts) == 0):
+                id = 1
+            else:                
+                time_now = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+                id = max(post.id for post in posts) + 1 
+            posts.append(Post(id, title, text, time_now, time_now))
 
-        return redirect(url_for('blog.home'))
+            return redirect(url_for('blog.home'))
+    
     return render_template('blog/create_post.html')
 
 @bp.route('/<int:id>/', methods=('GET', 'SET'))
@@ -44,6 +56,7 @@ def update(id):
         else:
             post.title = title
             post.text = text
+            post.date_modified = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)

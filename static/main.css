@@ -1,152 +1,155 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
 
-    :root {
-        --navbar_color: #203647;
-        --background_color: #16232e;
-    }
+:root {
+    --navbar_color: #203647;
+    --background_color: #16232e;
+}
 
-    * {
-        font-family: 'PT Sans';
-    }
+* {
+    font-family: 'PT Sans';
+}
 
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: var(--background_color);
-    }
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background_color);
+}
 
-    .crud_title {
-        margin: 20px 50px;
-        font-size: 30px;
-        color: #edf0f1;
-    }
+.crud_title {
+    margin: 20px 50px;
+    font-size: 30px;
+    color: #edf0f1;
+}
 
-    li, a {
-        font-weight: 500;
-        color: #edf0f1;
-        text-decoration: none;
-    }
+li, a {
+    font-weight: 500;
+    color: #edf0f1;
+    text-decoration: none;
+}
 
-    .navbar {
-        background-color: var(--navbar_color);
-        padding: 1px;
-        color: #edf0f1;
-        font-size:1.2em;
-    }
+.navbar {
+    background-color: var(--navbar_color);
+    padding: 1px;
+    color: #edf0f1;
+    font-size:1.2em;
+}
 
-    .posts {
-        margin: 0px 20px;
-        display: inline-block;
-    }
+.posts {
+    margin: 0px 20px;
+    display: inline-block;
+}
 
 
-    .post_info {
-        border:solid;
-        margin:20px 0px;
-    }
+.post_info {
+    border:solid;
+    margin:20px 0px;
+}
 
-    .action {
-        float: right;
-        margin: 10px;
-    }
+.post_info h1 {
+    float: left;
+    font-size: 1.3em;
+    margin: 15px 100px;
+}
 
-    .post_info h1 {
-        float: left;
-        font-size: 1.3em;
-        margin: 15px 100px;
-    }
+.post_info h1:hover {
+    text-decoration:underline;
+}
 
-    .post_info h1:hover {
-        text-decoration:underline;
-    }
+.post {
+    color: #EEFBFB;
+    margin: 10px;
+    padding-bottom: 1px;
+    background-color: #22303c;
+}
 
-    .post {
-        color: #EEFBFB;
-        margin: 10px;
-        padding-bottom: 1px;
-        background-color: #22303c;
-    }
+.action {
+    float: right;
+    margin: 10px;
+    font-weight: 500;
+    font-size: 1.1em;
+    color: #edf0f1;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+}
 
-    .action {
-        font-weight: 500;
-        font-size: 1.1em;
-        color: #edf0f1;
-        text-decoration: none;
-        padding: 10px;
-        font-weight:bold;
-    }
+.action:hover {
+    background-color: #12232e;
+    box-shadow: 0 0 0px 6px #12232e;
+}
 
-    .action:hover {
-        background-color: #12232e;
-        box-shadow: 0 0 0px 6px #12232e;
-    }
+.post_text{
+    margin:20px;
+}
 
-    .post_text{
-        margin:20px;
-    }
+.nav_list {
+    list-style: none;
+    font-size: 1.5em;
+}
 
-    .nav_list {
-        list-style: none;
-        font-size: 1.5em;
-    }
+#second_word{
+    color:darkcyan;
+    font-weight:bolder;
+}
 
-    #second_word{
-        color:darkcyan;
-        font-weight:bolder;
-    }
+.nav_list li {
+    padding: 0px 20px;
+    display: inline-block;
+}
 
-    .nav_list li {
-        padding: 0px 20px;
-        display: inline-block;
-    }
+.hoverlink a {
+    transition: all 0.3s ease 0s;
+}
 
-    .hoverlink a {
-        transition: all 0.3s ease 0s;
-    }
+.hoverlink a:hover {
+    background-color: #12232e;
+    border-radius: 3px;
+    box-shadow: 0 0 0px 6px #12232e;
+}
 
-    .hoverlink a:hover {
-        background-color: #12232e;
-        border-radius: 3px;
-        box-shadow: 0 0 0px 6px #12232e;
-    }
+.crud_form {
+    margin: 0px 50px;
+    font-size: 20px;
+    color: #edf0f1;
+}
 
-    .crud_form {
-        margin: 0px 50px;
-        font-size: 20px;
-        color: #edf0f1;
-    }
+input[type=text], textarea{
+    border: 5px solid #203647;
+}
 
-    input[type=text], textarea{
-        border: 5px solid #203647;
-    }
+textarea {
+    width: 100%;
+}
 
-    textarea {
-        width: 100%;
-    }
+input[type=submit] {
+    padding: 10px;
+    font-size: 20px;
+    background-color: #203647;
+    border: 5px solid #203647;
+    color: #edf0f1;
+}
 
-    input[type=submit] {
-        padding: 10px;
-        font-size: 20px;
-        background-color: #203647;
-        border: 5px solid #203647;
-        color: #edf0f1;
-    }
+input[type=submit]:hover {
+    padding: 10px;
+    font-size: 20px;
+    background-color: white;
+    cursor: pointer;
+    color: black;
+    transition: all 0.4s ease 0.1s;
+}
 
-    input[type=submit]:hover {
-        padding: 10px;
-        font-size: 20px;
-        background-color: white;
-        cursor: pointer;
-        color: black;
-        transition: all 0.4s ease 0.1s;
-    }
+#view_post_text {
+    color: #edf0f1;
+    margin:40px;
+}
 
-    .post_text{
-        margin:40px;
-        margin-right:180px;
-    }
+.post_text {
+    margin: 40px;
+    margin-right: 180px;
+}
 
-    #view_post_text {
-        color: #edf0f1;
-        margin:40px;
-    }
+.crud_date {
+    margin: 20px;
+    float: right;
+    color: #edf0f1;
+}
