@@ -7,9 +7,7 @@ def create_app():
 
     import blog
     app.register_blueprint(blog.bp)
-    asd = blog.get_post(3)
     return app
-
 
 app = create_app()
 app.run()
