@@ -2,13 +2,12 @@
 
 {% block title %}Update post{% endblock %}
 {% block content %}
-<h1>Update {{post.title}}</h1> </br>
-
-<form method="post">
-    <label for="title"> Title: </label> <br>
-    <input type="text" id="title" name="title" size="30" value="{{post.title}}"><br>
-    <label for="text"> Text: </label> <br>
-    <textarea type="text" id="text" name="text" rows="6" cols="60">{{post.text}}</textarea><br>
+<h1 class="crud_title">Edit "{{post.title}}"</h1>
+<form method="POST" class="crud_form">
+    <label class="crud_label" for="title"> Title </label> <br>
+    <input type="text" id="title" name="title" size="50"><br>
+    <label class="crud_label" for="text"> Text </label> <br>
+    <textarea type="text" id="text" name="text" rows="10" cols="100"> </textarea><br>
     <input type="submit" value="Save">
 </form>
 {% endblock %}

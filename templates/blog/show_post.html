@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}{{post.title}}{% endblock %}
+{% block title %}
+    {{post.title}}
+{% endblock %}
+
+
 {% block content %}
-<h1>{{post.title}}</h1> <br>
-<p>{{post.text}}</p>
+<h1 class="crud_title">{{post.title}}</h1>
+<p id="view_post_text">{{post.text}}</p>
 {% endblock %}
