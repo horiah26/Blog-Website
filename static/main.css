@@ -17,6 +17,11 @@ body {
     background-color: var(--background_color);
 }
 
+.welcome .laptop-image {
+    width: 100%;
+    height: auto;
+}
+
 .crud_title {
     margin: 20px 50px;
     font-size: 30px;
@@ -34,34 +39,10 @@ li, a {
     padding: 1px;
     color: var(--theme_white);
     font-size:1.2em;
-}
-
-.posts {
-    margin: 0px 20px;
-    display: inline-block;
-}
-
-
-.post_info {
-    border:solid;
-    margin: 0px;
-}
-
-.post_info h1 {
-    float: left;
-    font-size: 1.6em;
-    margin: 15px 40px;
-}
-
-.post_info h1:hover {
-    text-decoration:underline;
-}
-
-.post {
-    color: #EEFBFB;
-    margin: 20px;
-    padding-bottom: 1px;
-    background-color: var(--post_background);
+    position:fixed;
+    z-index:2;
+    width:100%;
+    margin-bottom:200px;
 }
 
 .action {
@@ -80,16 +61,12 @@ li, a {
     box-shadow: 0 0 0px 6px #12232e;
 }
 
-.post_text{
-    margin:20px;
-}
-
 .nav_list {
     list-style: none;
     font-size: 1.5em;
 }
 
-#second_word{
+#second-word{
     color:darkcyan;
     font-weight:bolder;
 }
@@ -119,10 +96,12 @@ input[type=text], textarea {
     border: 5px solid #203647;
     background-color: #203647;
     color: var(--theme_white);
+    outline: none;
 }
 
 textarea {
     width: 100%;
+    outline:none;
 }
 
 input[type=submit] {
@@ -144,11 +123,9 @@ input[type=submit]:hover {
 
 #view_post_text {
     color: var(--theme_white);
-    margin:40px;
-}
-
-.post_text {
-    margin: 10px 30px;
+    margin: 40px;
+    white-space: pre-wrap;
+    text-indent: 4em;
 }
 
 .crud_date {
@@ -157,17 +134,7 @@ input[type=submit]:hover {
     color: var(--theme_white);
 }
 
-.leftcolumn {
-    float: left;
-    width: 73%;
-}
-
-.rightcolumn {
-    float: left;
-    width: 26%;
-}
-
-.card {
+.about-card {
     background-color: var(--post_background);
     padding: 20px;
     margin-top: 20px;
@@ -176,10 +143,11 @@ input[type=submit]:hover {
     border-color: var(--theme_white);
 }
 
-.aboutimg{
+.about-img{
     width:100%;
     margin:0px;
     padding:0;
+    margin-bottom:20px;
 }
 
 .popular_list li {
@@ -193,8 +161,98 @@ input[type=submit]:hover {
     margin-left: -20px;
 }
 
-#post_date {
-    font-size:0.8em;
-    margin-top: 30px;
-    margin-left: 40px;
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    overflow: hidden;
+    box-shadow: 0px 0px 6px 0px black;
+    background: #16232e;
+    position: relative;
+    width: 400px;
+    margin: 1rem;
+    transition: 0.15s all ease-in-out;
+    cursor: pointer;
+    color:var(--theme_white);
+}
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 2px 20px black;
+    }
+
+.banner-img {
+    position: absolute;
+    object-fit: cover;
+    height: 14rem;
+    width: 100%;
+}
+
+.category-tag {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: darkcyan;
+    background: var(--theme_white);
+    padding: 0.5rem 1.3rem 0.5rem 1rem;
+    text-transform: uppercase;
+    position: absolute;
+    z-index: 1;
+    top: 1rem;
+}
+
+.card-body {
+    margin: 15rem 1rem 1rem 1rem;
+}
+
+.blog-hashtag {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: red;
+}
+
+.blog-title {
+    line-height: 1.5rem;
+    margin: 1rem 0 0.5rem;
+}
+
+.blog-description {
+    font-size: 0.8rem;
+}
+
+.card-profile {
+    display: flex;
+    margin-top: 1rem;
+    align-items: center;
+    line-height:0px;
+}
+
+.profile-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.card-profile-info {
+    margin-left: 1rem;
+}
+
+.welcome .logo {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10rem;
+    color: var(--theme_white);
+    text-shadow: 10px 10px 10px black;
+}
+
+.img-container {
+    background: url(https://images.pexels.com/photos/169573/pexels-photo-169573.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260);
+    height: 800px;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
 }

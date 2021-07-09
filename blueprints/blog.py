@@ -29,9 +29,9 @@ def create():
             flash(error)
         else:
             id = posts.next_id()
-            time_now = datetime.datetime.now().strftime("Created at: %d/%m/%Y %H:%M:%S")
+            time_now = datetime.datetime.now().strftime("Created at: %H:%M            %d.%m.%Y       ")
                 
-            posts.add(Post(id, title, text, "admin", time_now, time_now))
+            posts.add(Post(id, title, text, "Admin", time_now, time_now))
 
             return redirect(url_for('blog.home'))
     
@@ -53,7 +53,7 @@ def update(id):
         if not text:
             text = post.text
         else:
-            date_modified = datetime.datetime.now().strftime("Last edited at: %d/%m/%Y %H:%M:%S")
+            date_modified = datetime.datetime.now().strftime("Last edited at: %H:%M            %d.%m.%Y       ")
             posts.update(id, title, text, date_modified) 
 
             return redirect(url_for('blog.home'))

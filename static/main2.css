@@ -1,0 +1,88 @@
+*{
+    box-sizing:border-box;
+    font-family:Gabriola, sans-serif;
+    margin:0;
+    padding:0;
+}
+
+body{
+    margin:2rem;
+    color:white; 
+}
+
+.wrapper{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.card {
+    overflow: hidden;
+    box-shadow: 0px 2px 20px gray;
+    background: #16232e;
+    position: relative;
+    width: 350px;
+    margin: 1rem;
+    transition:0.15s all ease-in-out;
+    cursor:pointer;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 2px 20px gray;
+}
+
+.banner-img {
+    position: absolute;
+    object-fit: cover;
+    height: 14rem;
+    width: 100%;
+}
+
+.category-tag {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: wheat;
+    background: red;
+    padding: 0.5rem 1.3rem 0.5rem 1rem;
+    text-transform: uppercase;
+    position: absolute;
+    z-index: 1;
+    top: 1rem;
+}
+
+.card-body{
+    margin:15rem 1rem 1rem 1rem;
+}
+
+.blog-hashtag{
+    font-size:0.9rem;
+    font-weight:500;
+    color:red;
+}
+
+.blog-title{
+    line-height:1.5rem;
+    margin: 1rem 0  0.5rem;
+}
+
+.blog-description{
+    font-size:0.8rem;
+}
+
+.card-profile{
+    display:flex;
+    margin-top:2rem;
+    align-items:center;
+}
+
+.profile-img{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:50%;
+}
+
+.card-profile-info{
+    margin-left:1rem;
+}

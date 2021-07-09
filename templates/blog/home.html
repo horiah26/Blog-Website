@@ -2,57 +2,72 @@
 {% block title %} Lorem Ipsum {% endblock %}
 
 {% block content %}
-
-<div class="leftcolumn">
-    <div class="posts">
-        {% for post in posts|reverse %}
-        <article class="post">
-            <header>
-                <div class="post_info">
-                    <a href="{{url_for('blog.show', id = post.id)}}"><h1> <i>{{post.title}}</i></h1></a>
-                    <a class="action" href="{{url_for('blog.update', id = post.id)}}">Edit</a>
-                    <a class="action" href="{{url_for('blog.delete', id = post.id)}}">Delete</a>
-                </div>
-            </header>
-
-            <div id="post_date">
-                <br />
-                <br />
-                {% if post.date_modified[16:] == post.date_created[12:] %}
-                    {{post.date_created}}
-                {% else %}
-                    {{post.date_modified}}
-                {% endif %}    
-            </div>
-            <br />
-            <p class="post_text"> {{preview(post.text)}} </p>
-        </article>
-        {% endfor %}
+<div class="welcome">
+    <div class="img-container">
     </div>
+    <p class="logo" href="{{url_for('blog.home')}}">Lorem<span id="second-word">Ipsum</span></p>
 </div>
 
-<div class="rightcolumn">
+<div class="wrapper">
+
+    {% for post in posts|reverse %}
     <div class="card">
-        <h2>About</h2>
-        <img class="aboutimg" src="https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="Code image"  />
-        <br />
-        <p>Aenean neque justo, efficitur vel nibh eget, pellentesque varius eros. Pellentesque gravida vehicula arcu, in sodales nisl gravida vitae. Aliquam sodales a nunc vitae dignissim</p>
+        <div class="card-banner">
+            <p class="category-tag popular">Popular</p>
+            <img class="banner-img"
+                 src="https://images.unsplash.com/photo-1508185159346-bb1c5e93ebb4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=55cf14db6ed80a0410e229368963e9d8&auto=format&fit=crop&w=1900&q=80" />
+        </div>
+
+        <div class="card-body">
+            <p class="blog-hashtag"># anything</p>
+            <h2 class="blog-title"> {{post.title}}</h2>
+            <p class="blog-description"> {{preview(post.text)}}</p>
+            <div class="card-profile">
+                <img class="profile-img"
+                     src="https://us.123rf.com/450wm/sommersby/sommersby1908/sommersby190800173/130588066-user-with-tie-working-on-laptop-concept-illustration-of-person-with-personal-computer.jpg?ver=6" />
+                <div class="card-profile-info">
+                    <h6 class="owner">
+                        {{post.owner}}
+                    </h6>
+                    <h6 class="date-created">
+                        {% if post.date_modified[16:] == post.date_created[12:] %}
+                        {{post.date_created}}
+                        {% else %}
+                        {{post.date_modified}}
+                        {% endif %}
+                    </h6>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Popular posts</h3>
-        <ol class="popular_list">
-            <li><a href="http://127.0.0.1:5000/1/">Lorem Ipsum</a></li>
-            <li><a href="http://127.0.0.1:5000/2/">Pellentesque tincidunt</a></li>
-            <li><a href="http://127.0.0.1:5000/3/">Aliquam at leo</a></li>
-        </ol>
-
-    </div>
-    <div class="card">
-        <h3>Follow Us</h3>
-        <p>Donec pretium velit felis, et tincidunt felis sollicitudin at. Integer at augue elit</p>
-        <h3>Subscribe</h3>
-    </div>
+    {% endfor %}
 </div>
 
 {% endblock %}
+
+<!--
+<div class="posts">
+    {% for post in posts|reverse %}
+    <article class="post">
+        <header>
+            <div class="post_info">
+                <a href="{url_for('blog.show', id = post.id)}}"><h1> <i>{post.title}}</i></h1></a>
+                <a class="action" href="{url_for('blog.update', id = post.id)}}">Edit</a>
+                <a class="action" href="{url_for('blog.delete', id = post.id)}}" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+            </div>
+        </header>
+        <div id="post_date">
+            <br />
+            <br />
+            {% if post.date_modified[16:] == post.date_created[12:] %}
+            {post.date_created}}
+            {% else %}
+            {post.date_modified}}
+            {% endif %}
+        </div>
+        <br />
+        <p class="post_text"> {preview(post.text)}} </p>
+    </article>
+    {% endfor %}
+</div>-->
