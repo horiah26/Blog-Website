@@ -18,11 +18,11 @@
             <div id="post_date">
                 <br />
                 <br />
-                {% if post.date_modified < post.date_created %}
-                    {{post.date_modified}}
-                {% else %}
+                {% if post.date_modified[16:] == post.date_created[12:] %}
                     {{post.date_created}}
-                {% endif %}
+                {% else %}
+                    {{post.date_modified}}
+                {% endif %}    
             </div>
             <br />
             <p class="post_text"> {{post.text}} </p>
