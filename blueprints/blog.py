@@ -3,15 +3,16 @@ from flask import (
 )
 import datetime
 
-
 from repos.post.list_repo import repo_posts as posts
 from models.post import Post
+from .methods.preview import preview
+
 
 bp = Blueprint('blog', __name__)
 
 @bp.route('/')
 def home():
-    return render_template('blog/home.html', posts=posts.get_all())
+    return render_template('blog/home.html', posts=posts.get_all(), preview=preview)
 
 @bp.route('/create', methods=['GET', 'POST'])
 def create():
@@ -30,7 +31,6 @@ def create():
             id = posts.next_id()
             time_now = datetime.datetime.now().strftime("Created at: %d/%m/%Y %H:%M:%S")
                 
-
             posts.add(Post(id, title, text, "admin", time_now, time_now))
 
             return redirect(url_for('blog.home'))
