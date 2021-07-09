@@ -27,12 +27,12 @@ def create():
         if error is not None:
             flash(error)
         else:
+            time_now = datetime.datetime.now().strftime("Created at: %d/%m/%Y %H:%M:%S")
             if(len(posts) == 0):
                 id = 1
             else:                
-                time_now = datetime.datetime.now().strftime("Created at: %d/%m/%Y %H:%M:%S")
                 id = max(post.id for post in posts) + 1 
-            posts.append(Post(id, title, text, time_now, time_now))
+            posts.append(Post(id, title, text, "admin", time_now, time_now))
 
             return redirect(url_for('blog.home'))
     
