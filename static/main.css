@@ -3,9 +3,11 @@
 :root {
     --navbar_color: #203647;
     --background_color: #16232e;
+    --post_background: #22303c;
+    --theme_white: #edf0f1;
 }
 
-* {
+* {    
     font-family: 'PT Sans';
 }
 
@@ -18,19 +20,19 @@ body {
 .crud_title {
     margin: 20px 50px;
     font-size: 30px;
-    color: #edf0f1;
+    color: var(--theme_white);
 }
 
 li, a {
     font-weight: 500;
-    color: #edf0f1;
+    color: var(--theme_white);
     text-decoration: none;
 }
 
 .navbar {
     background-color: var(--navbar_color);
     padding: 1px;
-    color: #edf0f1;
+    color: var(--theme_white);
     font-size:1.2em;
 }
 
@@ -42,13 +44,13 @@ li, a {
 
 .post_info {
     border:solid;
-    margin:20px 0px;
+    margin: 0px;
 }
 
 .post_info h1 {
     float: left;
-    font-size: 1.3em;
-    margin: 15px 100px;
+    font-size: 1.6em;
+    margin: 15px 40px;
 }
 
 .post_info h1:hover {
@@ -57,9 +59,9 @@ li, a {
 
 .post {
     color: #EEFBFB;
-    margin: 10px;
+    margin: 20px;
     padding-bottom: 1px;
-    background-color: #22303c;
+    background-color: var(--post_background);
 }
 
 .action {
@@ -67,7 +69,7 @@ li, a {
     margin: 10px;
     font-weight: 500;
     font-size: 1.1em;
-    color: #edf0f1;
+    color: var(--theme_white);
     text-decoration: none;
     padding: 10px;
     font-weight: bold;
@@ -110,11 +112,13 @@ li, a {
 .crud_form {
     margin: 0px 50px;
     font-size: 20px;
-    color: #edf0f1;
+    color: var(--theme_white);
 }
 
-input[type=text], textarea{
+input[type=text], textarea {
     border: 5px solid #203647;
+    background-color: #203647;
+    color: var(--theme_white);
 }
 
 textarea {
@@ -126,7 +130,7 @@ input[type=submit] {
     font-size: 20px;
     background-color: #203647;
     border: 5px solid #203647;
-    color: #edf0f1;
+    color: var(--theme_white);
 }
 
 input[type=submit]:hover {
@@ -139,17 +143,58 @@ input[type=submit]:hover {
 }
 
 #view_post_text {
-    color: #edf0f1;
+    color: var(--theme_white);
     margin:40px;
 }
 
 .post_text {
-    margin: 40px;
-    margin-right: 180px;
+    margin: 10px 30px;
 }
 
 .crud_date {
     margin: 20px;
     float: right;
-    color: #edf0f1;
+    color: var(--theme_white);
+}
+
+.leftcolumn {
+    float: left;
+    width: 73%;
+}
+
+.rightcolumn {
+    float: left;
+    width: 26%;
+}
+
+.card {
+    background-color: var(--post_background);
+    padding: 20px;
+    margin-top: 20px;
+    color: var(--theme_white);
+    border: solid;
+    border-color: var(--theme_white);
+}
+
+.aboutimg{
+    width:100%;
+    margin:0px;
+    padding:0;
+}
+
+.popular_list li {
+    list-style-type: upper-roman;
+    margin: 0 0 8px 0;
+    list-style-position: outside;
+}
+
+.popular_list {
+    margin-top: 30px;
+    margin-left: -20px;
+}
+
+#post_date {
+    font-size:0.8em;
+    margin-top: 30px;
+    margin-left: 40px;
 }

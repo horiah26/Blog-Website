@@ -30,7 +30,7 @@ def create():
             if(len(posts) == 0):
                 id = 1
             else:                
-                time_now = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+                time_now = datetime.datetime.now().strftime("Created at: %d/%m/%Y %H:%M:%S")
                 id = max(post.id for post in posts) + 1 
             posts.append(Post(id, title, text, time_now, time_now))
 
@@ -56,7 +56,7 @@ def update(id):
         else:
             post.title = title
             post.text = text
-            post.date_modified = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+            post.date_modified = datetime.datetime.now().strftime("Last edited at: %d/%m/%Y %H:%M:%S")
 
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)

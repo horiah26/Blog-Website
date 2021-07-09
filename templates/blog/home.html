@@ -2,20 +2,56 @@
 {% block title %} Lorem Ipsum {% endblock %}
 
 {% block content %}
-<div class="posts">
-    {% for post in posts %}
-    <article class="post">
-        <header>
-            <div class="post_info">
-                <a href="{{url_for('blog.show', id = post.id)}}"><h1> <i>{{post.title}}</i></h1></a>
-                <a class="action" href="{{url_for('blog.update', id = post.id)}}">Edit</a>
-                <a class="action" href="{{url_for('blog.delete', id = post.id)}}">Delete</a>
+
+<div class="leftcolumn">
+    <div class="posts">
+        {% for post in posts|reverse %}
+        <article class="post">
+            <header>
+                <div class="post_info">
+                    <a href="{{url_for('blog.show', id = post.id)}}"><h1> <i>{{post.title}}</i></h1></a>
+                    <a class="action" href="{{url_for('blog.update', id = post.id)}}">Edit</a>
+                    <a class="action" href="{{url_for('blog.delete', id = post.id)}}">Delete</a>
+                </div>
+            </header>
+
+            <div id="post_date">
+                <br />
+                <br />
+                {% if post.date_modified < post.date_created %}
+                    {{post.date_modified}}
+                {% else %}
+                    {{post.date_created}}
+                {% endif %}
             </div>
-        </header>
+            <br />
+            <p class="post_text"> {{post.text}} </p>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="rightcolumn">
+    <div class="card">
+        <h2>About me</h2>
+        <img class="aboutimg" src="https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="Code image"  />
         <br />
-        <p class="post_text"> {{post.text}} </p>
-    </article>
-    {% endfor %}
+        <p>Aenean neque justo, efficitur vel nibh eget, pellentesque varius eros. Pellentesque gravida vehicula arcu, in sodales nisl gravida vitae. Aliquam sodales a nunc vitae dignissim</p>
+    </div>
+
+    <div class="card">
+        <h3>Popular posts</h3>
+        <ol class="popular_list">
+            <li><a href="http://127.0.0.1:5000/1/">Lorem Ipsum</a></li>
+            <li><a href="http://127.0.0.1:5000/2/">Pellentesque tincidunt</a></li>
+            <li><a href="http://127.0.0.1:5000/3/">Aliquam at leo</a></li>
+        </ol>
+
+    </div>
+    <div class="card">
+        <h3>Follow Me</h3>
+        <p>Donec pretium velit felis, et tincidunt felis sollicitudin at. Integer at augue elit</p>
+    </div>
 </div>
 
 {% endblock %}
