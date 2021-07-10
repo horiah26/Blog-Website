@@ -11,28 +11,18 @@
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="container">
-            <nav>
-                <ul class="nav_list">
-                    <li><a class="logo" href="{{url_for('blog.home')}}">Lorem<span id="second-word">Ipsum</span></a></li>
-                    <li><a class="menu-buttons" href="{{url_for('blog.create')}}">Write</a></li>
-                    <li><a href="#" class="toggle-button">
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                        <span class="bar"></span>
-                        </li>
-                    </a>
-                </ul>
-
-                <a href="#" class="toggle-button">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </a>
-            </nav>
-        </div>
-    </div>
+    <nav id="navbar" class="navbar">
+        <a class="logo" href="{{url_for('blog.home')}}">Lorem<span id="second-word">Ipsum</span></a>
+             
+        <a href="#" class="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </a>
+        <ul class="nav-links">
+            <li><a class="menu-buttons" href="{{url_for('blog.create')}}">Write</a></li>
+        </ul>
+    </nav>
 
     <section class="content">
         <header>
@@ -40,6 +30,7 @@
         </header>
         {% block content %}{% endblock %}
     </section>
+
     <script >
         var prevScrollpos = window.pageYOffset;
         window.onscroll = function() {
@@ -52,6 +43,7 @@
             prevScrollpos = currentScrollPos;
         }
     </script>
+
     <script src="hide_nav.js"></script>
 </body>
 

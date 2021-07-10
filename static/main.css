@@ -17,6 +17,11 @@ body {
     background-color: var(--background_color);
 }
 
+.logo {
+    font-size:2.3rem;
+    margin:10px 40px;
+}
+
 
 .crud_title {
     font-size: 50px;
@@ -32,6 +37,8 @@ li, a {
 }
 
 .navbar {
+    display: flex;
+    justify-content:space-between;
     background-color: var(--navbar_color);
     padding: 1px;
     color: var(--theme_white);
@@ -41,39 +48,45 @@ li, a {
     z-index: 2;
     width: 100%;
     margin-bottom: 200px;
-    display: block;
     transition: top 0.7s;
     transition-delay: 0.3s;
+    align-items:center;
 }
 
-.nav_list {
+#second-word {
+    color: darkcyan;
+    font-weight: bolder;
+}
+
+.nav-links {
     list-style: none;
     font-size: 1.4em;
-    margin: 20px;
+    margin: 20px 50px 20px 20px;
+    float: right;
+    display: block;
 }
+    .nav-links:hover {
+        color: red;
+    }
 
-#second-word{
-    color:darkcyan;
-    font-weight:bolder;
-}
-
-.nav_list li {
-    padding: 0px 20px;
+.nav-links li {
+    padding: 10px;
     display: inline-block;
 }
 
-.menu-buttons a {
-    transition: all 0.3s ease 0s;
+.nav-links li:hover {
+    background-color: darkcyan;
+    transform: scale(1.05);
+    transition-duration: 0.3s;
+    color: red;
 }
 
-.menu-buttons a:hover {
-    background-color: #12232e;
-    border-radius: 3px;
-    box-shadow: 0 0 0px 6px #12232e;
+.menu-buttons:hover {
+    color: black;
 }
 
-#create-post-title{
-    margin-top:100px;
+#create-post-title {
+    margin-top: 100px;
 }
 
 .crud_form {
@@ -105,10 +118,11 @@ input[type=submit] {
 input[type=submit]:hover {
     padding: 10px;
     font-size: 20px;
-    background-color: white;
+    background-color: darkcyan;
+    border-color:darkcyan;
     cursor: pointer;
     color: black;
-    transition: all 0.4s ease 0.1s;
+    transition: all 0.5s ease 0.1s;
 }
 
 #view_post_text {
@@ -248,12 +262,15 @@ input[type=submit]:hover {
     text-decoration: none;
     padding: 10px;
     font-weight: bold;
-    float:right;
+    float: right;
+    border-width: 0px 0px 4px 0px;
+    border-color: darkcyan;
+    border-style:solid;
 }
 
 .action:hover {
-    background-color: var(--navbar_color);
-    box-shadow: 0 0 0px 6px #12232e;
+    background-color: darkcyan;
+    color:black;
 }
 
 .edit-delete {
@@ -283,10 +300,12 @@ input[type=submit]:hover {
     right: 1rem;
     display: block;
     flex-direction: column;
-    flex-direction:column;
-    justify-content:space-between;
-    width:30px;
-    height:21px;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    z-index: 3;
+    color:rebeccapurple;
 }
 
 .toggle-button bar{
@@ -306,7 +325,9 @@ input[type=submit]:hover {
     }
 
     .toggle-button{
-        display:flex;
+        display:block;
+        z-index:3;
+        color:red;
     }
 
     .menu-buttons {

@@ -30,7 +30,7 @@ def create():
             flash(error)
         else:
             id = posts.next_id()
-            time_now = datetime.datetime.now().strftime("Created at: %H:%M            %d.%m.%Y       ")
+            time_now = datetime.datetime.now().strftime("%H:%M  %d.%m.%Y")
                 
             posts.add(Post(id, title, text, "Admin", time_now, time_now))
 
