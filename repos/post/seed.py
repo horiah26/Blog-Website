@@ -1,8 +1,8 @@
 import datetime
 from models.post import Post
 
-modified_time = datetime.datetime.now().strftime("Last edited at: %H:%M            %d.%m.%Y       ")
-created_time = datetime.datetime.now().strftime("Created at: %H:%M            %d.%m.%Y       ")
+modified_time = datetime.datetime.now().strftime("%B %d %Y")
+created_time = datetime.datetime.now().strftime("%B %d %Y")
 seed =[]
 
 post1 = Post(1, "Duis a lectus", "Duis a lectus in erat blandit hendrerit eget quis purus. Duis eros nunc, pretium at aliquet a, feugiat sit amet nisl. Ut pharetra molestie euismod. Maecenas sed placerat mi. Fusce vel feugiat orci. \n          Mauris convallis, erat non mollis sodales, libero lacus dapibus metus, quis facilisis ipsum orci sed nisi. Nam in ultricies ligula. Vivamus aliquam cursus ante ac porttitor. Phasellus iaculis, lectus eu fringilla imperdiet, ligula sapien pretium tellus, vel accumsan velit mauris quis nulla.\n          Nunc scelerisque tincidunt semper. Curabitur vitae porta massa, nec posuere erat. Maecenas ultricies metus quis scelerisque ullamcorper. Maecenas efficitur lacinia sem, ac aliquet mi facilisis at. Proin at convallis ex. Integer dapibus, odio ac tempus malesuada, neque neque laoreet neque, ac maximus urna ipsum ut urna.", "Admin", created_time,modified_time)

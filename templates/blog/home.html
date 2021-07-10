@@ -4,70 +4,44 @@
 {% block content %}
 <div class="welcome">
     <div class="img-container">
+        <img id="laptop-img" src="https://wallpaperaccess.com/full/1682012.jpg" />
+         <div class="logo">Lorem<span id="second-word">Ipsum</span></div>
     </div>
-    <p class="logo" href="{{url_for('blog.home')}}">Lorem<span id="second-word">Ipsum</span></p>
 </div>
 
 <div class="wrapper">
-
     {% for post in posts|reverse %}
-    <div class="card">
-        <div class="card-banner">
-            <p class="category-tag popular">Popular</p>
-            <img class="banner-img"
-                 src="https://images.unsplash.com/photo-1508185159346-bb1c5e93ebb4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=55cf14db6ed80a0410e229368963e9d8&auto=format&fit=crop&w=1900&q=80" />
-        </div>
+    <a href="{{url_for('blog.show', id = post.id)}}">
+        <div class="card">
+            <div class="card-banner">
+                <p class="category-tag popular">{{generator.random_tag()}}</p>
+                <img class="banner-img"
+                     src="{{generator.random_pic()}}" />
+            </div>
 
-        <div class="card-body">
-            <p class="blog-hashtag"># anything</p>
-            <h2 class="blog-title"> {{post.title}}</h2>
-            <p class="blog-description"> {{preview(post.text)}}</p>
-            <div class="card-profile">
-                <img class="profile-img"
-                     src="https://us.123rf.com/450wm/sommersby/sommersby1908/sommersby190800173/130588066-user-with-tie-working-on-laptop-concept-illustration-of-person-with-personal-computer.jpg?ver=6" />
-                <div class="card-profile-info">
-                    <h6 class="owner">
-                        {{post.owner}}
-                    </h6>
-                    <h6 class="date-created">
-                        {% if post.date_modified[16:] == post.date_created[12:] %}
-                        {{post.date_created}}
-                        {% else %}
-                        {{post.date_modified}}
-                        {% endif %}
-                    </h6>
+            <div class="card-body">
+                <p class="blog-hashtag">{{generator.random_hashtags()}}</p>
+                <h2 class="blog-title"> {{post.title}}</h2>
+                <p class="blog-description"> {{preview(post.text)}}</p>
+                <div class="card-profile">
+                    <img class="profile-img"
+                         src="https://images.unsplash.com/photo-1526835746352-0b9da4054862?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80" />
+                    <div class="card-profile-info">
+                        <h6 class="owner">
+                            {{post.owner}}
+                        </h6>
+                        <h6 class="date-created">
+                            {% if post.date_modified[16:] == post.date_created[12:] %}
+                            {{post.date_created}}
+                            {% else %}
+                            {{post.date_modified}}
+                            {% endif %}
+                        </h6>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    </a>
     {% endfor %}
 </div>
-
 {% endblock %}
-
-<!--
-<div class="posts">
-    {% for post in posts|reverse %}
-    <article class="post">
-        <header>
-            <div class="post_info">
-                <a href="{url_for('blog.show', id = post.id)}}"><h1> <i>{post.title}}</i></h1></a>
-                <a class="action" href="{url_for('blog.update', id = post.id)}}">Edit</a>
-                <a class="action" href="{url_for('blog.delete', id = post.id)}}" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
-            </div>
-        </header>
-        <div id="post_date">
-            <br />
-            <br />
-            {% if post.date_modified[16:] == post.date_created[12:] %}
-            {post.date_created}}
-            {% else %}
-            {post.date_modified}}
-            {% endif %}
-        </div>
-        <br />
-        <p class="post_text"> {preview(post.text)}} </p>
-    </article>
-    {% endfor %}
-</div>-->

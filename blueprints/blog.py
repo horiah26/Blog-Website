@@ -6,13 +6,14 @@ import datetime
 from repos.post.list_repo import repo_posts as posts
 from models.post import Post
 from .methods.preview import preview
+from .methods import pic_generator as generator
 
 
 bp = Blueprint('blog', __name__)
 
 @bp.route('/')
 def home():
-    return render_template('blog/home.html', posts=posts.get_all(), preview=preview)
+    return render_template('blog/home.html', posts=posts.get_all(), preview=preview, generator=generator)
 
 @bp.route('/create', methods=['GET', 'POST'])
 def create():

@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{post.title}}
+{{post.title}}
 {% endblock %}
 
 {% block content %}
-<h1 class="crud_title">{{post.title}}</h1>
-<p id="view_post_text">{{post.text}}</p>
-<div class="crud_date">
-    <p id="view_post_date">{{post.date_created}}</p>
-    <p id="view_post_date">{{post.date_modified}}</p>
+<div class="view-post">
+    <div class="view-post-controls">
+        <h1 class="crud_title">{{post.title}}</h1>
+        <div class="edit-delete">
+            <a class="action" href="{{url_for('blog.delete', id = post.id)}}">Delete</a>
+            <a class="action" href="{{url_for('blog.update', id = post.id)}}">Edit</a>
+        </div>
+    </div>
+    <br />
+    <p id="view_post_text">{{post.text}}</p>
+    <div class="crud_date">
+        <p id="view_post_date">Created on: {{post.date_created}}</p>
+        <p id="view_post_date">Last edited on: {{post.date_modified}}</p>
+    </div>
 </div>
 {% endblock %}

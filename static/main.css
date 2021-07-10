@@ -17,15 +17,12 @@ body {
     background-color: var(--background_color);
 }
 
-.welcome .laptop-image {
-    width: 100%;
-    height: auto;
-}
 
 .crud_title {
-    margin: 20px 50px;
-    font-size: 30px;
+    font-size: 50px;
     color: var(--theme_white);
+    text-align: center;
+    width: 100%;
 }
 
 li, a {
@@ -38,32 +35,21 @@ li, a {
     background-color: var(--navbar_color);
     padding: 1px;
     color: var(--theme_white);
-    font-size:1.2em;
-    position:fixed;
-    z-index:2;
-    width:100%;
-    margin-bottom:200px;
-}
-
-.action {
-    float: right;
-    margin: 10px;
-    font-weight: 500;
-    font-size: 1.1em;
-    color: var(--theme_white);
-    text-decoration: none;
-    padding: 10px;
-    font-weight: bold;
-}
-
-.action:hover {
-    background-color: #12232e;
-    box-shadow: 0 0 0px 6px #12232e;
+    font-size: 1.2em;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    margin-bottom: 200px;
+    display: block;
+    transition: top 0.7s;
+    transition-delay: 0.3s;
 }
 
 .nav_list {
     list-style: none;
-    font-size: 1.5em;
+    font-size: 1.4em;
+    margin: 20px;
 }
 
 #second-word{
@@ -76,14 +62,18 @@ li, a {
     display: inline-block;
 }
 
-.hoverlink a {
+.menu-buttons a {
     transition: all 0.3s ease 0s;
 }
 
-.hoverlink a:hover {
+.menu-buttons a:hover {
     background-color: #12232e;
     border-radius: 3px;
     box-shadow: 0 0 0px 6px #12232e;
+}
+
+#create-post-title{
+    margin-top:100px;
 }
 
 .crud_form {
@@ -135,7 +125,6 @@ input[type=submit]:hover {
 }
 
 .about-card {
-    background-color: var(--post_background);
     padding: 20px;
     margin-top: 20px;
     color: var(--theme_white);
@@ -170,19 +159,20 @@ input[type=submit]:hover {
 .card {
     overflow: hidden;
     box-shadow: 0px 0px 6px 0px black;
-    background: #16232e;
+    background: var(--post_background);
     position: relative;
     width: 400px;
+    height: 460px;
     margin: 1rem;
     transition: 0.15s all ease-in-out;
     cursor: pointer;
     color:var(--theme_white);
 }
 
-    .card:hover {
-        transform: scale(1.02);
-        box-shadow: 0px 2px 20px black;
-    }
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 2px 20px black;
+}
 
 .banner-img {
     position: absolute;
@@ -192,10 +182,9 @@ input[type=submit]:hover {
 }
 
 .category-tag {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: darkcyan;
-    background: var(--theme_white);
+    font-weight: bolder;
+    color: var(--theme_white);
+    background: #007cc7;
     padding: 0.5rem 1.3rem 0.5rem 1rem;
     text-transform: uppercase;
     position: absolute;
@@ -210,7 +199,7 @@ input[type=submit]:hover {
 .blog-hashtag {
     font-size: 0.9rem;
     font-weight: 500;
-    color: red;
+    color: #4da8da;
 }
 
 .blog-title {
@@ -234,25 +223,109 @@ input[type=submit]:hover {
     height: 60px;
     object-fit: cover;
     border-radius: 50%;
+    bottom:10px;
 }
 
 .card-profile-info {
     margin-left: 1rem;
 }
 
-.welcome .logo {
+#laptop-img {
+    height: auto;
+    width: 100%;
+}
+
+.view-post {
+    margin: 150px;
+}
+
+.action {
+    top: 0;
+    margin: -19px 0px;
+    font-weight: 500;
+    font-size: 1.1em;
+    color: var(--theme_white);
+    text-decoration: none;
+    padding: 10px;
+    font-weight: bold;
+    float:right;
+}
+
+.action:hover {
+    background-color: var(--navbar_color);
+    box-shadow: 0 0 0px 6px #12232e;
+}
+
+.edit-delete {
+    margin-right: 50px;
+    background-color: var(--navbar_color);
+}
+
+.img-container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.img-container .logo {
     position: absolute;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 10rem;
+    font-size: 13vw;
     color: var(--theme_white);
     text-shadow: 10px 10px 10px black;
 }
 
-.img-container {
-    background: url(https://images.pexels.com/photos/169573/pexels-photo-169573.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260);
-    height: 800px;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
+.toggle-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    display: block;
+    flex-direction: column;
+    flex-direction:column;
+    justify-content:space-between;
+    width:30px;
+    height:21px;
+}
+
+.toggle-button bar{
+    height:3px;
+    width:100%;
+    background-color:var(--theme_white);
+    border-radius:10px;
+}
+
+@media (max-width:600px) {
+    .img-container {
+        display: none;
+    }
+
+    .wrapper {
+        margin-top: 80px;
+    }
+
+    .toggle-button{
+        display:flex;
+    }
+
+    .menu-buttons {
+        display: none;
+    }
+}
+
+@media (max-width:400px){
+    .card {
+        overflow: hidden;
+        box-shadow: 0px 0px 6px 0px black;
+        background: var(--post_background);
+        position: relative;
+        width: 90%;
+        height: auto;
+        margin: 1rem;
+        margin-right: 2rem;
+        transition: 0.15s all ease-in-out;
+        cursor: pointer;
+        color: var(--theme_white);
+    }
 }
