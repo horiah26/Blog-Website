@@ -6,7 +6,7 @@ import datetime
 from repos.post.list_repo import repo_posts as posts
 from models.post import Post
 from .methods.preview import preview
-from .methods import pic_generator as generator
+from .methods import post_misc_generator as generator
 
 
 bp = Blueprint('blog', __name__)
@@ -32,7 +32,7 @@ def create():
             id = posts.next_id()
             time_now = datetime.datetime.now().strftime("%H:%M  %d.%m.%Y")
                 
-            posts.add(Post(id, title, text, "Admin", time_now, time_now))
+            posts.add(Post(id, title, text, "Owner", time_now, time_now))
 
             return redirect(url_for('blog.home'))
     
