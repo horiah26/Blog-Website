@@ -6,21 +6,19 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
 
-    <script src="test.js"></script>
-
 </head>
 
 <body>
     <nav id="navbar" class="navbar">
         <a class="logo" href="{{url_for('blog.home')}}">Lorem<span id="second-word">Ipsum</span></a>
-             
         <a href="#" class="toggle-button">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </a>
-        <ul class="nav-links">
-            <li><a class="menu-buttons" href="{{url_for('blog.create')}}">Write</a></li>
+
+        <ul class="navbar-links">
+            <li><a class="menu-buttons" href="{{url_for('blog.create')}}"><span>Write</span></a></li>
         </ul>
     </nav>
 
@@ -31,20 +29,8 @@
         {% block content %}{% endblock %}
     </section>
 
-    <script >
-        var prevScrollpos = window.pageYOffset;
-        window.onscroll = function() {
-        var currentScrollPos = window.pageYOffset;
-        if (prevScrollpos > currentScrollPos) {
-            document.getElementById("navbar").style.top = "0";
-        } else {
-            document.getElementById("navbar").style.top = "-100px";
-        }
-            prevScrollpos = currentScrollPos;
-        }
-    </script>
-
-    <script src="hide_nav.js"></script>
+    <script src="{{url_for('static', filename="js/hide_nav.js")}}"></script>
+    <script src="{{url_for('static', filename="js/collapse_nav.js")}}"></script>
 </body>
 
 </html>

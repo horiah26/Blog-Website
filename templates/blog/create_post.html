@@ -2,14 +2,14 @@
 
 {% block title %}Create a new Post{% endblock %}
 
-{% block header %}<h1 id="create-post-title" class="crud_title">Create a new Post</h1>{% endblock %}
+{% block header %}<h1 class="crud_title">Create a new Post</h1>{% endblock %}
 
 {% block content %}
 	<form method="POST" class="crud_form">
 		<label class="crud_label" for="title"> Title </label> <br>
-		<input type="text" id="title" name = "title" size="50"><br>
+		<input type="text" class="form-title" name = "title"><br>
 		<label  class="crud_label" for="text"> Text </label> <br>
-		<textarea type="text" id="text" name = "text" rows="10" cols="100"> </textarea><br>
+		<textarea type="text" class="form-title" name = "text" rows="10"> </textarea><br>
 		<input type="submit" value="Create post">
 	</form>
 {% endblock %}
