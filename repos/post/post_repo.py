@@ -6,7 +6,7 @@ class RepoPosts(AbstractRepoPosts):
     def __init__(self, seed):
         self.posts = seed
 
-    def get_post(self, id):
+    def get(self, id):
             post = next((post for post in self.posts if post.id == id), None)
             if post is not None:
                 return post
@@ -19,7 +19,7 @@ class RepoPosts(AbstractRepoPosts):
             self.posts.append(post)
 
     def update(self, id, title, text, date_modified):
-        post = self.get_post(id)
+        post = self.get(id)
         post.title = title
         post.text = text
         post.date_modified = date_modified

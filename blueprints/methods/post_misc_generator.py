@@ -53,5 +53,5 @@ def random_hashtags():
 	tags = ""
 	nr = random.randint(1, 4)
 	for x in range(nr):
-		tags = tags + random_hashtag() + " "
+		tags += random_hashtag() + " "
 	return tags

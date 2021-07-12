@@ -3,7 +3,7 @@ from flask import (
 )
 import datetime
 
-from repos.post.list_repo import repo_posts as posts
+from repos.post.post_repo import repo_posts as posts
 from models.post import Post
 from .methods.preview import preview
 from .methods import post_misc_generator as generator
@@ -40,11 +40,11 @@ def create():
 
 @bp.route('/<int:id>/', methods=['GET'])
 def show(id):
-    return render_template('blog/show_post.html', post=posts.get_post(id))
+    return render_template('blog/show_post.html', post=posts.get(id))
 
 @bp.route('/<int:id>/update', methods=['GET', 'POST'])
 def update(id):
-    post = posts.get_post(id)
+    post = posts.get(id)
     if request.method == 'POST':
         title = request.form['title']
         text = request.form['text']

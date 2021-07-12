@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class AbstractRepoPosts(ABC):
 	@abstractmethod
-	def get_post(self, id): pass
+	def get(self, id): pass
 	
 	@abstractmethod
 	def get_all(self): pass
