@@ -1,3 +1,5 @@
+from flask import abort
+
 from .abstract_post import AbstractRepoPosts
 from .seed import seed
 from models.post import Post
@@ -10,6 +12,8 @@ class RepoPosts(AbstractRepoPosts):
             post = next((post for post in self.posts if post.id == id), None)
             if post is not None:
                 return post
+            else:
+                abort(404)
 
     def get_all(self):
         return self.posts

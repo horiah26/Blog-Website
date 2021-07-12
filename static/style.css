@@ -23,7 +23,7 @@ body {
 }
 
 
-.crud_title {
+.crud-title {
     margin-top:130px;
     font-size: 50px;
     color: var(--theme_white);

@@ -11,7 +11,7 @@ from .methods import post_misc_generator as generator
 
 bp = Blueprint('blog', __name__)
 
-@bp.route('/')
+@bp.route('/', methods=['GET'])
 def home():
     return render_template('blog/home.html', posts=posts.get_all(), preview=preview, generator=generator)
 
@@ -60,7 +60,7 @@ def update(id):
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
 
-@bp.route('/<int:id>/delete', methods=['GET','POST'])
+@bp.route('/<int:id>/delete', methods=['GET'])
 def delete(id):
     posts.delete(id)
     return redirect(url_for('blog.home'))
