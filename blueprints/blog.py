@@ -3,13 +3,14 @@ from flask import (
 )
 import datetime
 
-from repos.post.post_repo import repo_posts as posts
+from repos.post.post_factory import PostFactory
 from models.post import Post
 from repos.post.methods.preview import preview
 from repos.post.methods import post_misc_generator as generator
 
-bp = Blueprint('blog', __name__)
+posts = PostFactory.create_repo("memory")
 
+bp = Blueprint('blog', __name__)
 @bp.route('/', methods=['GET'])
 def home():
     return render_template('blog/home.html', posts=posts.get_all(), preview=preview, generator=generator)
@@ -31,7 +32,7 @@ def create():
             id = posts.next_id()
             time_now = datetime.datetime.now().strftime("%H:%M  %d.%B.%Y")
                 
-            posts.add(Post(id, title, text, "Owner", time_now, time_now))
+            posts.insert(Post(id, title, text, "Owner", time_now, time_now))
 
             return redirect(url_for('blog.home'))
     

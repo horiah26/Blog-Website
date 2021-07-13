@@ -11,15 +11,15 @@ def client():
     
     gc.collect()
 
-#def test_can_update_first_post(client):
-#    data = dict(title = 'Ugly title for test lsdkhnsdpbjeri', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq')
+def test_can_update_first_post(client):
+    data = dict(title = 'Ugly title for test lsdkhnsdpbjeri', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq')
        
-#    update = client.post('/1/update', data=data, follow_redirects=True)
+    update = client.post('/1/update', data=data, follow_redirects=True)
     
-#    rv = client.get('/1/')
+    rv = client.get('/1/')
 
-#    assert b'Ugly title for test lsdkhnsdpbjeri' in rv.data
-#    assert b'Ugly text for test asfjkoas' in rv.data
+    assert b'Ugly title for test lsdkhnsdpbjeri' in rv.data
+    assert b'Ugly text for test asfjkoas' in rv.data
 
 def test_homepage_works(client):    
     rv = client.get('/')

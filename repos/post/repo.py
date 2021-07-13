@@ -1,10 +1,10 @@
 from flask import abort
 
-from .abstract_post import AbstractRepoPosts
-from .seed import seed
+from .IPost import IPost
+from .seed import create_seed 
 from models.post import Post
 
-class RepoPosts(AbstractRepoPosts):
+class RepoPosts(IPost):
     def __init__(self, seed):
         self.posts = seed
 
@@ -18,7 +18,7 @@ class RepoPosts(AbstractRepoPosts):
     def get_all(self):
         return self.posts
 
-    def add(self, post):
+    def insert(self, post):
         if isinstance(post, Post):
             self.posts.append(post)
 
@@ -40,6 +40,3 @@ class RepoPosts(AbstractRepoPosts):
         else:                
             id = max(post.id for post in self.posts) + 1 
         return id
-
-
-repo_posts = RepoPosts(seed)

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class AbstractRepoPosts(ABC):
+class IPost (ABC):
 	@abstractmethod
 	def get(self, id): pass
 	
