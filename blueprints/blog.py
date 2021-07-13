@@ -5,9 +5,8 @@ import datetime
 
 from repos.post.post_repo import repo_posts as posts
 from models.post import Post
-from .methods.preview import preview
-from .methods import post_misc_generator as generator
-
+from repos.post.methods.preview import preview
+from repos.post.methods import post_misc_generator as generator
 
 bp = Blueprint('blog', __name__)
 
@@ -30,7 +29,7 @@ def create():
             flash(error)
         else:
             id = posts.next_id()
-            time_now = datetime.datetime.now().strftime("%H:%M  %d.%m.%Y")
+            time_now = datetime.datetime.now().strftime("%H:%M  %d.%B.%Y")
                 
             posts.add(Post(id, title, text, "Owner", time_now, time_now))
 
@@ -51,12 +50,12 @@ def update(id):
 
         if not title:
             title = post.title
-        if not text:
+        elif not text:
             text = post.text
         else:
-            date_modified = datetime.datetime.now().strftime("Last edited at: %H:%M            %d.%m.%Y       ")
+            date_modified = datetime.datetime.now().strftime("Last edited at: %H:%M %d.%B.%Y")
             posts.update(id, title, text, date_modified) 
-
+            
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
 
