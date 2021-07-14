@@ -11,7 +11,7 @@ def create_table():
     create_post_table(conn)
 
 def insert(post):
-    """Defines the post attributes"""
+    """Add a new post"""
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
@@ -19,7 +19,6 @@ def insert(post):
         VALUES(%s, %s, %s, %s, %s)",
         (post.title, post.text, post.date_created, post.date_modified, post.owner))
     conn.commit()
-    cur.execute("SELECT * FROM posts;")
     cur.close()
     conn.close()
 
@@ -61,3 +60,14 @@ def update(id, title, text):
     conn.commit()
     cur.close()
     conn.close()
+
+def get_all():
+    """Returns all posts"""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM posts;")
+    posts = cur.fetchall()
+    conn.commit()
+    cur.close()
+    conn.close()
+    return posts
