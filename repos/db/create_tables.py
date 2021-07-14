@@ -1,6 +1,8 @@
+"""Creates tables"""
 import psycopg2
 
 def create_post_table(conn):
+    """Creates the posts table"""
     command = (
             """
             CREATE TABLE posts (
