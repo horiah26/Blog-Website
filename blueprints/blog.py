@@ -21,10 +21,10 @@ def home():
 def create():
     """Route to creating new posts"""
     if request.method == 'POST':
-        title = request.form['title']
-        text = request.form['text']
-        error = None
+        title = request.form['title'].strip()
+        text = request.form['text'].strip()
 
+        error = None
         if not title:
             error = "Title is required"
         if not text:
@@ -32,41 +32,40 @@ def create():
         if error is not None:
             flash(error)
         else:
-            id = posts.next_id()
-            time_now = datetime.datetime.now().strftime("%H:%M  %d.%B.%Y")
+            post_id = posts.next_id()
 
-            posts.insert(Post(id, title, text, "Owner", time_now, time_now))
+            posts.insert(Post(post_id, title, text, "Owner"))
 
             return redirect(url_for('blog.home'))
 
     return render_template('blog/create_post.html')
 
-@bp.route('/<int:id>/', methods=['GET'])
-def show(id):
+@bp.route('/<int:post_id>/', methods=['GET'])
+def show(post_id):
     """Route to show post by id"""
-    return render_template('blog/show_post.html', post=posts.get(id))
+    return render_template('blog/show_post.html', post=posts.get(post_id))
 
-@bp.route('/<int:id>/update', methods=['GET', 'POST'])
-def update(id):
+@bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
+def update(post_id):
     """Route to update existing posts"""
-    post = posts.get(id)
+    post = posts.get(post_id)
     if request.method == 'POST':
-        title = request.form['title']
-        text = request.form['text']
+        title = request.form['title'].strip()
+        text = request.form['text'].strip()
 
         if not title:
             title = post.title
         elif not text:
             text = post.text
         else:
-            date_modified = datetime.datetime.now().strftime("Last edited at: %H:%M %d.%B.%Y")
-            posts.update(id, title, text, date_modified)
+            date_modified = datetime.datetime.now().strftime("%H:%M %B %d %Y")
+            posts.update(post_id, title, text, date_modified)
 
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
 
-@bp.route('/<int:id>/delete', methods=['GET'])
-def delete(id):
+@bp.route('/<int:post_id>/delete', methods=['GET'])
+def delete(post_id):
     """Route to delete posts"""
-    posts.delete(id)
+    posts.delete(post_id)
     return redirect(url_for('blog.home'))

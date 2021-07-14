@@ -22,11 +22,11 @@ def insert(post):
     cur.close()
     conn.close()
 
-def get(id):
+def get(post_id):
     """Returns post by id"""
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM posts WHERE id = %s;", (id,))
+    cur.execute("SELECT * FROM posts WHERE post_id = %s;", (post_id,))
     post = cur.fetchone()
 
     conn.commit()
@@ -38,25 +38,25 @@ def get(id):
     else:
         return Post(post[0], post[1], post[2], post[3], post[4], post[5])
 
-def delete(id):
+def delete(post_id):
     """Deletes post by id"""
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("DELETE FROM posts WHERE id = %s;", (id,))
+    cur.execute("DELETE FROM posts WHERE post_id = %s;", (post_id,))
     rows_deleted = cur.rowcount
     conn.commit()
     cur.close()
     conn.close()
     return rows_deleted
 
-def update(id, title, text):
+def update(post_id, title, text):
     """Updates post by id"""
     conn = get_connection()
     cur = conn.cursor()
-    time_now = datetime.datetime.now().strftime("%H:%M  %d.%B.%Y")
+    time_now = datetime.datetime.now().strftime("%H:%M %B %d %Y")
     cur.execute(
-        "UPDATE posts SET title = %s, text = %s, date_modified = %s WHERE id = %s",
-        (title, text, time_now, id))    
+        "UPDATE posts SET title = %s, text = %s, date_modified = %s WHERE post_id = %s",
+        (title, text, time_now, post_id))    
     conn.commit()
     cur.close()
     conn.close()

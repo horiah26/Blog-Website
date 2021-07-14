@@ -6,7 +6,7 @@ def create_post_table(conn):
     command = (
             """
             CREATE TABLE posts (
-                    id  SERIAL PRIMARY KEY,
+                    post_id  SERIAL PRIMARY KEY,
                     title VARCHAR(255) NOT NULL,
                     text TEXT NOT NULL,
                     date_created VARCHAR(40) NOT NULL,

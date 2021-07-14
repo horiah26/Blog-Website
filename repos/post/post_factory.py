@@ -1,5 +1,5 @@
 """Posts repo factory"""
-from repos.post.repo import RepoPosts
+from repos.post.post_repo_memory import RepoPosts
 from repos.post.seed import create_seed
 
 class PostFactory():

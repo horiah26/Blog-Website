@@ -9,8 +9,8 @@
     <div class="view-post-controls">
         <h1 class="crud-title">{{post.title}}</h1>
         <div class="edit-delete">
-            <a class="action" href="{{url_for('blog.delete', id = post.id)}}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
-            <a class="action" href="{{url_for('blog.update', id = post.id)}}">Edit</a>
+            <a class="action" href="{{url_for('blog.delete', post_id = post.post_id)}}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+            <a class="action" href="{{url_for('blog.update', post_id = post.post_id)}}">Edit</a>
         </div>
     </div>
     <br />
