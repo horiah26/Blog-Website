@@ -15,6 +15,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--background_color);
+    display: grid;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo {
@@ -393,5 +396,79 @@ input[type=submit]:hover {
         transition: 0.15s all ease-in-out;
         cursor: pointer;
         color: var(--theme_white);
+    }
+}
+
+.footer{
+ 
+    padding:20px;
+    color: var(--background_color);
+    background-color:var(--navbar_color);
+    display:block;
+   
+}
+.footer > *{
+    flex: 1 100%;
+}
+.footer-left{
+    margin-right: 1.25em;
+    margin-bottom:2em;
+}
+
+.h2{
+    font-weight: 600;
+    font-size: 17px;
+}
+.footer ul{
+    list-style:none;
+    padding-left: 0;
+}
+
+.footer li{
+    line-height:2em;
+}
+
+.footer a{
+    text-decoration: none;
+}
+
+.footer-list {
+    display: flex;
+    flex-flow: row wrap;
+    margin-left:50px;
+}
+
+.footer-list > * {
+    flex: 1 50%;
+    margin-right: 1.25em;
+    margin-left: 1.25em
+}
+
+.box a{
+    color:var(--theme_white);
+}
+
+.box{
+    width:150px;
+}
+
+.footer-bottom{
+    text-align: center;
+    color: var(--theme_white);
+    padding-top: 50px;
+}
+
+@media (min-width:660px) {
+
+    .footer-left > * {
+        flex: 2;
+    }
+
+    .footer-list > * {
+        flex: 3 0px;
+    }
+
+    .footer-list {
+        justify-content: left;
     }
 }
