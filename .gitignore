@@ -368,3 +368,5 @@ FodyWeavers.xsd
 #personal try files
 
 try_db_repo.py
+db_config.json
+erase.py

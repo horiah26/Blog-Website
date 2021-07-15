@@ -9,12 +9,12 @@ class Post:
         self.text = text
         self.owner = owner
 
-        if date_created == None:
+        if date_created is None:
             self.date_created = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         else:
             self.date_created = date_created
 
-        if date_modified == None:
+        if date_modified is None:
             self.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         else:
             self.date_modified = date_modified

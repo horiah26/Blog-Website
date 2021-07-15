@@ -10,7 +10,7 @@ class RepoPostsDB(IPost):
     """Repository for posts that communicates with the database"""
     def __init__(self, seed = None):
         """Initializes class and adds posts from seed if present"""
-        if seed is not None and len(self.get_all()) is 0:
+        if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
 
@@ -65,6 +65,7 @@ class RepoPostsDB(IPost):
 
     def get_all(self):
         """Returns all posts"""
+        #try:
         conn = get_connection()
         cur = conn.cursor()
         cur.execute("SELECT * FROM posts;")
@@ -86,6 +87,6 @@ class RepoPostsDB(IPost):
         return previewed_posts
 
     def next_id(self):
-        """Created to be compatible with post_repo_memory. 
+        """Created to be compatible with post_repo_memory.
             Id is assigned automatically by database"""
-        return 0;
+        return 0

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+
+</head>
+
+<body>
+    <form method="POST" class="crud_form">
+        <br />
+        <br />
+        <br />
+
+        <label class="crud_label" for="database"> Database </label> <br>
+        <input type="text" class="form-title" name="database"><br>
+
+        <label class="crud_label" for="database"> Host </label> <br>
+        <input type="text" class="form-title" name="host"><br>
+
+        <label class="crud_label" for="database"> User </label> <br>
+        <input type="text" class="form-title" name="user"><br>
+
+        <label class="crud_label" for="database"> Password </label> <br>
+        <input type="text" class="form-title" name="password"><br>
+
+        <br />
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+</html>
