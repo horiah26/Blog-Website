@@ -38,7 +38,7 @@ imageArray = [
 tagArray = ["Advice","Android","Apple", "Architecture","Art", "Blogging","Books",
 			"Business","Cars","Comics","Comedy","Cooking","Cosmetics","Crafts","Culture","Design","Education","Fashion","Food","Health",
 			"Humor", "Life", "Internet", "Music", "Marketing", "Movies","News", "Photography","Politics", "Technology", "Travel", "Writing"
-			,"Nutrition","Parenting","Personal","Photo", "Law","Science","Shopping","Social","Gossip","Geek","Landscape","Management","Pets","Relationships"]
+			,"Nutrition","Parenting","Personal","Photos", "Law","Science","Shopping","Social","Gossip","Geek","Landscape","Management","Pets","Relationships"]
 
 def random_pic():
 	return random.choice(imageArray)

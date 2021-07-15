@@ -3,9 +3,13 @@ import datetime
 
 from app import create_app
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def client():
     app = create_app()
+    app.config.from_mapping(
+        SECRET_KEY="secret",
+        DB_TYPE = "memory")    
+    app.app_context().push()    
     yield app.test_client()
 
 def test_homepage_works(client):    
@@ -15,8 +19,6 @@ def test_homepage_works(client):
     assert b'welcome' in rv.data
     assert b'category-tag popular' in rv.data
     assert b'profile-img' in rv.data
-
-    del client    
 
 def test_shows_date_correctly(client): 
     rv = client.get('/1/')
@@ -91,9 +93,9 @@ def test_can_delete_post(client):
 def test_can_update_post(client):
     data = dict(title = 'Ugly title for test lsdkhnsdpbjeri', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq')
        
-    update = client.post('/2/update', data=data, follow_redirects=True)
+    update = client.post('/5/update', data=data, follow_redirects=True)
     
-    rv = client.get('/2/')
+    rv = client.get('/5/')
 
     assert b'Ugly title for test lsdkhnsdpbjeri' in rv.data
     assert b'Ugly text for test asfjkoas' in rv.data

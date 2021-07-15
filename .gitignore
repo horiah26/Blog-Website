@@ -364,3 +364,7 @@ FodyWeavers.xsd
 
 # Pytest Cache folder
 .pytest_cache
+
+#personal try files
+
+try_db_repo.py
