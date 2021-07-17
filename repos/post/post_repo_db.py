@@ -4,6 +4,7 @@ import psycopg2
 from models.post import Post
 from models.post_preview import PostPreview
 from database.connection import Connection
+from static import constant
 from .IPost import IPost
 
 connection = Connection()
@@ -83,28 +84,25 @@ class RepoPostsDB(IPost):
         """Returns previews of posts posts"""
         conn = connection.get()
         cur = conn.cursor()
-        cur.execute("SELECT LEFT(text, 180) FROM posts;")
-        text_preview = cur.fetchall()         
-
+        cur.execute("SELECT LEFT(text, %s) FROM posts;", [constant.PREVIEW_LENGTH])
+        text_preview = cur.fetchall()
+        text_preview = [text[0] for text in text_preview]
         cur.execute("SELECT * INTO temp_table FROM posts;")
         cur.execute("ALTER TABLE temp_table DROP COLUMN text;")
         cur.execute("SELECT * FROM temp_table;")
-        columns_except_text = cur.fetchall()   
+        columns_except_text = cur.fetchall()
         cur.execute("DROP TABLE temp_table;")
         cur.close()
         conn.close()
-        rows=[columns_except_text, text_preview]
 
         posts = []
-        for index in range(len(text_preview)):
-            current_column = columns_except_text[index]
-            posts.append(PostPreview(current_column[0],
-                                    current_column[1],
+        for index, row in enumerate(columns_except_text):
+            posts.append(PostPreview(row[0],
+                                    row[1],
                                     text_preview[index],
-                                    current_column[2],
-                                    current_column[3],
-                                    current_column[4]))
-            posts.sort(key=lambda x: x.post_id)
+                                    row[2],
+                                    row[3],
+                                    row[4]))
         return posts
 
     def next_id(self):

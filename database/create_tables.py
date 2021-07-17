@@ -1,6 +1,5 @@
 """Creates tables"""
 import psycopg2
-from database.connection import Connection
 
 class CreateTables():
     """Creates the tables"""
@@ -18,7 +17,7 @@ class CreateTables():
                 )
                 """)
 
-        try:            
+        try:
             cur = conn.cursor()
             cur.execute(command)
             cur.close()

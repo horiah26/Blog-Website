@@ -4,6 +4,7 @@ from flask import abort
 
 from models.post import Post
 from models.post_preview import PostPreview
+from static import constant
 from .IPost import IPost
 
 class RepoPostsMemory(IPost):
@@ -54,5 +55,5 @@ class RepoPostsMemory(IPost):
         posts = self.get_all()
         previewed_posts = []
         for post in posts:
-            previewed_posts.append(PostPreview(post.post_id, post.title, post.text, post.owner, post.date_created, post.date_modified))
+            previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], post.owner, post.date_created, post.date_modified))
         return previewed_posts

@@ -7,5 +7,6 @@ class RepoHolder():
         self.posts = None
 
     def create_repo(self, app):
+        """Creates the repo"""
         db_type = app.config["DB_TYPE"]
         self.posts = PostFactory.create_repo(db_type)

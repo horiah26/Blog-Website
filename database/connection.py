@@ -3,7 +3,7 @@ import os
 import json
 import psycopg2
 
-class Connection():    
+class Connection():
     """Conects to the database"""
     def __init__(self):
         self.DB_PATH = 'database/db_config.json'

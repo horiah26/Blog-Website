@@ -12,7 +12,7 @@ class PostPreview:
 
     def format_preview(self, text):
         """Removes the last whitespace and comma if ending with a comma, adds three dots at the end"""
-        text = text[0].rsplit(' ', 1)[0]
+        text = text.rsplit(' ', 1)[0]
         if text[-1] == ",":
             text = text[:-1]
         text += "..."

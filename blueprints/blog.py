@@ -1,9 +1,8 @@
 """Blog blueprint"""
+from functools import wraps
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app
 )
-from functools import wraps
-from repos.post.post_factory import PostFactory
 from repos.post.methods import post_misc_generator as gen
 from models.post import Post
 from models.repo_holder import RepoHolder
@@ -29,21 +28,21 @@ def redirect_to_setup(f):
     @wraps(f)
     def redirect_if_no_db(*args, **kwargs):
         """Redirects to setup page if db not configured"""
-        if connection.db_config_missing():
-            return redirect(url_for('setup.setup_db'))  
+        if current_app.config['DB_TYPE'] == 'db' and connection.db_config_missing():
+            return redirect(url_for('setup.setup_db'))
         return f(*args, **kwargs)
     return redirect_if_no_db
 
 @bp.route('/', methods=['GET'])
 @redirect_to_setup
-@check_repo  
+@check_repo
 def home():
     """Route to home"""
     return render_template('blog/home.html', posts=repo_holder.posts.get_previews(), generator=gen)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @redirect_to_setup
-@check_repo  
+@check_repo
 def create():
     """Route to creating new posts"""
     if request.method == 'POST':
