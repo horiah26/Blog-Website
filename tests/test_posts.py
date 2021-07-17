@@ -32,7 +32,7 @@ def test_opens_first_post_from_seed(client):
     assert b'view-post-controls' in rv.data
     assert b'edit-delete' in rv.data
     assert b'view_post_text' in rv.data
-    assert b'view_post_date' in rv.data
+    assert b'view-post-date' in rv.data
     assert b'Suspendisse dui elit' in rv.data
 
     time_now = datetime.datetime.now().strftime("%B %d %Y")   
@@ -45,7 +45,7 @@ def test_opens_last_post_from_seed(client):
     assert b'view-post-controls' in rv.data
     assert b'edit-delete' in rv.data
     assert b'view_post_text' in rv.data
-    assert b'view_post_date' in rv.data
+    assert b'view-post-date' in rv.data
     assert b'Donec tincidunt maximus sem' in rv.data
 
 def test_error404_nonexistent_post(client):    

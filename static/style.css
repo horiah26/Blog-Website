@@ -16,8 +16,6 @@ body {
     padding: 0;
     background-color: var(--background_color);
     display: grid;
-    align-items: center;
-    justify-content: center;
 }
 
 .logo {
@@ -94,12 +92,13 @@ li, a {
 }
 
 .crud_form {
-    margin: 0px 50px;
+    width:95%;
+    margin:30px;
     font-size: 20px;
     color: var(--theme_white);
 }
 
-input[type=text], textarea {
+input[type=text], input[type=password], textarea {
     border: 5px solid #203647;
     background-color: #203647;
     color: var(--theme_white);
@@ -135,10 +134,13 @@ input[type=submit]:hover {
     white-space: pre-wrap;
 }
 
-.crud_date {
+.crud-date {
     margin: 20px;
-    float: right;
+    margin-left:100px;
+    float: inherit;
     color: var(--theme_white);
+    font-size:0.8em;
+    font-style:italic;
 }
 
 .about-card {
@@ -254,8 +256,13 @@ input[type=submit]:hover {
 
 .view-post {
     margin: 150px;
+    display: block;
 }
 
+
+.view-post-controls {
+    display: block;
+}
 .action {
     top: 0;
     margin: -19px 0px;
@@ -265,7 +272,7 @@ input[type=submit]:hover {
     text-decoration: none;
     padding: 10px;
     font-weight: bold;
-    float: right;
+    float: left;
     border-width: 0px 0px 4px 0px;
     border-color: darkcyan;
     border-style:solid;
@@ -279,7 +286,7 @@ input[type=submit]:hover {
 
 .edit-delete {
     margin-right: 50px;
-    background-color: var(--navbar_color);
+    float:right;
 }
 
 .img-container {
@@ -329,6 +336,11 @@ input[type=submit]:hover {
 
     input[type=submit] {
        width:100%;
+    }
+
+    .crud_form {
+        width: 100%;
+        margin: 0px;
     }
 }
 

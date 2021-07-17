@@ -54,5 +54,5 @@ class RepoPostsMemory(IPost):
         posts = self.get_all()
         previewed_posts = []
         for post in posts:
-            previewed_posts.append(PostPreview(post))
+            previewed_posts.append(PostPreview(post.post_id, post.title, post.text, post.owner, post.date_created, post.date_modified))
         return previewed_posts

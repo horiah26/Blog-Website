@@ -5,9 +5,9 @@
 <h1 class="crud-title">Edit "{{post.title}}"</h1>
 <form method="POST" class="crud_form">
     <label class="crud_label" for="title"> Title </label> <br>
-    <input type="text" class="form-title" name="title" size="50" value="{{post.title}}"><br>
+    <input type="text" class="form-title" name="title" value="{{post.title}}"><br>
     <label class="crud_label" for="text"> Text </label> <br>
-    <textarea type="text" class="form-title" name="text" rows="10" cols="100"> {{post.text}}</textarea><br>
+    <textarea type="text" class="form-title" name="text" rows="10"> {{post.text}}</textarea><br>
     <input type="submit" value="Save">
 </form>
 {% endblock %}

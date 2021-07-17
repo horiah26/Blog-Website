@@ -3,8 +3,10 @@ import datetime
 import psycopg2
 from models.post import Post
 from models.post_preview import PostPreview
-from database.connection import get_connection
+from database.connection import Connection
 from .IPost import IPost
+
+connection = Connection()
 
 class RepoPostsDB(IPost):
     """Repository for posts that communicates with the database"""
@@ -16,7 +18,7 @@ class RepoPostsDB(IPost):
 
     def insert(self, post):
         """Add a new post"""
-        conn = get_connection()
+        conn = connection.get()
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO posts (title, text, owner, date_created, date_modified) \
@@ -28,7 +30,7 @@ class RepoPostsDB(IPost):
 
     def get(self, post_id):
         """Returns post by id"""
-        conn = get_connection()
+        conn = connection.get()
         cur = conn.cursor()
         cur.execute("SELECT * FROM posts WHERE post_id = %s;", (post_id,))
         post = cur.fetchone()
@@ -44,7 +46,7 @@ class RepoPostsDB(IPost):
 
     def delete(self, post_id):
         """Deletes post by id"""
-        conn = get_connection()
+        conn = connection.get()
         cur = conn.cursor()
         cur.execute("DELETE FROM posts WHERE post_id = %s;", (post_id,))
         conn.commit()
@@ -53,7 +55,7 @@ class RepoPostsDB(IPost):
 
     def update(self, post_id, title, text):
         """Updates post by id"""
-        conn = get_connection()
+        conn = connection.get()
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
@@ -66,11 +68,10 @@ class RepoPostsDB(IPost):
     def get_all(self):
         """Returns all posts"""
         #try:
-        conn = get_connection()
+        conn = connection.get()
         cur = conn.cursor()
         cur.execute("SELECT * FROM posts;")
         rows = cur.fetchall()
-        conn.commit()
         cur.close()
         conn.close()
         posts = []
@@ -80,11 +81,31 @@ class RepoPostsDB(IPost):
 
     def get_previews(self):
         """Returns previews of posts posts"""
-        posts = self.get_all()
-        previewed_posts = []
-        for post in posts:
-            previewed_posts.append(PostPreview(post))
-        return previewed_posts
+        conn = connection.get()
+        cur = conn.cursor()
+        cur.execute("SELECT LEFT(text, 180) FROM posts;")
+        text_preview = cur.fetchall()         
+
+        cur.execute("SELECT * INTO temp_table FROM posts;")
+        cur.execute("ALTER TABLE temp_table DROP COLUMN text;")
+        cur.execute("SELECT * FROM temp_table;")
+        columns_except_text = cur.fetchall()   
+        cur.execute("DROP TABLE temp_table;")
+        cur.close()
+        conn.close()
+        rows=[columns_except_text, text_preview]
+
+        posts = []
+        for index in range(len(text_preview)):
+            current_column = columns_except_text[index]
+            posts.append(PostPreview(current_column[0],
+                                    current_column[1],
+                                    text_preview[index],
+                                    current_column[2],
+                                    current_column[3],
+                                    current_column[4]))
+            posts.sort(key=lambda x: x.post_id)
+        return posts
 
     def next_id(self):
         """Created to be compatible with post_repo_memory.

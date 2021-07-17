@@ -2,18 +2,17 @@
 
 class PostPreview:
     """Defines the post attributes"""
-    def __init__(self, post):
-        self.post_id = post.post_id
-        self.title = post.title
-        self.text = self.preview(post.text)
-        self.owner = post.owner
-        self.date_created = post.date_created
-        self.date_modified = post.date_modified
+    def __init__(self, post_id, title, text, owner, date_created = None, date_modified = None):
+        self.post_id = post_id
+        self.title = title
+        self.text = self.format_preview(text)
+        self.owner = owner
+        self.date_created = date_created
+        self.date_modified = date_modified
 
-    def preview(self, text):
-        """Selects only the first 180 chars then removes last whitespace or comma"""
-        text = text[0:180]
-        text = text.rsplit(' ', 1)[0]
+    def format_preview(self, text):
+        """Removes the last whitespace and comma if ending with a comma, adds three dots at the end"""
+        text = text[0].rsplit(' ', 1)[0]
         if text[-1] == ",":
             text = text[:-1]
         text += "..."

@@ -2,33 +2,50 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, current_app
 )
-
+from functools import wraps
 from repos.post.post_factory import PostFactory
 from repos.post.methods import post_misc_generator as gen
 from models.post import Post
 from models.repo_holder import RepoHolder
-from database.connection import db_config_missing
+from database.connection import Connection
 
 repo_holder = RepoHolder()
+connection = Connection()
 
 bp = Blueprint('blog', __name__)
 
+def check_repo(f):
+    """Creates posts repository if it doesn't exist"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        """Creates posts repository if it doesn't exist"""
+        if repo_holder.posts is None:
+            repo_holder.create_repo(current_app)
+        return f(*args, **kwargs)
+    return decorated_function
+
+def redirect_to_setup(f):
+    """Redirects to setup page if db not configured"""
+    @wraps(f)
+    def redirect_if_no_db(*args, **kwargs):
+        """Redirects to setup page if db not configured"""
+        if connection.db_config_missing():
+            return redirect(url_for('setup.setup_db'))  
+        return f(*args, **kwargs)
+    return redirect_if_no_db
+
 @bp.route('/', methods=['GET'])
+@redirect_to_setup
+@check_repo  
 def home():
     """Route to home"""
-    if repo_holder.posts is None and not db_config_missing():
-        db_type = current_app.config["DB_TYPE"]
-        repo_holder.posts = PostFactory.create_repo(db_type)
-
-    if db_config_missing():
-        return redirect(url_for('setup.setup_db'))
     return render_template('blog/home.html', posts=repo_holder.posts.get_previews(), generator=gen)
 
 @bp.route('/create', methods=['GET', 'POST'])
+@redirect_to_setup
+@check_repo  
 def create():
     """Route to creating new posts"""
-    if db_config_missing():
-        return redirect(url_for('setup.setup_db'))
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
@@ -48,18 +65,17 @@ def create():
     return render_template('blog/create_post.html')
 
 @bp.route('/<int:post_id>/', methods=['GET'])
+@redirect_to_setup
+@check_repo
 def show(post_id):
     """Route to show post by id"""
-    if db_config_missing():
-        return redirect(url_for('setup.setup_db'))
     return render_template('blog/show_post.html', post=repo_holder.posts.get(post_id))
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
+@redirect_to_setup
+@check_repo
 def update(post_id):
     """Route to update existing posts"""
-
-    if db_config_missing():
-        return redirect(url_for('setup.setup_db'))
     post = repo_holder.posts.get(post_id)
     if request.method == 'POST':
         title = request.form['title'].strip()
@@ -71,14 +87,13 @@ def update(post_id):
             text = post.text
         else:
             repo_holder.posts.update(post_id, title, text)
-
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
 
 @bp.route('/<int:post_id>/delete', methods=['GET'])
+@redirect_to_setup
+@check_repo
 def delete(post_id):
     """Route to delete posts"""
-    if db_config_missing():
-        return redirect(url_for('setup.setup_db'))
     repo_holder.posts.delete(post_id)
     return redirect(url_for('blog.home'))

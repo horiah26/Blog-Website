@@ -3,6 +3,9 @@ import json
 from flask import (
     Blueprint, redirect, render_template, request, url_for
 )
+from models.db_auth import DbAuth
+from database.create_tables import CreateTables
+from database.connection import Connection
 
 bp = Blueprint('setup', __name__)
 
@@ -15,15 +18,14 @@ def setup_db():
         password = request.form['password'].strip()
         host = request.form['host'].strip()
 
-        data = {
-           "database" : database,
-           "user" : user,
-           "password" : password,
-           "host": host
-            }
+        db_auth = DbAuth(database, host, user, password)
 
         with open('database/db_config.json', 'w') as file:
-            json.dump(data, file)
+            json.dump(db_auth.json, file)
+
+        tables = CreateTables()
+        connection = Connection()
+        tables.create_tables(connection.get())
 
         return redirect(url_for('blog.home'))
     return render_template('database/setup.html')
