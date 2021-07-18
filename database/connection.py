@@ -22,6 +22,11 @@ class Connection():
             print("Connection failed. Check db_config file")
 
 
-    def db_config_missing(self):
+    def db_config_exists(self, app):
         """Checks if database configuration file exists"""
-        return not os.path.isfile(self.DB_PATH)
+        if app.config['DB_TYPE'] == 'db':
+            return os.path.isfile(self.DB_PATH)
+        if app.config['DB_TYPE'] == 'memory':
+            return True
+        print("Error! DB_TYPE not configured correctly in app.config['DB_TYPE']. Type invalid")
+        return False

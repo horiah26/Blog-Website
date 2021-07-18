@@ -13,5 +13,4 @@ def create_app():
     app.app_context().push()
     app.register_blueprint(setup.bp)
     app.register_blueprint(blog.bp)
-
     return app

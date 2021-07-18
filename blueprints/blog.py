@@ -28,7 +28,7 @@ def redirect_to_setup(f):
     @wraps(f)
     def redirect_if_no_db(*args, **kwargs):
         """Redirects to setup page if db not configured"""
-        if current_app.config['DB_TYPE'] == 'db' and connection.db_config_missing():
+        if not connection.db_config_exists(current_app):
             return redirect(url_for('setup.setup_db'))
         return f(*args, **kwargs)
     return redirect_if_no_db
