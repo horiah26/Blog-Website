@@ -1,16 +1,15 @@
 """Posts repo factory"""
 from repos.post.post_repo_memory import RepoPostsMemory
 from repos.post.post_repo_db import RepoPostsDB
-from repos.post.seed import create_seed
 
-class PostFactory():
+class PostRepoFactory():
     """Posts repo factory"""
     @staticmethod
-    def create_repo(repo_type):
+    def create_repo(repo_type, seed = None):
         """Creates repo from string"""
         if repo_type == "memory":
-            return RepoPostsMemory(create_seed())
+            return RepoPostsMemory(seed)
         if repo_type == "db":
-            return RepoPostsDB(create_seed())
+            return RepoPostsDB(seed)
         print("Invalid type")
         return -1

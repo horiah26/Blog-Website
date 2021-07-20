@@ -1,7 +1,7 @@
 """Abstract class for posts repo"""
 from abc import ABC, abstractmethod
 
-class IPost (ABC):
+class IPostRepo (ABC):
     """Abstract class for posts repo"""
     @abstractmethod
     def get(self, post_id):
@@ -12,12 +12,17 @@ class IPost (ABC):
         """Get all posts"""
 
     @abstractmethod
+    def insert(self, post):
+        "Insert post"
+
+    @abstractmethod
     def update(self, post_id, title, text):
         """Update post"""
 
     @abstractmethod
     def delete(self, post_id):
         """Delete post"""
+
     @abstractmethod
     def get_previews(self):
         """Returns preview of all posts"""

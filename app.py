@@ -1,6 +1,7 @@
 """Creates instance of Flask app"""
 from flask import Flask
 from blueprints import setup
+from blueprints import users
 from blueprints import blog
 
 def create_app():
@@ -11,5 +12,6 @@ def create_app():
         DB_TYPE = "db")
     app.app_context().push()
     app.register_blueprint(setup.bp)
+    app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)
     return app

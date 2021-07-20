@@ -484,3 +484,9 @@ input[type=submit]:hover {
         justify-content: left;
     }
 }
+
+.user-info{
+    color:var(--theme_white);
+    margin:20px;
+
+}

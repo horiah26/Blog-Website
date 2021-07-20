@@ -4,6 +4,7 @@ from flask import redirect, url_for
 from database.connection import Connection
 from config.config_exists import ConfigExists
 from database.create_tables import CreateTables
+from database.seed_tables import SeedTables
 
 connection = Connection() 
 config_exists = ConfigExists()
@@ -18,7 +19,9 @@ def redirect_to_setup(app):
             """Redirects to setup page if db not configured"""
             if not config_exists.check(app):
                 return redirect(url_for('setup.setup_db'))
-            create_tables.create_tables(connection.get())    
+            create_tables.create_tables(connection.get())                
+            seed_tables = SeedTables(app)
+            seed_tables.seed_all()
             return f(*args, **kwargs)
         return redirect_if_no_db
     return helper_function

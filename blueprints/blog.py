@@ -37,7 +37,7 @@ def create():
         else:
             post_id = repo_holder.get().next_id()
 
-            repo_holder.get().insert(Post(post_id, title, text, "Owner"))
+            repo_holder.get().insert(Post(post_id, title, text, "username1"))
             return redirect(url_for('blog.home'))
     return render_template('blog/create_post.html')
 

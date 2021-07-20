@@ -5,11 +5,11 @@ from models.post import Post
 from models.post_preview import PostPreview
 from database.connection import Connection
 from static import constant
-from .IPost import IPost
+from .IPostRepo import IPostRepo
 
 connection = Connection()
 
-class RepoPostsDB(IPost):
+class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
     def __init__(self, seed = None):
         """Initializes class and adds posts from seed if present"""
@@ -68,7 +68,6 @@ class RepoPostsDB(IPost):
 
     def get_all(self):
         """Returns all posts"""
-        #try:
         conn = connection.get()
         cur = conn.cursor()
         cur.execute("SELECT * FROM posts;")

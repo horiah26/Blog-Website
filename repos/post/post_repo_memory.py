@@ -5,10 +5,10 @@ from flask import abort
 from models.post import Post
 from models.post_preview import PostPreview
 from static import constant
-from .IPost import IPost
+from .IPostRepo import IPostRepo
 
-class RepoPostsMemory(IPost):
-    """Returns post by id"""
+class RepoPostsMemory(IPostRepo):
+    """Repos for posts in memory"""
     def __init__(self, seed):
         self.posts = seed
 

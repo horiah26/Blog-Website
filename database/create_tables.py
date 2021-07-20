@@ -7,7 +7,7 @@ class CreateTables():
         """Creates the posts table"""  
         try:
             cur = conn.cursor()
-            cur.execute(open("database/schemas/posts.sql", "r").read())
+            cur.execute(open("database/schemas/schema.sql", "r").read())
             cur.close()
             conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:
