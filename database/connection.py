@@ -2,31 +2,20 @@
 import os
 import json
 import psycopg2
+from config.config import Config
+
+config = Config()
 
 class Connection():
     """Conects to the database"""
     def __init__(self):
-        self.DB_PATH = 'database/db_config.json'
+        self.config_manager = Config()
 
     def get(self):
         """Conects to the database"""
-        try:
-            with open(self.DB_PATH) as file:
-                db_config = json.loads(file.read())
+        db_config = config.get_db_info()
 
-            return psycopg2.connect(database = db_config['database'],
-                                    user = db_config['user'],
-                                    password = db_config['password'],
-                                    host = db_config['host'])
-        except Exception:
-            print("Connection failed. Check db_config file")
-
-
-    def db_config_exists(self, app):
-        """Checks if database configuration file exists"""
-        if app.config['DB_TYPE'] == 'db':
-            return os.path.isfile(self.DB_PATH)
-        if app.config['DB_TYPE'] == 'memory':
-            return True
-        print("Error! DB_TYPE not configured correctly in app.config['DB_TYPE']. Type invalid")
-        return False
+        return psycopg2.connect(database = db_config['database'],
+                                user = db_config['user'],
+                                password = db_config['password'],
+                                host = db_config['host']) 

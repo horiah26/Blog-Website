@@ -3,7 +3,6 @@ from flask import Flask
 from blueprints import setup
 from blueprints import blog
 
-
 def create_app():
     """Creates app"""
     app=Flask(__name__, template_folder='templates')

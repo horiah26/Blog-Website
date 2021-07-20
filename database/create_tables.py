@@ -4,26 +4,11 @@ import psycopg2
 class CreateTables():
     """Creates the tables"""
     def create_tables(self, conn):
-        """Creates the posts table"""
-        command = (
-                """
-                CREATE TABLE posts (
-                        post_id  SERIAL PRIMARY KEY,
-                        title VARCHAR(255) NOT NULL,
-                        text TEXT NOT NULL,
-                        owner VARCHAR(100) NOT NULL,
-                        date_created VARCHAR(40) NOT NULL,
-                        date_modified VARCHAR(40) NOT NULL
-                )
-                """)
-
+        """Creates the posts table"""  
         try:
             cur = conn.cursor()
-            cur.execute(command)
+            cur.execute(open("database/schemas/posts.sql", "r").read())
             cur.close()
             conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
-        finally:
-            if conn is not None:
-                conn.close()

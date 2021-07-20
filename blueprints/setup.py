@@ -6,8 +6,10 @@ from flask import (
 from models.db_auth import DbAuth
 from database.create_tables import CreateTables
 from database.connection import Connection
+from config.config import Config
 
 bp = Blueprint('setup', __name__)
+config = Config()
 
 @bp.route('/setup', methods=['GET', 'POST'])
 def setup_db():
@@ -19,9 +21,7 @@ def setup_db():
         host = request.form['host'].strip()
 
         db_auth = DbAuth(database, host, user, password)
-
-        with open('database/db_config.json', 'w') as file:
-            json.dump(db_auth.json, file)
+        config.append(db_auth)
 
         tables = CreateTables()
         connection = Connection()

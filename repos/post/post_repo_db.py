@@ -84,25 +84,15 @@ class RepoPostsDB(IPost):
         """Returns previews of posts posts"""
         conn = connection.get()
         cur = conn.cursor()
-        cur.execute("SELECT LEFT(text, %s) FROM posts;", [constant.PREVIEW_LENGTH])
-        text_preview = cur.fetchall()
-        text_preview = [text[0] for text in text_preview]
-        cur.execute("SELECT * INTO temp_table FROM posts;")
-        cur.execute("ALTER TABLE temp_table DROP COLUMN text;")
-        cur.execute("SELECT * FROM temp_table;")
-        columns_except_text = cur.fetchall()
-        cur.execute("DROP TABLE temp_table;")
+        cur.execute("SELECT post_id, title, LEFT(text, %s), owner, date_created, date_modified FROM posts;", [constant.PREVIEW_LENGTH])
+        previews = cur.fetchall()
+
         cur.close()
         conn.close()
 
         posts = []
-        for index, row in enumerate(columns_except_text):
-            posts.append(PostPreview(row[0],
-                                    row[1],
-                                    text_preview[index],
-                                    row[2],
-                                    row[3],
-                                    row[4]))
+        for row in previews:
+            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5]))
         return posts
 
     def next_id(self):
