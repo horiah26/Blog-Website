@@ -3,8 +3,8 @@ import datetime
 import psycopg2
 
 from models.user import User
-from .IUserRepo import IUserRepo
 from database.connection import Connection
+from .IUserRepo import IUserRepo
 
 connection = Connection()
 
@@ -15,8 +15,8 @@ class RepoUserDB(IUserRepo):
             for user in seed:
                 self.insert(user)
 
-    def insert(self, user):        
-        """Add a new user"""        
+    def insert(self, user):
+        """Add a new user"""
         conn = connection.get()
         cur = conn.cursor()
         cur.execute(
@@ -26,7 +26,7 @@ class RepoUserDB(IUserRepo):
         conn.commit()
         cur.close()
         conn.close()
-    
+
     def get(self, username):
         """Returns user object by username"""
         conn = connection.get()
@@ -38,7 +38,7 @@ class RepoUserDB(IUserRepo):
         conn.close()
 
         if user is None:
-            print("ERROR: Post not found, incorrect id")
+            print("ERROR: Post not found, incorrect username")
         else:
             return User(user[0], user[1], user[2], user[3], user[4], user[5])
 
@@ -57,8 +57,8 @@ class RepoUserDB(IUserRepo):
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
-            "UPDATE posts SET name = %s, email = %s, password = %s WHERE username = %s",
-            (name, email, password, username))
+            "UPDATE users SET name = %s, email = %s, password = %s, date_modified = %s WHERE username = %s",
+            (name, email, password, time_now, username))
         conn.commit()
         cur.close()
         conn.close()

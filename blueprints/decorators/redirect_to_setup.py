@@ -2,12 +2,9 @@
 from functools import wraps
 from flask import redirect, url_for
 from database.connection import Connection
-from config.config_exists import ConfigExists
 from database.create_tables import CreateTables
-from database.seed_tables import SeedTables
 
-connection = Connection() 
-config_exists = ConfigExists()
+connection = Connection()
 create_tables = CreateTables()
 
 def redirect_to_setup(app):
@@ -17,11 +14,9 @@ def redirect_to_setup(app):
         @wraps(f)
         def redirect_if_no_db(*args, **kwargs):
             """Redirects to setup page if db not configured"""
-            if not config_exists.check(app):
+            if not connection.config_exists(app):
                 return redirect(url_for('setup.setup_db'))
-            create_tables.create_tables(connection.get())                
-            seed_tables = SeedTables(app)
-            seed_tables.seed_all()
+            create_tables.create_tables(connection.get())
             return f(*args, **kwargs)
         return redirect_if_no_db
     return helper_function

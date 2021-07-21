@@ -18,3 +18,6 @@ class User():
             self.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         else:
             self.date_modified = date_modified
+
+    def __repr__(self):
+        return f'<User: {self.username}>'

@@ -13,6 +13,7 @@ class RepoHolder():
         self.posts = PostRepoFactory.create_repo(db_type)
 
     def get(self):
+        """Returns all posts"""
         if self.posts is None:
             self.create_repo()
         return self.posts

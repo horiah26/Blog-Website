@@ -1,9 +1,10 @@
+"""Blueprint for user management"""
 from flask import (
-    Blueprint, redirect, render_template, request, url_for, current_app
+    Blueprint, redirect, render_template, request, url_for, current_app, session
 )
 from models.user import User
-from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from repos.user.user_repo_factory import UserRepoFactory
+from blueprints.decorators.redirect_to_setup import redirect_to_setup
 
 factory = UserRepoFactory()
 users_repo = factory.create_repo('db')
@@ -37,7 +38,7 @@ def sign_up():
         if password != confirm_password:
             error = "Your password must match"
         if error is not None:
-            flash(error)
+            print(error)
         else:
             users_repo.insert(User(username, name, email, password))
             return redirect(url_for('blog.home'))
@@ -71,7 +72,7 @@ def edit(username):
     if request.method == 'POST':
         email = request.form['email'].strip()
         name = request.form['name'].strip()
-        
+
         error = None
         #if not "@" in email or not "." in email:
         #    error = "Email is invalid"
@@ -84,5 +85,32 @@ def edit(username):
                 email = user.email
             else:
                 users_repo.update(username, name, email, user.password)
-                return redirect(url_for('users.view_user', username = user.username))    
+                return redirect(url_for('users.view_user', username = user.username))
     return render_template('users/edit.html', user = user)
+
+@bp.route('/login', methods=['GET', 'POST'])
+@redirect_to_setup(current_app)
+def login():
+    """Creates a new user"""
+    if request.method == 'POST':
+        session.pop('username', None)
+
+        username = request.form['username'].strip()
+        password = request.form['password'].strip()
+
+        user = users_repo.get(username)
+
+        error = None
+        if user is None:
+            error = "User does not exist"
+        elif user.password != password:
+            error = "Incorrect password"
+
+        if error is None:
+            session['username'] = user.username
+        else:
+            print(error)
+            return redirect(url_for('users.login'))
+
+        return redirect(url_for('blog.home'))
+    return render_template('users/login.html')

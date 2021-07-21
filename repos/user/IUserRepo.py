@@ -12,7 +12,7 @@ class IUserRepo (ABC):
         """Get all users"""
 
     @abstractmethod
-    def insert(self, username, name, email, password):
+    def insert(self, user):
         """Add user"""
 
     @abstractmethod

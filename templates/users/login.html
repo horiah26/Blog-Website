@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Log in{% endblock %}
+
+{% block header %}<h1 class="crud-title">Log in</h1>{% endblock %}
+
+{% block content %}
+<form method="POST" class="crud_form">
+    <label class="crud_label" for="signup"> Username </label> <br>
+    <input type="text" class="form-title" name="username"><br>
+
+    <label class="crud_label" for="signup"> Password </label> <br>
+    <input type="password" class="form-title" name="password"><br>
+    <br />
+    <input type="submit" value="Log in">
+</form>
+{% endblock %}

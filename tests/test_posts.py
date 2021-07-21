@@ -155,9 +155,9 @@ def test_can_delete_all_posts_then_create_new_one_at_index1(client):
 
     assert b'Ugly title for test lsdkhnsdpbjeri' in newpost
     assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' in newpost
-
-@mock.patch("database.connection.Connection.db_config_exists", return_value = False)
-def test_homepage_redirects_to_setup_if_no_db_config(mock_db_config_exists, client):
+    
+@mock.patch("database.connection.Connection.config_exists", return_value = False)
+def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):
     """Tests if homepage redirects if no db_config"""
     redirected = client.get('/', follow_redirects=True)
     assert b'blog-description' not in redirected.data
@@ -169,8 +169,8 @@ def test_homepage_redirects_to_setup_if_no_db_config(mock_db_config_exists, clie
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("database.connection.Connection.db_config_exists", return_value = False)
-def test_create_redirects_to_setup_if_no_db_config(mock_db_config_exists, client):
+@mock.patch("database.connection.Connection.config_exists", return_value = False)
+def test_create_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if /create redirects if no db_config"""
     redirected = client.get('/create', follow_redirects=True)
 
@@ -179,8 +179,8 @@ def test_create_redirects_to_setup_if_no_db_config(mock_db_config_exists, client
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("database.connection.Connection.db_config_exists", return_value = False)
-def test_update_redirects_to_setup_if_no_db_config(mock_db_config_exists, client):
+@mock.patch("database.connection.Connection.config_exists", return_value = False)
+def test_update_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if /update redirects if no db_config"""
     redirected = client.get('/1/update', follow_redirects=True)
 
@@ -189,8 +189,8 @@ def test_update_redirects_to_setup_if_no_db_config(mock_db_config_exists, client
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("database.connection.Connection.db_config_exists", return_value = False)
-def test_index_redirects_to_setup_if_no_db_config(mock_db_config_exists, client):
+@mock.patch("database.connection.Connection.config_exists", return_value = False)
+def test_index_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if article at index redirects if no db_config"""
     redirected = client.get('/1/update', follow_redirects=True)
 
