@@ -1,8 +1,11 @@
 """Creates instance of Flask app"""
 from flask import Flask
+from models.user import User
+from flask_login import LoginManager
 from blueprints import setup
 from blueprints import users
 from blueprints import blog
+from repos.user.user_repo_factory import UserRepoFactory
 
 def create_app():
     """Creates app"""
@@ -11,6 +14,12 @@ def create_app():
         SECRET_KEY="secret",
         DB_TYPE = "db")
     app.app_context().push()
+    login = LoginManager(app)
+    user_repo = UserRepoFactory.create_repo(app.config['DB_TYPE'])
+    @login.user_loader
+    def load_user(username):       
+        return user_repo.get(username)
+    login.login_view = 'users.login'
     app.register_blueprint(setup.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)

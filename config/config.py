@@ -1,7 +1,9 @@
 """
     Used to interact with the config.ini file
 """
+import os
 import json
+from flask import current_app
 
 class Config():
     """Used to interact with the config.ini file"""
@@ -26,3 +28,12 @@ class Config():
         """Appends instructions to config file"""
         with open(self.CONFIG_PATH, 'a') as file:
             json.dump(db_auth.json, file)
+
+    def config_file_exists(self):
+        """Checks if database configuration file exists"""
+        if current_app.config['DB_TYPE'] == 'db':
+            return os.path.isfile(self.CONFIG_PATH)
+        if current_app.config['DB_TYPE'] == 'memory':
+            return True
+        print("Error! DB_TYPE not configured correctly in app.config['DB_TYPE']. Type invalid")
+        return False
