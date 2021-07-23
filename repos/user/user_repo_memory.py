@@ -18,7 +18,6 @@ class RepoUserMemory(IUserRepo):
         user = next((user for user in self.users if user.username == username), None)
         if user is not None:
             return user
-        abort(404)
 
     def get_all(self):
         """Returns all posts"""

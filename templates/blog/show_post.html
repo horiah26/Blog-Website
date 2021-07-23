@@ -13,8 +13,10 @@
             <p id="view-post-date">Last edited on: {{post.date_modified}}</p>
         </div>
         <div class="edit-delete">
+            {% if current_user.username == post.owner%}
             <a class="action" href="{{url_for('blog.delete', post_id = post.post_id)}}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
             <a class="action" href="{{url_for('blog.update', post_id = post.post_id)}}">Edit</a>
+            {% endif %}
         </div>
     </div>
     <br />
