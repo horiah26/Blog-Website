@@ -1,7 +1,7 @@
 """The user class"""
 import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin):
     """The user class"""
@@ -24,12 +24,6 @@ class User(UserMixin):
     def __repr__(self):
         return f'<User: {self.username}>'
 
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
     def get_id(self):
         return self.username
 
@@ -37,3 +31,9 @@ class User(UserMixin):
         if username == username:
             return self
         return None
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password, method='pbkdf2:sha512:100')
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)

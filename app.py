@@ -14,12 +14,14 @@ def create_app():
         SECRET_KEY="secret",
         DB_TYPE = "db")
     app.app_context().push()
-    login = LoginManager(app)
+
+    login_manager = LoginManager(app)
     user_repo = UserRepoFactory.create_repo(app.config['DB_TYPE'])
-    @login.user_loader
-    def load_user(username):       
+    @login_manager.user_loader
+    def load_user(username):
         return user_repo.get(username)
-    login.login_view = 'users.login'
+    login_manager.login_view = 'users.login'
+
     app.register_blueprint(setup.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)

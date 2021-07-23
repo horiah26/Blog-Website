@@ -4,15 +4,15 @@ from flask import (
 )
 from flask_login import current_user, login_user, logout_user
 from models.user import User
-from repos.user.user_repo_factory import UserRepoFactory
+from models.user_repo_holder import UserRepoHolder
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
+from blueprints.decorators.permission_required import permission_required
 
-factory = UserRepoFactory()
-users_repo = factory.create_repo('db')
+users_repo = UserRepoHolder()
 bp = Blueprint('users', __name__)
 
 @bp.route('/signup', methods=['GET', 'POST'])
-@redirect_to_setup()
+@redirect_to_setup
 def sign_up():
     """Creates a new user"""
     if request.method == 'POST':
@@ -45,30 +45,36 @@ def sign_up():
     return render_template('users/sign_up.html')
 
 @bp.route('/users', methods=['GET'])
-@redirect_to_setup()
+@redirect_to_setup
 def view_all():
     """Route to home"""
-    return render_template('users/view_all.html', users = users_repo.get_all())
+    return render_template('users/view_all.html', users = users_repo.get().get_all())
 
 @bp.route('/users/<username>/', methods=['GET'])
-@redirect_to_setup()
+@redirect_to_setup
 def view_user(username):
     """Route to home"""
-    return render_template('users/view.html', user = users_repo.get(username))
+    return render_template('users/view.html', user = users_repo.get().get(username))
 
 @bp.route('/users/<username>/delete', methods=['GET'])
-@redirect_to_setup()
+@redirect_to_setup
+@permission_required()
 def delete(username):
     """Route to home"""
-    users_repo.delete(username)
+    users_repo.get().delete(username)
     return redirect(url_for('blog.home'))
 
 
 @bp.route('/users/<username>/edit', methods=['GET', 'POST'])
-@redirect_to_setup()
+@redirect_to_setup
+@permission_required()
 def edit(username):
     """Route to home"""
-    user = users_repo.get(username)
+    user = users_repo.get().get(username)
+    if user.username != current_user.username:
+        print('Only Author can update the post')
+        return redirect(url_for('blog.home'))
+
     if request.method == 'POST':
         email = request.form['email'].strip()
         name = request.form['name'].strip()
@@ -89,7 +95,7 @@ def edit(username):
     return render_template('users/edit.html', user = user)
 
 @bp.route('/login', methods=['GET', 'POST'])
-@redirect_to_setup()
+@redirect_to_setup
 def login():
     """Creates a new user"""    
     if current_user.is_authenticated:
@@ -101,8 +107,7 @@ def login():
         username = request.form['username'].strip()
         password = request.form['password'].strip()
 
-        user = users_repo.get(username)
-        print(user)
+        user = users_repo.get().get(username)
         if user is None or not user.check_password(password):
             print('Invalid username or password')
             return redirect(url_for('users.login'))
@@ -111,7 +116,7 @@ def login():
     return render_template('users/login.html')
 
 @bp.route('/logout')
-@redirect_to_setup()
+@redirect_to_setup
 def logout():
     logout_user()
     return redirect(url_for('blog.home'))

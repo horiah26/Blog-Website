@@ -3,4 +3,4 @@ import app
 
 instance = app.create_app()
 
-instance.run(threaded=True)
+instance.run()
