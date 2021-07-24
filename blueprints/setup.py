@@ -1,6 +1,6 @@
 """Route to setting up database"""
 from flask import (
-    Blueprint, redirect, render_template, request, url_for
+    Blueprint, redirect, render_template, flash, request, url_for
 )
 from models.db_auth import DbAuth
 from database.create_tables import CreateTables
@@ -24,7 +24,7 @@ def setup_db():
 
         tables = CreateTables()
         connection = Connection()
-        tables.create_tables(connection.get())
-
+        tables.create_tables(connection.get())             
+        flash("Database has been set up")
         return redirect(url_for('blog.home'))
     return render_template('database/setup.html')

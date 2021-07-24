@@ -485,8 +485,38 @@ input[type=submit]:hover {
     }
 }
 
-.user-info{
-    color:var(--theme_white);
-    margin:20px;
+.user-info {
+    color: var(--theme_white);
+    margin: 20px;
+}
 
+.flashes {
+    list-style-type: none;
+    color:darkcyan;
+
+    -moz-animation: cssAnimation 0s ease-in 4s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 4s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 4s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 4s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes cssAnimation {
+    to {
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
+}
+
+@-webkit-keyframes cssAnimation {
+    to {
+        width: 0;
+        height: 0;
+        visibility: hidden;
+    }
 }

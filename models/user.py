@@ -9,7 +9,7 @@ class User(UserMixin):
         self.username = username
         self.name = name
         self.email = email
-        self.set_password(password)
+        self.password = password
 
         if date_created is None:
             self.date_created = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
@@ -32,8 +32,8 @@ class User(UserMixin):
             return self
         return None
 
-    def set_password(self, password):
+    def set_hashed_password(self, password):
         self.password = generate_password_hash(password, method='pbkdf2:sha512:100')
 
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
+    def check_password(self, secret):
+        return check_password_hash(self.password, secret)

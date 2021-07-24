@@ -16,7 +16,7 @@ class RepoUserMemory(IUserRepo):
     def get(self, username):
         """Returns post by id"""
         user = next((user for user in self.users if user.username == username), None)
-        if user is not None:
+        if user:
             return user
 
     def get_all(self):

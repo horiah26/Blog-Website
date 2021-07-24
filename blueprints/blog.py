@@ -1,6 +1,6 @@
 """Blog blueprint"""
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, current_app, g
+    Blueprint, flash, redirect, render_template, request, flash, url_for, current_app, g
 )
 from flask_login import login_required, current_user
 from repos.post.methods import post_misc_generator as gen
@@ -40,6 +40,8 @@ def create():
             post_id = repo_holder.get().next_id()
 
             repo_holder.get().insert(Post(post_id, title, text, current_user.username))
+                 
+            flash("Post has been created")
             return redirect(url_for('blog.home'))
     return render_template('blog/create_post.html')
 
@@ -65,7 +67,8 @@ def update(post_id):
         elif not text:
             text = post.text
         else:
-            repo_holder.get().update(post_id, title, text)
+            repo_holder.get().update(post_id, title, text)                 
+            flash("Post has been updated")
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
 
@@ -75,5 +78,6 @@ def update(post_id):
 @permission_required(repo_holder)
 def delete(post_id):
     """Route to delete posts"""
-    repo_holder.get().delete(post_id)
+    repo_holder.get().delete(post_id)         
+    flash("Post has been deleted")
     return redirect(url_for('blog.home'))

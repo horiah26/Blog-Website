@@ -17,7 +17,15 @@
             <span class="bar"></span>
             <span class="bar"></span>
         </a>
-
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         <ul class="navbar-links">
             <li><a class="menu-buttons" href="{{url_for('blog.create')}}"><span>Write</span></a></li>
             <li><a class="menu-buttons" href="{{url_for('users.view_all')}}"><span>Users</span></a></li>

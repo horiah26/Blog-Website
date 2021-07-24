@@ -6,9 +6,9 @@
 
 {% block content %}
 <div class="edit-delete">
-    {% if current_user.username == user.username %}
+    {% if current_user.username == user.username or current_user.username == 'admin' %}
     <a class="action" href="{{url_for('users.edit', username = user.username)}}">Edit</a>
-    <a class="action" href="{{url_for('users.delete', username = user.username)}}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+    <a class="action" href="{{url_for('users.delete', username = user.username)}}" onclick="return confirm('ee you want to delete this item?');">Delete</a>
     {% endif %}
 </div>
 
