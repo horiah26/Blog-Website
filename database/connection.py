@@ -19,12 +19,3 @@ class Connection():
                                 user = db_config['user'],
                                 password = db_config['password'],
                                 host = db_config['host'])
-
-    #def config_exists(self):
-    #    """Checks if database configuration file exists"""
-    #    if current_app.config['DB_TYPE'] == 'db':
-    #        return os.path.isfile(self.config.CONFIG_PATH)
-    #    if current_app.config['DB_TYPE'] == 'memory':
-    #        return True
-    #    print("Error! DB_TYPE not configured correctly in app.config['DB_TYPE']. Type invalid")
-    #    return False

@@ -354,23 +354,37 @@ def test_admin_can_delete_another_user_profile(client):
     assert not b'username2' in client.get('/users').data
     logout(client)
 
-
-#def test_user_cannot_edit_another_user_profile(client):
-#    """Does not update an article if the input is an empty title"""
-#    logout(client)
-#    login(client, 'admin','admin')
-#    before = client.get('/users/username1/')
-#    assert  b"username1" in before.data
+def test_user_cannot_edit_another_user_profile(client):
+    """Does not update an article if the input is an empty title"""
+    logout(client)
+    login(client, 'username3','password3')
+    before = client.get('/users/username1/')
+    assert  b"username1" in before.data
     
-#    client.post('/users/username1/edit',
-#            data = dict(name='new name for test',
-#                        text='Ugly text for test sdhsdjherj3eh12k;op'), follow_redirects = True)
+    rv = client.post('/users/username1/edit',
+            data = dict(name='new name for test',
+                        text='Ugly text for test sdhsdjherj3eh12k;op'), follow_redirects = True)
 
-#    after = client.get('/users/username1')
-#    print(after.data)
+    assert b'You don&#39;t have permission to modify this profile' in rv.data    
+    logout(client)
+
+def test_user_cannot_delete_another_user_profile(client):
+    """Does not update an article if the input is an empty title"""
+    logout(client)
+    login(client, 'username3','password3')
+    before = client.get('/users/username1/')
+    assert  b"username1" in before.data
     
-#    assert b'new name for test' in after.data
-#    assert b'Ugly text for test sdhsdjherj3eh12k;op' in after.data
+    rv = client.get('/users/username1/delete', follow_redirects = True)
+
+    assert b'You don&#39;t have permission to modify this profile' in rv.data    
+    logout(client)
+    
+def test_display_name_not_username_shown_in_main_cards(client):
+    """Does not update an article if the input is an empty title"""
+    rv = client.get('/')
+    assert  b"username2" not in rv.data
+    assert b'Name 2'in rv.data
 
 @mock.patch("config.config.Config.config_file_exists", return_value = False)
 def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):

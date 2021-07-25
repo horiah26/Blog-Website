@@ -83,9 +83,10 @@ class RepoPostsDB(IPostRepo):
         """Returns previews of posts posts"""
         conn = connection.get()
         cur = conn.cursor()
-        cur.execute("SELECT post_id, title, LEFT(text, %s), owner, date_created, date_modified FROM posts;", [constant.PREVIEW_LENGTH])
+        cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.date_created, users.date_modified FROM posts JOIN users ON owner = username;", [constant.PREVIEW_LENGTH])
         previews = cur.fetchall()
-
+        first = cur.fetchone()
+        print(first)
         cur.close()
         conn.close()
 

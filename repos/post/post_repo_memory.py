@@ -6,6 +6,7 @@ from models.post import Post
 from models.post_preview import PostPreview
 from static import constant
 from .IPostRepo import IPostRepo
+from repos.user.user_repo_factory import UserRepoFactory
 
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
@@ -54,6 +55,10 @@ class RepoPostsMemory(IPostRepo):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
-        for post in posts:
-            previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], post.owner, post.date_created, post.date_modified))
+        users = UserRepoFactory().create_repo('memory').get_all()
+        for post in posts:            
+            for user in users:
+                if post.owner == user.username:
+                    previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, post.date_created, post.date_modified))
+                    break
         return previewed_posts
