@@ -52,7 +52,7 @@ class RepoUserDB(IUserRepo):
         conn.close()
 
     def update(self, username, name, email, password):
-        """Updates post by id"""
+        """Updates user by id"""
         conn = connection.get()
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
@@ -64,7 +64,7 @@ class RepoUserDB(IUserRepo):
         conn.close()
 
     def get_all(self):
-        """Returns all posts"""
+        """Returns all users"""
         conn = connection.get()
         cur = conn.cursor()
         cur.execute("SELECT * FROM users;")

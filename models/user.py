@@ -27,13 +27,16 @@ class User(UserMixin):
     def get_id(self):
         return self.username
 
-    def get(username):
-        if username == username:
+    def get(self, username):
+        """Returns this post"""
+        if self.username == username:
             return self
         return None
 
     def set_hashed_password(self, password):
+        """Hashes password"""
         self.password = generate_password_hash(password, method='pbkdf2:sha512:100')
 
     def check_password(self, secret):
+        """Checks hassed password"""
         return check_password_hash(self.password, secret)

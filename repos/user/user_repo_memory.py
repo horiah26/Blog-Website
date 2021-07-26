@@ -1,7 +1,5 @@
 """Memory posts repo"""
 import datetime
-from flask import abort
-
 from models.user import User
 from .IUserRepo import IUserRepo
 

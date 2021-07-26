@@ -25,6 +25,7 @@ class RepoPostsDB(IPostRepo):
             "INSERT INTO posts (title, text, owner, date_created, date_modified) \
             VALUES(%s, %s, %s, %s, %s)",
             (post.title, post.text, post.owner, post.date_created, post.date_modified))
+
         conn.commit()
         cur.close()
         conn.close()
@@ -85,8 +86,6 @@ class RepoPostsDB(IPostRepo):
         cur = conn.cursor()
         cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.date_created, users.date_modified FROM posts JOIN users ON owner = username;", [constant.PREVIEW_LENGTH])
         previews = cur.fetchall()
-        first = cur.fetchone()
-        print(first)
         cur.close()
         conn.close()
 

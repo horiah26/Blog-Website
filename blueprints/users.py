@@ -1,14 +1,13 @@
 """Blueprint for user management"""
 from flask import (
-    Blueprint, redirect, render_template, request, url_for, abort, flash, current_app, session, g
+    Blueprint, redirect, render_template, request, url_for, abort, flash, session
 )
 from flask_login import current_user, login_user, logout_user
+from werkzeug.security import generate_password_hash
 from models.user import User
 from models.user_repo_holder import UserRepoHolder
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
-
-from werkzeug.security import generate_password_hash, check_password_hash
 
 users_repo = UserRepoHolder()
 bp = Blueprint('users', __name__)
@@ -46,7 +45,7 @@ def sign_up():
         if error is not None:
             flash(error)
         else:
-            users_repo.get().insert(User(username, name, email, generate_password_hash(password)))  
+            users_repo.get().insert(User(username, name, email, generate_password_hash(password)))
             flash("You have signed up")
             return redirect(url_for('blog.home'))
     return render_template('users/sign_up.html')
@@ -54,13 +53,13 @@ def sign_up():
 @bp.route('/users', methods=['GET'])
 @redirect_to_setup
 def view_all():
-    """Route to home"""
+    """View all users"""
     return render_template('users/view_all.html', users = users_repo.get().get_all())
 
 @bp.route('/users/<username>/', methods=['GET'])
 @redirect_to_setup
 def view_user(username):
-    """Route to home"""
+    """View user"""
     if users_repo.get().get(username):
         return render_template('users/view.html', user = users_repo.get().get(username))
     abort(404)
@@ -70,8 +69,8 @@ def view_user(username):
 @redirect_to_setup
 @permission_required()
 def delete(username):
-    """Route to home"""
-    users_repo.get().delete(username)     
+    """Delete user"""
+    users_repo.get().delete(username)
     flash("User deleted")
     return redirect(url_for('blog.home'))
 
@@ -80,7 +79,7 @@ def delete(username):
 @redirect_to_setup
 @permission_required()
 def edit(username):
-    """Route to home"""
+    """Edit user"""
     user = users_repo.get().get(username)
     if user.username != current_user.username and current_user.username != 'admin':
         print('Only the User cand edit their post')
@@ -92,7 +91,7 @@ def edit(username):
 
         error = None
         if error is not None:
-            print(error)                 
+            print(error)
             flash(error)
         else:
             if not name:
@@ -100,7 +99,7 @@ def edit(username):
             elif not email:
                 email = user.email
             else:
-                users_repo.get().update(username, name, email, user.password)                     
+                users_repo.get().update(username, name, email, user.password)
                 flash("User profile has been modified")
                 return redirect(url_for('users.view_user', username = user.username))
     return render_template('users/edit.html', user = user)
@@ -108,7 +107,7 @@ def edit(username):
 @bp.route('/login', methods=['GET', 'POST'])
 @redirect_to_setup
 def login():
-    """Creates a new user"""    
+    """Log in user"""
     if current_user.is_authenticated:
         return redirect(url_for('blog.home'))
 
@@ -118,18 +117,20 @@ def login():
         username = request.form['username'].strip()
         password = request.form['password'].strip()
 
-        user = users_repo.get().get(username)    
+        user = users_repo.get().get(username)
         if user is None or not user.check_password(password):
             flash('Invalid username or password')
             return redirect(url_for('users.login'))
-        login_user(user)        
+        login_user(user)
         flash("You are logged in")
         return redirect(url_for('blog.home'))
     return render_template('users/login.html')
 
 @bp.route('/logout')
 @redirect_to_setup
+
 def logout():
-    logout_user()     
+    """Log out user"""
+    logout_user()
     flash("You are logged out")
     return redirect(url_for('blog.home'))

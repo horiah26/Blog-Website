@@ -1,6 +1,7 @@
 """Seed data, posts for blog"""
-from models.user import User
 from werkzeug.security import generate_password_hash
+from models.user import User
+
 user1 = User("username1", "Name 1", "email1@g.com", generate_password_hash("password1", method='pbkdf2:sha512:100'))
 user2 = User("username2", "Name 2", "email2@g.com", generate_password_hash("password2", method='pbkdf2:sha512:100'))
 user3 = User("username3", "Name 3", "email3@g.com", generate_password_hash("password3", method='pbkdf2:sha512:100'))

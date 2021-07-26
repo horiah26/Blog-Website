@@ -5,10 +5,10 @@ from flask import (
 from models.db_auth import DbAuth
 from database.create_tables import CreateTables
 from database.connection import Connection
-from config.config import Config
+from config.config_db import ConfigDB
 
 bp = Blueprint('setup', __name__)
-config = Config()
+config = ConfigDB()
 
 @bp.route('/setup', methods=['GET', 'POST'])
 def setup_db():
@@ -20,11 +20,9 @@ def setup_db():
         host = request.form['host'].strip()
 
         db_auth = DbAuth(database, host, user, password)
-        config.append(db_auth)
+        config.save(db_auth)
 
-        tables = CreateTables()
-        connection = Connection()
-        tables.create_tables(connection.get())             
+        CreateTables().create_tables(Connection().get())
         flash("Database has been set up")
         return redirect(url_for('blog.home'))
     return render_template('database/setup.html')

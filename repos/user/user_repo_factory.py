@@ -9,7 +9,7 @@ class UserRepoFactory():
     def create_repo(repo_type):
         """Creates repo from string"""
         if repo_type == "memory":
-            return RepoUserMemory(seed.get())        
+            return RepoUserMemory(seed.get())
         if repo_type == "db":
             return RepoUserDB(seed.get())
         print("Invalid factory type")

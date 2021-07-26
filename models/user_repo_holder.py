@@ -1,5 +1,5 @@
 """A class that holds posts so they can be operated on by routes in blueprints"""
-from flask import current_app, g
+from flask import current_app
 from repos.user.user_repo_factory import UserRepoFactory
 
 class UserRepoHolder():

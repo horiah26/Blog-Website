@@ -1,13 +1,10 @@
 """Post tests"""
 import datetime
 from unittest import mock
-from flask import request
 import pytest
+from flask_login import LoginManager
 from app import create_app
-import flask_login
-from flask_login import current_user, login_user, LoginManager
 from repos.user.user_repo_factory import UserRepoFactory
-from models.user import User
 
 
 @pytest.fixture()
@@ -17,7 +14,7 @@ def client():
     app.config.from_mapping(
         SECRET_KEY="secret",
         DB_TYPE = "memory")
-    
+
     login_manager = LoginManager(app)
     user_repo = UserRepoFactory.create_repo(app.config['DB_TYPE'])
     @login_manager.user_loader
@@ -30,6 +27,7 @@ def client():
 
 
 def login(client, username, password):
+    """Logs user in"""
     return client.post('/login', data=dict(
         username=username,
         password=password
@@ -37,6 +35,7 @@ def login(client, username, password):
 
 
 def logout(client):
+    """Logs user out"""
     return client.get('/logout', follow_redirects=True)
 
 def test_homepage_works(client):
@@ -82,8 +81,9 @@ def test_opens_last_post_from_seed(client):
 def test_error404_nonexistent_post(client):
     """Returns 404 if post at index not found"""
     assert client.get('/100/').status_code == 404
-    
+
 def test_can_log_in_user_redirects_to_homepage(client):
+    """Tests if page is rediected after log in"""
     login = client.post('/login',
                 data = dict(username='username3',
                     password = 'password3'), follow_redirects=True)
@@ -93,32 +93,32 @@ def test_can_log_in_user_redirects_to_homepage(client):
     assert b'blog-description' in login.data
     assert b'wrapper' in login.data
     assert b'welcome' in login.data
-        
+
 def test_does_not_log_in_if_wrong_password(client):
+    """Tests if page is not logged in if wrong password"""
     login = client.post('/login',
                 data = dict(username='username3',
                     password = 'password4'), follow_redirects=True)
 
     assert login.status_code == 200
-    
+
     assert b'<input type="text" class="form-title" name="username"><br>' in login.data
     assert b'<input type="password" class="form-title" name="password"><br>' in login.data
 
     assert b'blog-description' not in login.data
     assert b'wrapper' not in login.data
     assert b'welcome' not in login.data
-        
+
 def admin_can_update_post(client):
-    """Can update post"""    
+    """Can update post"""
     rv = login(client, 'admin', 'admin')
 
     data = dict(title = 'Ugly title for test lsdkhnsdpbjeri', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq')
 
     rv = client.post('/6/update', data=data, follow_redirects=True)
-    
-    print(rv.data)
+
     assert b'Post has been updated' in rv.data
-    
+
     rv2 = client.get('/6/')
 
     assert b'Ugly title for test lsdkhnsdpbjeri' in rv2.data
@@ -127,18 +127,19 @@ def admin_can_update_post(client):
     logout(client)
 
 def test_can_sign_up_user(client):
+    """Tests if user can sign up"""
     sign_up = client.post('/signup',
                 data = dict(username='username5',
                     name='Name nr 5',
                     email = 'username5@email.com',
                     password = 'password5',
                     confirm_password = 'password5'), follow_redirects=True)
-    
+
     assert sign_up.status_code == 200
 
 
     assert client.get('/').status_code == 200
-    
+
 def test_can_log_in(client):
     """Make sure login and logout works."""
 
@@ -159,7 +160,7 @@ def test_does_not_write_article_if_not_logged_in(client):
     assert b'Please log in to access this page.' in redirect.data
 
 def test_write_article(client):
-    """Writes a new article"""    
+    """Writes a new article"""
     login(client, 'username1', 'password1')
 
     client.post('/create',
@@ -200,7 +201,7 @@ def test_does_not_write_article_with_empty_title(client):
     assert client.get('/10/').status_code == 404
 
 def test_cannot_delete_post_if_not_logged_in(client):
-    """Can delete post"""    
+    """Can delete post"""
     logout(client)
     assert client.get('/3/').status_code == 200
 
@@ -209,20 +210,19 @@ def test_cannot_delete_post_if_not_logged_in(client):
     assert client.get('/3/').status_code == 200
 
 def test_cannot_delete_post_if_logged_in_as_another_user(client):
-    """Can delete post"""    
+    """Cannot delete post if logged in as another user"""
     rv = login(client, 'username2', 'password2')
     assert client.get('/3/').status_code == 200
 
     rv = client.get('/3/delete', follow_redirects=True)
-    print(rv.data)
     assert b'You don&#39;t have permission to modify this post' in rv.data
     assert client.get('/3/').status_code == 200
 
     logout(client)
-    
+
 def test_can_delete_post_if_logged_in(client):
-    """Can delete post"""    
-    rv = login(client, 'username1', 'password1')
+    """Can delete post"""
+    login(client, 'username1', 'password1')
     assert client.get('/3/').status_code == 200
 
     client.get('/3/delete')
@@ -230,10 +230,9 @@ def test_can_delete_post_if_logged_in(client):
     assert client.get('/3/').status_code == 404
     logout(client)
 
-    
 def test_admin_can_delete_other_users_post(client):
-    """Can delete post"""    
-    rv = login(client, 'admin', 'admin')
+    """Can delete post"""
+    login(client, 'admin', 'admin')
     assert client.get('/7/').status_code == 200
 
     client.get('/7/delete')
@@ -242,18 +241,14 @@ def test_admin_can_delete_other_users_post(client):
     logout(client)
 
 def test_can_update_post(client):
-    """Can update post"""    
+    """Can update post"""
     rv = login(client, 'username2', 'password2')
 
     data = dict(title = 'Ugly title for test lsdkhnsdpbjeri', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq')
 
     rv = client.post('/5/update', data=data, follow_redirects=True)
-    
-    print(rv.data)
     assert b'Post has been updated' in rv.data
-    
     rv2 = client.get('/5/')
-
     assert b'Ugly title for test lsdkhnsdpbjeri' in rv2.data
     assert b'Ugly text for test asfjkoas' in rv2.data
 
@@ -261,12 +256,12 @@ def test_can_update_post(client):
 
 def test_does_not_update_article_with_empty_text(client):
     """Does not update an article if the input is an empty text"""
-    rv = login(client, 'username1', 'password1')
+    login(client, 'username1', 'password1')
     before = client.get('/4/')
     assert  b"<title>\nDuis a lectus\n</title>" in before.data
-    rv = client.post('/4/update',
-                     data = dict(title='Ugly title for test lsdkhnsdpbjeri',
-                                 text=' '), follow_redirects = True)
+    client.post('/4/update',
+                data = dict(title='Ugly title for test lsdkhnsdpbjeri',
+                            text=' '), follow_redirects = True)
     after = client.get('/4/')
     assert  b"<title>\nDuis a lectus\n</title>" in after.data
     assert  b"<title>\nUgly title for test lsdkhnsdpbjeri\n</title>" not in after.data
@@ -288,64 +283,61 @@ def test_does_not_update_article_with_empty_title(client):
 def test_can_delete_all_posts_then_create_new_one_at_index1(client):
     """Deletes all posts then creates a new one"""
     login(client, 'username1', 'password1')
-    assert client.get('/1/delete', follow_redirects=True).status_code == 200    
+    assert client.get('/1/delete', follow_redirects=True).status_code == 200
     assert client.get('/1/').status_code == 404
-    assert client.get('/2/delete', follow_redirects=True).status_code == 200    
+    assert client.get('/2/delete', follow_redirects=True).status_code == 200
     assert client.get('/2/').status_code == 404
-    assert client.get('/4/delete', follow_redirects=True).status_code == 200    
+    assert client.get('/4/delete', follow_redirects=True).status_code == 200
     assert client.get('/4/').status_code == 404
-    assert client.get('/9/delete', follow_redirects=True).status_code == 200    
+    assert client.get('/9/delete', follow_redirects=True).status_code == 200
     assert client.get('/9/').status_code == 404
     logout(client)
 
-    login(client, 'username2', 'password2')    
-    assert client.get('/5/delete', follow_redirects=True).status_code == 200    
+    login(client, 'username2', 'password2')
+    assert client.get('/5/delete', follow_redirects=True).status_code == 200
     assert client.get('/5/').status_code == 404
-    assert client.get('/6/delete', follow_redirects=True).status_code == 200    
+    assert client.get('/6/delete', follow_redirects=True).status_code == 200
     assert client.get('/6/').status_code == 404
-    assert client.get('/8/delete', follow_redirects=True).status_code == 200    
+    assert client.get('/8/delete', follow_redirects=True).status_code == 200
     assert client.get('/8/').status_code == 404
 
     assert client.get('/1/').status_code == 404
     assert client.get('/9/').status_code == 404
     assert client.get('/10/').status_code == 404
-    
-    login(client, 'username2', 'password2')    
+
+    login(client, 'username2', 'password2')
 
     client.post('/create',
                     data=dict(title='Ugly title for test lsdkhnsdpbjeri',
                     text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'), follow_redirects = True)
 
-    newpost = client.get('/1/')  
-    print(newpost.data)
+    newpost = client.get('/1/')
     assert newpost.status_code == 200
 
     assert b'Ugly title for test lsdkhnsdpbjeri' in newpost.data
     assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' in newpost.data
-    
+
 def test_admin_can_edit_another_user_profile(client):
     """Does not update an article if the input is an empty title"""
     logout(client)
     login(client, 'admin','admin')
     before = client.get('/users/username1/')
     assert  b"username1" in before.data
-    
+
     client.post('/users/username1/edit',
             data = dict(name='new name for test',
                         email='Ugly text for test sdhsdjherj3eh12k;op'), follow_redirects = True)
 
     after = client.get('/users/username1/')
-    print(after.data)
     assert b'new name for test' in after.data
     assert b'Ugly text for test sdhsdjherj3eh12k;op' in after.data
-    
-        
+
 def test_admin_can_delete_another_user_profile(client):
     """Does not update an article if the input is an empty title"""
     logout(client)
     login(client, 'admin','admin')
     before = client.get('/users/username2/')
-    assert b"username2" in before.data    
+    assert b"username2" in before.data
     assert b'username2' in client.get('/users').data
 
     rv = client.get('/users/username2/delete', follow_redirects = True)
@@ -360,12 +352,12 @@ def test_user_cannot_edit_another_user_profile(client):
     login(client, 'username3','password3')
     before = client.get('/users/username1/')
     assert  b"username1" in before.data
-    
+
     rv = client.post('/users/username1/edit',
             data = dict(name='new name for test',
                         text='Ugly text for test sdhsdjherj3eh12k;op'), follow_redirects = True)
 
-    assert b'You don&#39;t have permission to modify this profile' in rv.data    
+    assert b'You don&#39;t have permission to modify this profile' in rv.data
     logout(client)
 
 def test_user_cannot_delete_another_user_profile(client):
@@ -374,12 +366,12 @@ def test_user_cannot_delete_another_user_profile(client):
     login(client, 'username3','password3')
     before = client.get('/users/username1/')
     assert  b"username1" in before.data
-    
+
     rv = client.get('/users/username1/delete', follow_redirects = True)
 
-    assert b'You don&#39;t have permission to modify this profile' in rv.data    
+    assert b'You don&#39;t have permission to modify this profile' in rv.data
     logout(client)
-    
+
 def test_display_name_not_username_shown_in_main_cards(client):
     """Does not update an article if the input is an empty title"""
     rv = client.get('/')

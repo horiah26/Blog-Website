@@ -3,11 +3,11 @@ from functools import wraps
 from flask import redirect, url_for
 from database.connection import Connection
 from database.create_tables import CreateTables
-from config.config import Config
+from config.config_db import ConfigDB
 
 connection = Connection()
 create_tables = CreateTables()
-config = Config()
+config = ConfigDB()
 
 def redirect_to_setup(f):
     """Added so app could be inserted as a parameter in the other wrapper"""
