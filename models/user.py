@@ -1,9 +1,8 @@
 """The user class"""
 import datetime
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(UserMixin):
+class User():
     """The user class"""
     def __init__(self, username, name, email, password, date_created = None, date_modified = None):
         self.username = username
@@ -24,8 +23,6 @@ class User(UserMixin):
     def __repr__(self):
         return f'<User: {self.username}>'
 
-    def get_id(self):
-        return self.username
 
     def get(self, username):
         """Returns this post"""

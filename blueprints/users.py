@@ -2,7 +2,6 @@
 from flask import (
     Blueprint, redirect, render_template, request, url_for, abort, flash, session
 )
-from flask_login import current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash
 from models.user import User
 from models.user_repo_holder import UserRepoHolder
@@ -81,7 +80,7 @@ def delete(username):
 def edit(username):
     """Edit user"""
     user = users_repo.get().get(username)
-    if user.username != current_user.username and current_user.username != 'admin':
+    if user.username != session['username'] and session['username'] != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
 
@@ -108,9 +107,6 @@ def edit(username):
 @redirect_to_setup
 def login():
     """Log in user"""
-    if current_user.is_authenticated:
-        return redirect(url_for('blog.home'))
-
     if request.method == 'POST':
         session.pop('username', None)
 
@@ -121,7 +117,7 @@ def login():
         if user is None or not user.check_password(password):
             flash('Invalid username or password')
             return redirect(url_for('users.login'))
-        login_user(user)
+        session['username'] = user.username
         flash("You are logged in")
         return redirect(url_for('blog.home'))
     return render_template('users/login.html')
@@ -131,6 +127,6 @@ def login():
 
 def logout():
     """Log out user"""
-    logout_user()
+    session.pop('username', None)
     flash("You are logged out")
     return redirect(url_for('blog.home'))

@@ -2,10 +2,7 @@
 import datetime
 from unittest import mock
 import pytest
-from flask_login import LoginManager
 from app import create_app
-from repos.user.user_repo_factory import UserRepoFactory
-
 
 @pytest.fixture()
 def client():
@@ -14,14 +11,6 @@ def client():
     app.config.from_mapping(
         SECRET_KEY="secret",
         DB_TYPE = "memory")
-
-    login_manager = LoginManager(app)
-    user_repo = UserRepoFactory.create_repo(app.config['DB_TYPE'])
-    @login_manager.user_loader
-    def load_user(username):
-        return user_repo.get(username)
-    login_manager.login_view = 'users.login'
-
     app.app_context().push()
     yield app.test_client()
 
@@ -157,7 +146,7 @@ def test_does_not_write_article_if_not_logged_in(client):
                 data = dict(title='Ugly title for test lsdkhnsdpbjeri',
                             text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'), follow_redirects=True)
 
-    assert b'Please log in to access this page.' in redirect.data
+    assert b'You must be logged in to do this' in redirect.data
 
 def test_write_article(client):
     """Writes a new article"""
@@ -167,7 +156,7 @@ def test_write_article(client):
                 data = dict(title='Ugly title for test lsdkhnsdpbjeri',
                             text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'))
 
-    newpost = client.get('/9/').data #8 posts in seed
+    newpost = client.get('/10/').data #9 posts in seed
 
     assert b'Ugly title for test lsdkhnsdpbjeri' in newpost
     assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' in newpost
@@ -178,27 +167,27 @@ def test_does_not_write_article_with_empty_text(client):
     """Does not write article with empty text"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/9/').status_code == 200 #post 9 exists (8 from seed + 1 created previously)
-    assert client.get('/10/').status_code == 404 #post 10 does not exist
+    assert client.get('/10/').status_code == 200 #post 10 exists (9 from seed + 1 created previously)
+    assert client.get('/11/').status_code == 404 #post 11 does not exist
 
     client.post('/create',
                 data = dict(title='Ugly title for test lsdkhnsdpbjeri',
                             text=' '))
 
-    assert client.get('/10/').status_code == 404
+    assert client.get('/11/').status_code == 404
 
 def test_does_not_write_article_with_empty_title(client):
     """Does not write article with empty title"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/9/').status_code == 200 #post 9 exists (8 from seed + 1 created previously)
-    assert client.get('/10/').status_code == 404 #post 10 does not exist
+    assert client.get('/10/').status_code == 200 #post 10 exists (9 from seed + 1 created previously))
+    assert client.get('/11/').status_code == 404 #post 11 does not exist
 
     rv = client.post('/create',
                 data = dict(title=' ',
                             text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'))
     assert b'Title is required' in rv.data
-    assert client.get('/10/').status_code == 404
+    assert client.get('/11/').status_code == 404
 
 def test_cannot_delete_post_if_not_logged_in(client):
     """Can delete post"""
@@ -206,7 +195,8 @@ def test_cannot_delete_post_if_not_logged_in(client):
     assert client.get('/3/').status_code == 200
 
     rv = client.get('/3/delete', follow_redirects=True)
-    assert b'Please log in to access this page' in rv.data
+    print(rv.data)
+    assert b'You don&#39;t have permission to modify this post' in rv.data
     assert client.get('/3/').status_code == 200
 
 def test_cannot_delete_post_if_logged_in_as_another_user(client):
@@ -289,6 +279,7 @@ def test_can_delete_all_posts_then_create_new_one_at_index1(client):
     assert client.get('/2/').status_code == 404
     assert client.get('/4/delete', follow_redirects=True).status_code == 200
     assert client.get('/4/').status_code == 404
+
     assert client.get('/9/delete', follow_redirects=True).status_code == 200
     assert client.get('/9/').status_code == 404
     logout(client)
@@ -378,7 +369,7 @@ def test_display_name_not_username_shown_in_main_cards(client):
     assert  b"username2" not in rv.data
     assert b'Name 2'in rv.data
 
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
+@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
 def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):
     """Tests if homepage redirects if no db_config"""
     redirected = client.get('/', follow_redirects=True)
@@ -391,7 +382,7 @@ def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
+@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
 def test_create_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if /create redirects if no db_config"""
     redirected = client.get('/create', follow_redirects=True)
@@ -401,7 +392,7 @@ def test_create_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
+@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
 def test_update_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if /update redirects if no db_config"""
     redirected = client.get('/1/update', follow_redirects=True)
@@ -411,7 +402,7 @@ def test_update_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
+@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
 def test_index_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if article at index redirects if no db_config"""
     redirected = client.get('/1/', follow_redirects=True)

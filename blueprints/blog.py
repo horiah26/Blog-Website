@@ -1,14 +1,14 @@
 """Blog blueprint"""
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for
+    Blueprint, flash, redirect, render_template, request, url_for, session
 )
-from flask_login import login_required, current_user
 from repos.post.methods import post_misc_generator as gen
 from models.post import Post
 from models.repo_holder import RepoHolder
 from database.connection import Connection
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
+from blueprints.decorators.login_required import login_required
 
 repo_holder = RepoHolder()
 connection = Connection()
@@ -39,7 +39,7 @@ def create():
         else:
             post_id = repo_holder.get().next_id()
 
-            repo_holder.get().insert(Post(post_id, title, text, current_user.username))
+            repo_holder.get().insert(Post(post_id, title, text, session['username']))
 
             flash("Post has been created")
             return redirect(url_for('blog.home'))
@@ -52,7 +52,6 @@ def show(post_id):
     return render_template('blog/show_post.html', post=repo_holder.get().get(post_id))
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
-@login_required
 @redirect_to_setup
 @permission_required(repo_holder)
 def update(post_id):
@@ -73,7 +72,6 @@ def update(post_id):
     return render_template('blog/update_post.html', post=post)
 
 @bp.route('/<int:post_id>/delete', methods=['GET'])
-@login_required
 @redirect_to_setup
 @permission_required(repo_holder)
 def delete(post_id):
