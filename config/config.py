@@ -16,6 +16,5 @@ class Config():
 
     def save(self, new_data):
         """Writes json_data to config file"""
-        with open(self.CONFIG_PATH, 'a') as file:
-
-            json.dump(new_data.json, file)
+        with open(self.CONFIG_PATH, 'w') as file:
+            json.dump(new_data, file)

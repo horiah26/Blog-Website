@@ -492,7 +492,6 @@ input[type=submit]:hover {
 
 .flashes {
     list-style-type: none;
-    color:darkcyan;
 
     -moz-animation: cssAnimation 0s ease-in 4s forwards;
     /* Firefox */
@@ -503,6 +502,20 @@ input[type=submit]:hover {
     animation: cssAnimation 0s ease-in 4s forwards;
     -webkit-animation-fill-mode: forwards;
     animation-fill-mode: forwards;
+}
+
+    .flashes li {
+        color:tomato;
+    }
+
+#username {
+    color: darkcyan;
+}
+
+#username:hover {
+    color: var(--theme_white);
+    transition-duration: 0.3s;
+    display: block;
 }
 
 @keyframes cssAnimation {

@@ -10,7 +10,7 @@ def permission_required(repo_holder = None):
         def wrapped(*args, **kwargs):
             """decorator"""
             if 'username' in kwargs:
-                if session['username'] != kwargs['username'] and session['username'] != 'admin':
+                if 'username' not in session or session['username'] != kwargs['username'] and session['username'] != 'admin':
                     flash("You don't have permission to modify this profile")
                     return redirect(url_for('blog.home'))
             if 'post_id' in kwargs:

@@ -9,9 +9,9 @@
     <div class="view-post-controls">
         <h1 class="crud-title">{{post.title}}</h1>
         <div class="crud-date">
+            <p> Author: {{post.owner}}</p>
             <p id="view-post-date">Written on: {{post.date_created}}</p>
             <p id="view-post-date">Last edited on: {{post.date_modified}}</p>
-            <p> Author: {{post.owner}}</p>
         </div>
         <div class="edit-delete">
             {% if session['username'] == post.owner or session['username'] == 'admin' %}

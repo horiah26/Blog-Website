@@ -3,8 +3,7 @@ from flask import (
     Blueprint, redirect, render_template, flash, request, url_for
 )
 from models.db_auth import DbAuth
-from database.create_tables import CreateTables
-from database.connection import Connection
+from database.database import Database
 from config.config_db import ConfigDB
 
 bp = Blueprint('setup', __name__)
@@ -20,9 +19,8 @@ def setup_db():
         host = request.form['host'].strip()
 
         db_auth = DbAuth(database, host, user, password)
-        config.save(db_auth)
-
-        CreateTables().create_tables(Connection().get())
+        config.save(db_auth.json)
+        Database().create_update_tables()
         flash("Database has been set up")
         return redirect(url_for('blog.home'))
     return render_template('database/setup.html')

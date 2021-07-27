@@ -2,11 +2,12 @@
 import datetime
 import psycopg2
 
+from flask import flash
 from models.user import User
-from database.connection import Connection
+from database.database import Database
 from .IUserRepo import IUserRepo
 
-connection = Connection()
+db = Database()
 
 class RepoUserDB(IUserRepo):
     """Repo for posts in memory"""
@@ -17,19 +18,25 @@ class RepoUserDB(IUserRepo):
 
     def insert(self, user):
         """Add a new user"""
-        conn = connection.get()
+        conn = db.get_connection()
         cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO users (username, name, email, password, date_created, date_modified) \
-            VALUES(%s, %s, %s, %s, %s, %s)",
-            (user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
+        try:
+            cur.execute(
+                "INSERT INTO users (username, name, email, password, date_created, date_modified) \
+                VALUES(%s, %s, %s, %s, %s, %s)",
+                (user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
+
+        except Exception as error:
+            print(error)
+            flash(error)
+
         conn.commit()
         cur.close()
         conn.close()
 
     def get(self, username):
         """Returns user object by username"""
-        conn = connection.get()
+        conn = db.get_connection()
         cur = conn.cursor()
         cur.execute("SELECT * FROM users WHERE username = %s;", (username,))
         user = cur.fetchone()
@@ -44,16 +51,20 @@ class RepoUserDB(IUserRepo):
 
     def delete(self, username):
         """Deletes user by username"""
-        conn = connection.get()
+        conn = db.get_connection()
         cur = conn.cursor()
-        cur.execute("DELETE FROM users WHERE username = %s;", (username,))
+        try:
+            cur.execute("DELETE FROM users WHERE username = %s;", (username,))
+        except Exception as error:
+            print(error)
+            flash(error)
         conn.commit()
         cur.close()
         conn.close()
 
     def update(self, username, name, email, password):
         """Updates user by id"""
-        conn = connection.get()
+        conn = db.get_connection()
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
@@ -65,9 +76,14 @@ class RepoUserDB(IUserRepo):
 
     def get_all(self):
         """Returns all users"""
-        conn = connection.get()
+        conn = db.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM users;")
+        try:
+            cur.execute("SELECT * FROM users;")
+        except Exception as error:
+            print(error)
+            flash(error)
+            return []
         rows = cur.fetchall()
         cur.close()
         conn.close()

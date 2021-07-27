@@ -11,6 +11,6 @@ def login_required(f):
             session['username']
         except Exception:
             flash("You must be logged in to do this")
-            return redirect(url_for('users.login'))
+            return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return wrapped

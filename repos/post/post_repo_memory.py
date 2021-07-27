@@ -1,7 +1,5 @@
 """Memory posts repo """
 import datetime
-from flask import abort
-
 from models.post import Post
 from models.post_preview import PostPreview
 from static import constant
@@ -18,7 +16,6 @@ class RepoPostsMemory(IPostRepo):
         post = next((post for post in self.posts if post.post_id == post_id), None)
         if post is not None:
             return post
-        abort(404)
 
     def get_all(self):
         """Returns all posts"""

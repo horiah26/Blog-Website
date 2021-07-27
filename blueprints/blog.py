@@ -5,17 +5,19 @@ from flask import (
 from repos.post.methods import post_misc_generator as gen
 from models.post import Post
 from models.repo_holder import RepoHolder
-from database.connection import Connection
+from database.database import Database
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
+from blueprints.decorators.create_tables import create_tables
 
 repo_holder = RepoHolder()
-connection = Connection()
+db = Database()
 bp = Blueprint('blog', __name__)
 
 @bp.route('/', methods=['GET'])
 @redirect_to_setup
+@create_tables
 def home():
     """Route to home"""
     return render_template('blog/home.html', posts=repo_holder.get().get_previews(), generator=gen)
@@ -23,6 +25,7 @@ def home():
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @redirect_to_setup
+@create_tables
 def create():
     """Route to creating new posts"""
     if request.method == 'POST':
@@ -47,13 +50,18 @@ def create():
 
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
+@create_tables
 def show(post_id):
     """Route to show post by id"""
-    return render_template('blog/show_post.html', post=repo_holder.get().get(post_id))
+    if repo_holder.get().get(post_id):
+        return render_template('blog/show_post.html', post=repo_holder.get().get(post_id))
+    flash('Post not found')
+    return redirect(url_for('blog.home'))
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
 @redirect_to_setup
 @permission_required(repo_holder)
+@create_tables
 def update(post_id):
     """Route to update existing posts"""
     post = repo_holder.get().get(post_id)
@@ -74,6 +82,7 @@ def update(post_id):
 @bp.route('/<int:post_id>/delete', methods=['GET'])
 @redirect_to_setup
 @permission_required(repo_holder)
+@create_tables
 def delete(post_id):
     """Route to delete posts"""
     repo_holder.get().delete(post_id)
