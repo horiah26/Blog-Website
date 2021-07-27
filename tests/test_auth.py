@@ -1,5 +1,4 @@
 """Authentication and login/logout tests"""
-import pytest
 from conftest import login, logout
 
 def test_does_not_log_in_if_wrong_password(client):
@@ -7,9 +6,8 @@ def test_does_not_log_in_if_wrong_password(client):
     login = client.post('/login',
                 data = dict(username='username3',
                     password = 'password4'), follow_redirects=True)
-
+    
     assert login.status_code == 200
-
     assert b'<input type="text" class="form-title" name="username"><br>' in login.data
     assert b'<input type="password" class="form-title" name="password"><br>' in login.data
 
@@ -77,7 +75,7 @@ def test_can_delete_post_if_logged_in(client):
     assert client.get('/3/').status_code == 200
 
     client.get('/3/delete')
-
+    print(client.get('/3/', follow_redirects=True).data)
     assert b'Post not found' in client.get('/3/', follow_redirects=True).data
     logout(client)
 

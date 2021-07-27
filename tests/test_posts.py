@@ -1,7 +1,6 @@
 """Post tests"""
 import datetime
 from unittest import mock
-import pytest
 from conftest import login, logout
 
 def test_homepage_works(client):
@@ -131,7 +130,7 @@ def test_admin_can_delete_other_users_post(client):
     assert client.get('/7/').status_code == 200
 
     client.get('/7/delete')
-
+    print(client.get('/7/', follow_redirects=True).data)
     assert b'Post not found' in client.get('/7/', follow_redirects=True).data
     logout(client)
 

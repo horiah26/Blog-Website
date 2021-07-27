@@ -1,12 +1,10 @@
 """Creates instance of Flask app"""
-from flask import Flask
+from flask import Flask, session
 from models.user import User
 from blueprints import setup
 from blueprints import users
 from blueprints import blog
 from blueprints import auth
-from database.database import Database
-db = Database()
 
 def create_app():
     """Creates app"""
@@ -15,7 +13,7 @@ def create_app():
         SECRET_KEY="secret",
         DB_TYPE = "memory")
     app.app_context().push()
-
+    
     app.register_blueprint(setup.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)

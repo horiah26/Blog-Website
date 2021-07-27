@@ -13,6 +13,6 @@ def redirect_to_setup(f):
         """Redirects to setup page if db not configured"""
         if not config.config_file_exists():
             return redirect(url_for('setup.setup_db'))
-        database.create_update_tables()
+
         return f(*args, **kwargs)
     return redirect_if_no_db

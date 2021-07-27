@@ -11,7 +11,6 @@ class ConfigDB(Config):
         super().__init__()
         self.db_version = "1"
 
-
     def get_db_info(self):
         """Returns database configuration information"""
         try:

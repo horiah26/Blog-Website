@@ -41,4 +41,12 @@ INSERT INTO users SELECT * FROM users_temp;
 
 DROP TABLE users_temp;
 
-ALTER TABLE posts ADD FOREIGN KEY (owner) REFERENCES users(username);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'posts_owner_fkey') THEN
+        ALTER TABLE posts
+            ADD CONSTRAINT posts_owner_fkey
+            FOREIGN KEY (owner) REFERENCES users(username);
+    END IF;
+END;
+$$;

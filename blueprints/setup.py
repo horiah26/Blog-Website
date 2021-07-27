@@ -7,7 +7,6 @@ from database.database import Database
 from config.config_db import ConfigDB
 
 bp = Blueprint('setup', __name__)
-config = ConfigDB()
 
 @bp.route('/setup', methods=['GET', 'POST'])
 def setup_db():
@@ -19,7 +18,7 @@ def setup_db():
         host = request.form['host'].strip()
 
         db_auth = DbAuth(database, host, user, password)
-        config.save(db_auth.json)
+        ConfigDB().save(db_auth.json)
         Database().create_update_tables()
         flash("Database has been set up")
         return redirect(url_for('blog.home'))

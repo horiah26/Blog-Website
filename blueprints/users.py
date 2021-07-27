@@ -34,8 +34,11 @@ def view_user(username):
 @create_tables
 def delete(username):
     """Delete user"""
-    users_repo.get().delete(username)
-    flash("User deleted")
+    try:
+        users_repo.get().delete(username)
+        flash("User deleted")
+    except Exception:
+        flash("Delete user's posts first")
     return redirect(url_for('blog.home'))
 
 @bp.route('/users/<username>/edit', methods=['GET', 'POST'])

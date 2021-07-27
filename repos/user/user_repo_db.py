@@ -53,11 +53,7 @@ class RepoUserDB(IUserRepo):
         """Deletes user by username"""
         conn = db.get_connection()
         cur = conn.cursor()
-        try:
-            cur.execute("DELETE FROM users WHERE username = %s;", (username,))
-        except Exception as error:
-            print(error)
-            flash(error)
+        cur.execute("DELETE FROM users WHERE username = %s;", (username,))
         conn.commit()
         cur.close()
         conn.close()
