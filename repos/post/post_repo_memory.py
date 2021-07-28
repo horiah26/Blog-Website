@@ -48,14 +48,23 @@ class RepoPostsMemory(IPostRepo):
             post_id = max(post.post_id for post in self.posts) + 1
         return post_id
 
-    def get_previews(self):
+    def get_previews(self, username = None):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
         users = UserRepoFactory().create_repo('memory').get_all()
-        for post in posts:
-            for user in users:
-                if post.owner == user.username:
-                    previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, post.date_created, post.date_modified))
-                    break
+        if username:
+            for post in posts:
+                for user in users:
+                    if post.owner == user.username == username:
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
+                        break
+
+        else:
+            for post in posts:
+                for user in users:
+                    if post.owner == user.username:
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
+                        break
+
         return previewed_posts

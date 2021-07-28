@@ -80,17 +80,22 @@ class RepoPostsDB(IPostRepo):
             posts.append(Post(row[0], row[1], row[2], row[3], row[4], row[5]))
         return posts
 
-    def get_previews(self):
+    def get_previews(self, username = None):
         """Returns previews of posts posts"""
         conn = db.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.date_created, users.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH])
+        if username:
+            print()
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, users.date_created, users.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH, username])
+        else:
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, users.date_created, users.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH])
         previews = cur.fetchall()
+        print(previews[0])
         cur.close()
         conn.close()
         posts = []
         for row in previews:
-            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5]))
+            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
         return posts
 
     def next_id(self):

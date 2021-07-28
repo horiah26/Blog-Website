@@ -24,5 +24,5 @@ class IPostRepo (ABC):
         """Delete post"""
 
     @abstractmethod
-    def get_previews(self):
+    def get_previews(self, username = None):
         """Returns preview of all posts"""

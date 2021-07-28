@@ -11,7 +11,7 @@ def create_app():
     app=Flask(__name__, template_folder='templates')
     app.config.from_mapping(
         SECRET_KEY="secret",
-        DB_TYPE = "memory")
+        DB_TYPE = "db")
     app.app_context().push()
     
     app.register_blueprint(setup.bp)

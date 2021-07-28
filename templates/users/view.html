@@ -19,34 +19,41 @@
     <h3>Profile last modified: {{user.date_modified}}</h3>
 </div>
 
-<div class="wrapper">
-    <h2>Posts</h2>
-    <br />
-    <div class="card">
-        <div class="card-banner">
-        </div>
 
-        <div class="card-body">
-            <h2 class="blog-title"> {{user.name}}</h2>
-            <p class="blog-description"> {{user.email}}</p>
-            <div class="card-profile">
-                <img class="profile-img"
-                     src="https://images.unsplash.com/photo-1526835746352-0b9da4054862?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80" />
-                <div class="card-profile-info">
-                    <h6 class="owner">
-                        {{user.username}}
-                    </h6>
-                    <h6 class="date-created">
-                        {% if user.date_modified[16:] == user.date_created[12:] %}
-                        {{user.date_created}}
-                        {% else %}
-                        {{user.date_modified}}
-                        {% endif %}
-                    </h6>
+<div class="wrapper">
+    {% for preview in posts %}
+    <a href="{{url_for('blog.show', post_id = preview.post_id)}}">
+        <div class="card">
+            <div class="card-banner">
+                <p class="category-tag popular">{{generator.random_tag()}}</p>
+                <img class="banner-img"
+                     src="{{generator.random_pic()}}" />
+            </div>
+
+            <div class="card-body">
+                <p class="blog-hashtag">{{generator.random_hashtags()}}</p>
+                <h2 class="blog-title"> {{preview.title}}</h2>
+                <p class="blog-description"> {{preview.text}}</p>
+                <div class="card-profile">
+                    <img class="profile-img"
+                         src="https://images.unsplash.com/photo-1526835746352-0b9da4054862?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80" />
+                    <div class="card-profile-info">
+                        <h6 class="owner">
+                            {{preview.owner}}
+                        </h6>
+                        <h6 class="date-created">
+                            {% if preview.date_modified[16:] == preview.date_created[12:] %}
+                            {{preview.date_created}}
+                            {% else %}
+                            {{preview.date_modified}}
+                            {% endif %}
+                        </h6>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </a>
+    {% endfor %}
 </div>
 
 {% endblock %}

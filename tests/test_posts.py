@@ -12,6 +12,11 @@ def test_homepage_works(client):
     assert b'category-tag popular' in rv.data
     assert b'profile-img' in rv.data
 
+def test_display_name_not_username_shown_in_main_cards(client):
+    """Does not update an article if the input is an empty title"""
+    rv = client.get('/')
+    assert b' <h6 class="owner">\n                            Name 2\n                        </h6>' in rv.data
+
 def test_shows_date_correctly(client):
     """Tests the date is shown correctly"""
     rv = client.get('/1/')
@@ -43,6 +48,12 @@ def test_opens_last_post_from_seed(client):
     assert b'view-post-date' in rv.data
     assert b'Donec tincidunt maximus sem' in rv.data
 
+def test_shows_posts_on_user_profile(client):
+    """Can open the last post from seed"""
+    rv = client.get('/users/username1/')
+    print (rv.data)
+    assert b'Duis a lectus in erat blandit hendrerit ' in rv.data
+
 def test_redirects_if_post_not_found(client):
     """Redirects if post at index not found"""
     assert b'Post not found' in client.get('/100/', follow_redirects=True).data
@@ -58,13 +69,6 @@ def test_can_log_in_user_redirects_to_homepage(client):
     assert b'blog-description' in login.data
     assert b'wrapper' in login.data
     assert b'welcome' in login.data
-
-def test_display_name_not_username_shown_in_main_cards(client):
-    """Does not update an article if the input is an empty title"""
-    rv = client.get('/')
-    assert  b"username2" not in rv.data
-    print(rv.data)
-    assert b'Name 2'in rv.data
 
 def admin_can_update_post(client):
     """Can update post"""

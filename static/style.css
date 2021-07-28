@@ -533,3 +533,11 @@ input[type=submit]:hover {
         visibility: hidden;
     }
 }
+
+.view-post-owner {
+    font-size: 1.4em;
+}
+
+#post-owner-name {
+    color: darkcyan;
+}

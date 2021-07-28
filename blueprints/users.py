@@ -4,11 +4,15 @@ from flask import (
 )
 from werkzeug.security import generate_password_hash
 from models.user_repo_holder import UserRepoHolder
+from models.repo_holder import RepoHolder
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.create_tables import create_tables
+from repos.post.methods import post_misc_generator as gen
 
 users_repo = UserRepoHolder()
+posts_repo = RepoHolder()
+
 bp = Blueprint('users', __name__)
 
 @bp.route('/users', methods=['GET'])
@@ -23,8 +27,9 @@ def view_all():
 @create_tables
 def view_user(username):
     """View user"""
+    print(posts_repo.get().get_previews(username))
     if users_repo.get().get(username):
-        return render_template('users/view.html', user = users_repo.get().get(username))
+        return render_template('users/view.html', user = users_repo.get().get(username), posts = posts_repo.get().get_previews(username), generator = gen)
     flash('User not found')
     return redirect(url_for('users.view_all'))
 

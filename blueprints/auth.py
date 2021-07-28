@@ -46,8 +46,6 @@ def sign_up():
         else:
             users_repo.get().insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
             flash("You have signed up")
-            for user in users_repo.get().get_all():#TODEL
-                print (user)
             return redirect(url_for('blog.home'))
     return render_template('auth/sign_up.html')
 
