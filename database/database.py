@@ -1,8 +1,6 @@
 """Conects to the database"""
 import psycopg2
-from flask import session
 from config.config_db import ConfigDB
-from database.table_names import TableNames
 
 class Database():
     """Handles database operations"""
@@ -22,9 +20,7 @@ class Database():
 
     def create_update_tables(self):
         """Creates the posts table"""
-        required_tables = ['users', 'posts']
-        tables_in_database = TableNames().table_names()
-        if not set(required_tables).issubset(tables_in_database) or 'db_version' not in session or session['db_version'] != self.config.db_version:
+        if self.config.config_file_exists() and not self.config.db_up_to_date():
             try:
                 conn = self.get_connection()
                 cur = conn.cursor()

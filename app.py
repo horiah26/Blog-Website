@@ -5,6 +5,7 @@ from blueprints import setup
 from blueprints import users
 from blueprints import blog
 from blueprints import auth
+from database.database import Database
 
 def create_app():
     """Creates app"""
@@ -14,6 +15,10 @@ def create_app():
         DB_TYPE = "db")
     app.app_context().push()
     
+    @app.before_first_request
+    def create_tables():
+        Database().create_update_tables()
+
     app.register_blueprint(setup.bp)
     app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)

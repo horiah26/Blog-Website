@@ -5,14 +5,13 @@ from flask import (
 from werkzeug.security import generate_password_hash
 from models.user import User
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
-from blueprints.decorators.create_tables import create_tables
 from .users import users_repo
 
 bp = Blueprint('auth', __name__)
 
 @bp.route('/signup', methods=['GET', 'POST'])
 @redirect_to_setup
-@create_tables
+#@create_tables
 def sign_up():
     """Creates a new user"""
     if request.method == 'POST':
@@ -51,7 +50,7 @@ def sign_up():
 
 @bp.route('/login', methods=['GET', 'POST'])
 @redirect_to_setup
-@create_tables
+#@create_tables
 def login():
     """Log in user"""
     if request.method == 'POST':
@@ -74,7 +73,7 @@ def login():
 
 @bp.route('/logout', methods=['GET', 'POST'])
 @redirect_to_setup
-@create_tables
+#@create_tables
 def logout():
     """Log out user"""
     session.pop('username', None)

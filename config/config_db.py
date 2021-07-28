@@ -24,13 +24,12 @@ class ConfigDB(Config):
         except Exception:
             print("Couldn't load database configuration data. Check config.json file")
 
-    def db_version_to_session(self):
+    def db_up_to_date(self):
         """Loads database version to current session"""
         json_data = super().load()
         if 'db_version' in json_data and json_data['db_version'] == self.db_version:
-            session['db_version'] = json_data['db_version']
-        else:
-            session['db_version'] = None
+            return True
+        return False
 
     def update_db_version(self):
         """In the config.ini file updates db_version value to latest"""

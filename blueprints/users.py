@@ -7,7 +7,6 @@ from models.user_repo_holder import UserRepoHolder
 from models.repo_holder import RepoHolder
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
-from blueprints.decorators.create_tables import create_tables
 from repos.post.methods import post_misc_generator as gen
 
 users_repo = UserRepoHolder()
@@ -17,14 +16,14 @@ bp = Blueprint('users', __name__)
 
 @bp.route('/users', methods=['GET'])
 @redirect_to_setup
-@create_tables
+#@create_tables
 def view_all():
     """View all users"""
     return render_template('users/view_all.html', users = users_repo.get().get_all())
 
 @bp.route('/users/<username>/', methods=['GET'])
 @redirect_to_setup
-@create_tables
+#@create_tables
 def view_user(username):
     """View user"""
     print(posts_repo.get().get_previews(username))
@@ -36,7 +35,7 @@ def view_user(username):
 @bp.route('/users/<username>/delete', methods=['GET'])
 @redirect_to_setup
 @permission_required()
-@create_tables
+#@create_tables
 def delete(username):
     """Delete user"""
     try:
@@ -49,7 +48,7 @@ def delete(username):
 @bp.route('/users/<username>/edit', methods=['GET', 'POST'])
 @redirect_to_setup
 @permission_required()
-@create_tables
+#@create_tables
 def edit(username):
     """Edit user"""
     user = users_repo.get().get(username)
