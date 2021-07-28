@@ -25,7 +25,7 @@ def test_can_sign_up_user(client):
                     password = 'password5',
                     confirm_password = 'password5'), follow_redirects=True)
 
-    assert sign_up.status_code == 200
+    assert b'You have signed up' in sign_up.data
 
 
     assert client.get('/').status_code == 200

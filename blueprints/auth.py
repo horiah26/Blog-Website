@@ -1,17 +1,15 @@
 """Blueprint for authentication management"""
 from flask import (
-    Blueprint, redirect, render_template, request, url_for, flash, session
+    Blueprint, redirect, render_template, request, url_for, session
 )
-from werkzeug.security import generate_password_hash
-from models.user import User
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
-from .users import users_repo
+from database.authentication import Authentication
 
 bp = Blueprint('auth', __name__)
+auth_service = Authentication()
 
 @bp.route('/signup', methods=['GET', 'POST'])
 @redirect_to_setup
-#@create_tables
 def sign_up():
     """Creates a new user"""
     if request.method == 'POST':
@@ -21,36 +19,11 @@ def sign_up():
         password = request.form['password'].strip()
         confirm_password = request.form['confirm_password'].strip()
 
-        user = users_repo.get().get(username)
-
-        error = None
-        if user:
-            error = "Username already taken"
-        if user is not None and user.email == email:
-            error = "Email adress already taken"
-        if password != confirm_password:
-            error = "Your password must match"
-        if not password:
-            error = "Password is required"
-        if not confirm_password:
-            error = "Please confirm your password"
-        if not email:
-            error = "Email is required"
-        if not name:
-            error = "Your name is required"
-        if not username:
-            error = "Username is required"
-        if error is not None:
-            flash(error)
-        else:
-            users_repo.get().insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
-            flash("You have signed up")
-            return redirect(url_for('blog.home'))
+        return auth_service.sign_up(username, name, email, password, confirm_password)
     return render_template('auth/sign_up.html')
 
 @bp.route('/login', methods=['GET', 'POST'])
 @redirect_to_setup
-#@create_tables
 def login():
     """Log in user"""
     if request.method == 'POST':
@@ -59,23 +32,13 @@ def login():
         username = request.form['username'].strip()
         password = request.form['password'].strip()
 
-        user = users_repo.get().get(username)
-        if user is None or not user.check_password(password):
-            flash('Invalid username or password')
-            return redirect(url_for('auth.login'))
-        session['username'] = user.username
-        if '@temporary.com' in user.email:
-            flash('This user has been imported and must be updated')
-            return redirect(url_for('users.edit_required', username = user.username))
-        flash("You are logged in")
-        return redirect(url_for('blog.home'))
+        return auth_service.login(username, password)
+
     return render_template('auth/login.html')
 
 @bp.route('/logout', methods=['GET', 'POST'])
 @redirect_to_setup
-#@create_tables
 def logout():
     """Log out user"""
-    session.pop('username', None)
-    flash("You are logged out")
+    auth_service.logout()
     return redirect(url_for('blog.home'))

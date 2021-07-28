@@ -16,7 +16,6 @@ bp = Blueprint('blog', __name__)
 
 @bp.route('/', methods=['GET'])
 @redirect_to_setup
-#@create_tables
 def home():
     """Route to home"""
     return render_template('blog/home.html', posts=repo_holder.get().get_previews(), generator=gen)
@@ -24,7 +23,6 @@ def home():
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @redirect_to_setup
-#@create_tables
 def create():
     """Route to creating new posts"""
     if request.method == 'POST':
@@ -49,7 +47,6 @@ def create():
 
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
-#@create_tables
 def show(post_id):
     """Route to show post by id"""
     if repo_holder.get().get(post_id):
@@ -60,7 +57,6 @@ def show(post_id):
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
 @redirect_to_setup
 @permission_required(repo_holder)
-#@create_tables
 def update(post_id):
     """Route to update existing posts"""
     post = repo_holder.get().get(post_id)
@@ -81,7 +77,6 @@ def update(post_id):
 @bp.route('/<int:post_id>/delete', methods=['GET'])
 @redirect_to_setup
 @permission_required(repo_holder)
-#@create_tables
 def delete(post_id):
     """Route to delete posts"""
     repo_holder.get().delete(post_id)

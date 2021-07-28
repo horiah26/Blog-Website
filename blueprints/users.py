@@ -16,17 +16,14 @@ bp = Blueprint('users', __name__)
 
 @bp.route('/users', methods=['GET'])
 @redirect_to_setup
-#@create_tables
 def view_all():
     """View all users"""
     return render_template('users/view_all.html', users = users_repo.get().get_all())
 
 @bp.route('/users/<username>/', methods=['GET'])
 @redirect_to_setup
-#@create_tables
 def view_user(username):
     """View user"""
-    print(posts_repo.get().get_previews(username))
     if users_repo.get().get(username):
         return render_template('users/view.html', user = users_repo.get().get(username), posts = posts_repo.get().get_previews(username), generator = gen)
     flash('User not found')
@@ -35,7 +32,6 @@ def view_user(username):
 @bp.route('/users/<username>/delete', methods=['GET'])
 @redirect_to_setup
 @permission_required()
-#@create_tables
 def delete(username):
     """Delete user"""
     try:
@@ -48,7 +44,6 @@ def delete(username):
 @bp.route('/users/<username>/edit', methods=['GET', 'POST'])
 @redirect_to_setup
 @permission_required()
-#@create_tables
 def edit(username):
     """Edit user"""
     user = users_repo.get().get(username)
@@ -77,7 +72,6 @@ def edit(username):
                 users_repo.get().update(username, name, email, user.password)
             else:
                 users_repo.get().update(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100'))
-                print("Here3")
             flash("User profile has been modified")
             return redirect(url_for('users.view_user', username = user.username))
     return render_template('auth/edit.html', user = user)
