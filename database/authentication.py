@@ -62,3 +62,9 @@ class Authentication():
         """Logs user out"""
         session.pop('username', None)
         flash("You are logged out")
+
+    def get_logged_user(self):
+        if 'username' in session:
+            return session['username']
+        return 'Currently no user logged in'
+        

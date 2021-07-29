@@ -2,8 +2,9 @@
     Used to interact with the database section in config.ini
 """
 import os
-from flask import current_app, session
+from flask import session, current_app
 from .config import Config
+from models.db_auth import DbAuth
 
 class ConfigDB(Config):
     """Used to interact with the config.ini file"""
@@ -11,16 +12,11 @@ class ConfigDB(Config):
         super().__init__()
         self.db_version = "1"
 
-    def get_db_info(self):
+    def get_db_auth(self):
         """Returns database configuration information"""
         try:
             json_data = super().load()
-            db_config = {'database' : json_data ['database'],
-                                'host' : json_data['host'],
-                                'user' : json_data['user'],
-                                'password' : json_data['password']
-                            }
-            return db_config
+            return DbAuth(json_data['database'], json_data['host'], json_data['user'], json_data['password'])
         except Exception:
             print("Couldn't load database configuration data. Check config.json file")
 
@@ -28,6 +24,7 @@ class ConfigDB(Config):
         """Loads database version to current session"""
         json_data = super().load()
         if 'db_version' in json_data and json_data['db_version'] == self.db_version:
+            print ("Database up to date")
             return True
         return False
 
@@ -38,12 +35,3 @@ class ConfigDB(Config):
         session['db_version'] = self.db_version
         print(f"Database has been updated to version {self.db_version}")
         super().save(json_data)
-
-    def config_file_exists(self):
-        """Checks if database configuration file exists"""
-        if current_app.config['DB_TYPE'] == 'db':
-            return os.path.isfile(self.CONFIG_PATH)
-        if current_app.config['DB_TYPE'] == 'memory':
-            return True
-        print("Error! DB_TYPE not configured correctly in app.config['DB_TYPE']. Type invalid")
-        return False

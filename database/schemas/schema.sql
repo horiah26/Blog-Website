@@ -17,19 +17,16 @@ CREATE TABLE IF NOT EXISTS posts (
     date_modified VARCHAR(40) NOT NULL
 );
 
-CREATE TEMPORARY TABLE users_temp (
-    username TEXT UNIQUE NOT NULL PRIMARY KEY,
-    name TEXT,
-    email TEXT UNIQUE,
-    password TEXT,  
-    date_created VARCHAR(40),
-    date_modified VARCHAR(40)
-);
+ALTER TABLE users ALTER COLUMN name DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN password DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN date_created DROP NOT NULL;
+ALTER TABLE users ALTER COLUMN date_modified DROP NOT NULL;
 
-INSERT INTO users_temp (username)
+INSERT INTO users (username)
 SELECT DISTINCT owner FROM posts WHERE owner NOT IN(SELECT username FROM users);
 
-UPDATE users_temp
+UPDATE users
 SET name = username, 
 email = CONCAT(username,'@temporary.com'), 
 password = username, 
@@ -37,9 +34,11 @@ date_created =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW(
 date_modified =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' ))
 WHERE password is NULL;
 
-INSERT INTO users SELECT * FROM users_temp;
-
-DROP TABLE users_temp;
+ALTER TABLE users ALTER COLUMN name SET NOT NULL;
+ALTER TABLE users ALTER COLUMN email SET NOT NULL;
+ALTER TABLE users ALTER COLUMN password SET NOT NULL;
+ALTER TABLE users ALTER COLUMN date_created SET NOT NULL;
+ALTER TABLE users ALTER COLUMN date_modified SET NOT NULL;
 
 DO $$
 BEGIN

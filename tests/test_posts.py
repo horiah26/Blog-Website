@@ -284,7 +284,7 @@ def test_user_cannot_delete_another_user_profile(client):
     assert b'You don&#39;t have permission to modify this profile' in rv.data
     logout(client)
 
-@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
+@mock.patch("config.config.Config.config_file_exists", return_value = False)
 def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):
     """Tests if homepage redirects if no db_config"""
     redirected = client.get('/', follow_redirects=True)
@@ -297,7 +297,7 @@ def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
+@mock.patch("config.config.Config.config_file_exists", return_value = False)
 def test_create_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if /create redirects if no db_config"""
     redirected = client.get('/create', follow_redirects=True)
@@ -307,7 +307,7 @@ def test_create_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
+@mock.patch("config.config.Config.config_file_exists", return_value = False)
 def test_update_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if /update redirects if no db_config"""
     redirected = client.get('/1/update', follow_redirects=True)
@@ -317,7 +317,7 @@ def test_update_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-@mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
+@mock.patch("config.config.Config.config_file_exists", return_value = False)
 def test_index_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if article at index redirects if no db_config"""
     redirected = client.get('/1/', follow_redirects=True)

@@ -2,9 +2,9 @@
 from functools import wraps
 from flask import redirect, url_for
 from database.database import Database
-from config.config_db import ConfigDB
+from config.config import Config
 
-config = ConfigDB()
+config = Config()
 database = Database()
 def redirect_to_setup(f):
     """Added so app could be inserted as a parameter in the other wrapper"""

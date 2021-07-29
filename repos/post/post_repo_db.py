@@ -34,7 +34,7 @@ class RepoPostsDB(IPostRepo):
         """Returns post by id"""
         conn = db.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT post_id, title, text, owner, posts.date_created, posts.date_modified, name FROM posts WHERE post_id = %s;", (post_id,))
+        cur.execute("SELECT post_id, title, text, owner, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
         post = cur.fetchone()
 
         conn.commit()
@@ -44,7 +44,7 @@ class RepoPostsDB(IPostRepo):
         if post is None:
             print("ERROR: Post not found, incorrect id")
         else:
-            return (Post(post[0], post[1], post[2], post[3], post[4], post[5]), name)
+            return (Post(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
 
     def delete(self, post_id):
         """Deletes post by id"""

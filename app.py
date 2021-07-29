@@ -9,15 +9,17 @@ from database.database import Database
 
 def create_app():
     """Creates app"""
+    database_type = "db"
     app=Flask(__name__, template_folder='templates')
     app.config.from_mapping(
         SECRET_KEY="secret",
-        DB_TYPE = "memory")
+        DB_TYPE = database_type)
     app.app_context().push()
     
-    @app.before_first_request
-    def create_tables():
-        Database().create_update_tables()
+    if database_type == "db":
+        @app.before_first_request
+        def create_tables():
+            Database().create_update_tables()
 
     app.register_blueprint(setup.bp)
     app.register_blueprint(users.bp)
