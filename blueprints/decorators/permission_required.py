@@ -14,7 +14,7 @@ def permission_required(repo_holder = None):
                     flash("You don't have permission to modify this profile")
                     return redirect(url_for('blog.home'))
             if 'post_id' in kwargs:
-                if 'username' not in session or session['username'] != repo_holder.get().get(kwargs['post_id']).owner and session['username'] != 'admin':
+                if 'username' not in session or session['username'] != repo_holder.get().get(kwargs['post_id'])[0].owner and session['username'] != 'admin':
                     flash("You don't have permission to modify this post")
                     return redirect(url_for('blog.home'))
             return f(*args, **kwargs)

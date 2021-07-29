@@ -49,8 +49,9 @@ def create():
 @redirect_to_setup
 def show(post_id):
     """Route to show post by id"""
-    if repo_holder.get().get(post_id):
-        return render_template('blog/show_post.html', post=repo_holder.get().get(post_id))
+    post_and_display_name = repo_holder.get().get(post_id)
+    if post_and_display_name:
+        return render_template('blog/show_post.html', post = post_and_display_name[0], display_name = post_and_display_name[1])
     flash('Post not found')
     return redirect(url_for('blog.home'))
 
@@ -72,7 +73,7 @@ def update(post_id):
             repo_holder.get().update(post_id, title, text)
             flash("Post has been updated")
             return redirect(url_for('blog.home'))
-    return render_template('blog/update_post.html', post=post)
+    return render_template('blog/update_post.html', post=post[0])
 
 @bp.route('/<int:post_id>/delete', methods=['GET'])
 @redirect_to_setup

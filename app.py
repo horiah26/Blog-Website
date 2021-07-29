@@ -12,7 +12,7 @@ def create_app():
     app=Flask(__name__, template_folder='templates')
     app.config.from_mapping(
         SECRET_KEY="secret",
-        DB_TYPE = "db")
+        DB_TYPE = "memory")
     app.app_context().push()
     
     @app.before_first_request

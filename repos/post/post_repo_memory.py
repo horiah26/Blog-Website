@@ -15,7 +15,15 @@ class RepoPostsMemory(IPostRepo):
         """Returns post by id"""
         post = next((post for post in self.posts if post.post_id == post_id), None)
         if post is not None:
-            return post
+            from blueprints.users import users_repo
+            users = users_repo.get().get_all()
+            display_name = None
+            for user in users:
+                if user.username == post.owner:
+                    display_name = user.name
+                    break
+                    
+            return (post, display_name)
 
     def get_all(self):
         """Returns all posts"""
@@ -28,7 +36,7 @@ class RepoPostsMemory(IPostRepo):
 
     def update(self, post_id, title, text):
         """Updates post by id"""
-        post = self.get(post_id)
+        post = self.get(post_id)[0]
         post.title = title
         post.text = text
         post.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")

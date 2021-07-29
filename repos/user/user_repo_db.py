@@ -20,16 +20,11 @@ class RepoUserDB(IUserRepo):
         """Add a new user"""
         conn = db.get_connection()
         cur = conn.cursor()
-        try:
-            cur.execute(
-                "INSERT INTO users (username, name, email, password, date_created, date_modified) \
-                VALUES(%s, %s, %s, %s, %s, %s)",
-                (user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
-
-        except Exception as error:
-            print(error)
-            flash(error)
-
+        cur.execute(
+            "INSERT INTO users (username, name, email, password, date_created, date_modified) \
+            VALUES(%s, %s, %s, %s, %s, %s)",
+            (user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
+                
         conn.commit()
         cur.close()
         conn.close()
@@ -46,8 +41,9 @@ class RepoUserDB(IUserRepo):
 
         if user is None:
             print("ERROR: Post not found, incorrect username")
-        else:
-            return User(user[0], user[1], user[2], user[3], user[4], user[5])
+            flash("ERROR: Post not found, incorrect username")
+            return None
+        return User(user[0], user[1], user[2], user[3], user[4], user[5])
 
     def delete(self, username):
         """Deletes user by username"""

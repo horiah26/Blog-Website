@@ -9,7 +9,7 @@
     <div class="view-post-controls">
         <h1 class="crud-title">{{post.title}}</h1>
         <div class="crud-date">
-            <p class="view-post-owner"> Author: <a href="{{url_for('users.view_user', username = post.owner)}}"><span id="post-owner-name">{{post.owner}}</span> </a></p>
+            <p class="view-post-owner"> Author: <a href="{{url_for('users.view_user', username = post.owner)}}"><span id="post-owner-name">{{display_name}}</span> </a></p>
             <p class="view-post-date">Written on: {{post.date_created}}</p>
             <p class="view-post-date">Last edited on: {{post.date_modified}}</p>
         </div>

@@ -38,6 +38,11 @@ def test_opens_first_post_from_seed(client):
 
     assert bytes(time_now, 'utf-8') in rv.data
 
+def test_shows_display_name_in_post_view(client):
+    rv = client.get('/6/')
+    print(rv.data)
+    assert b'Name 2' in rv.data
+
 def test_opens_last_post_from_seed(client):
     """Can open the last post from seed"""
     rv = client.get('/8/')
@@ -47,6 +52,22 @@ def test_opens_last_post_from_seed(client):
     assert b'view_post_text' in rv.data
     assert b'view-post-date' in rv.data
     assert b'Donec tincidunt maximus sem' in rv.data
+    
+def test_can_update_post(client):
+    """Can update post"""
+    logout(client)
+    login(client, 'username1', 'password1')
+
+    data = dict(title = 'Ugly title for test lsdkhnsdpbjeri21', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g161;pq')
+
+    rv = client.post('/2/update', data=data, follow_redirects=True)
+    print(rv.data)
+    assert b'Post has been updated' in rv.data
+    rv2 = client.get('/2/')
+    assert b'Ugly title for test lsdkhnsdpbjeri' in rv2.data
+    assert b'Ugly text for test asfjkoas' in rv2.data
+
+    logout(client)
 
 def test_shows_posts_on_user_profile(client):
     """Can open the last post from seed"""
@@ -138,21 +159,6 @@ def test_admin_can_delete_other_users_post(client):
     assert b'Post not found' in client.get('/7/', follow_redirects=True).data
     logout(client)
 
-def test_can_update_post(client):
-    """Can update post"""
-    logout(client)
-    login(client, 'username1', 'password1')
-
-    data = dict(title = 'Ugly title for test lsdkhnsdpbjeri21', text = 'Ugly text for test asfjkoas.fnklwpgow[gp[g161;pq')
-
-    rv = client.post('/2/update', data=data, follow_redirects=True)
-    assert b'Post has been updated' in rv.data
-    rv2 = client.get('/2/')
-    assert b'Ugly title for test lsdkhnsdpbjeri' in rv2.data
-    assert b'Ugly text for test asfjkoas' in rv2.data
-
-    logout(client)
-
 def test_does_not_update_article_with_empty_text(client):
     """Does not update an article if the input is an empty text"""
     login(client, 'username1', 'password1')
@@ -179,36 +185,104 @@ def test_does_not_update_article_with_empty_title(client):
     assert  b"<title>\nDuis a lectus\n</title>" in after.data
     assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' not in after.data
 
-def test_can_delete_all_posts_then_create_new_one_at_index1(client):
-    """Deletes all posts then creates a new one"""
-    login(client, 'admin', 'admin')
-    assert client.get('/6/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/6/', follow_redirects=True).data
-    assert client.get('/5/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/5/', follow_redirects=True).data
-    assert client.get('/8/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/8/', follow_redirects=True).data
-    assert client.get('/1/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/1/', follow_redirects=True).data
-    assert client.get('/2/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/12/', follow_redirects=True).data
-    assert client.get('/4/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/4/', follow_redirects=True).data
-    assert client.get('/9/delete', follow_redirects=True).status_code == 200
-    assert b'Post not found' in client.get('/9/', follow_redirects=True).data
 
-    assert b'Post not found' in client.get('/1/', follow_redirects=True).data
-    assert b'Post not found' in client.get('/10/', follow_redirects=True).data
+def test_does_not_write_article_if_not_logged_in(client):
+    """Cannot write article if not logged_in"""
+    redirect = client.post('/create',
+                data = dict(title='Ugly title for test lsdkhnsdpbjeri',
+                            text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'), follow_redirects=True)
 
-    client.post('/create',
-                    data=dict(title='Ugly title for test lsdkhnsdpbjeri',
-                    text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'), follow_redirects = True)
+    assert b'You must be logged in to do this' in redirect.data
 
-    newpost = client.get('/1/')
-    assert newpost.status_code == 200
+def test_cannot_delete_post_if_not_logged_in(client):
+    """Can delete post"""
+    logout(client)
+    assert client.get('/3/').status_code == 200
 
-    assert b'Ugly title for test lsdkhnsdpbjeri' in newpost.data
-    assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' in newpost.data
+    rv = client.get('/3/delete', follow_redirects=True)
+    assert b'You don&#39;t have permission to modify this post' in rv.data
+    assert client.get('/3/').status_code == 200
+
+def test_cannot_delete_post_if_logged_in_as_another_user(client):
+    """Cannot delete post if logged in as another user"""
+    rv = login(client, 'username2', 'password2')
+    assert client.get('/3/').status_code == 200
+
+    rv = client.get('/3/delete', follow_redirects=True)
+    assert b'You don&#39;t have permission to modify this post' in rv.data
+    assert client.get('/3/').status_code == 200
+
+    logout(client)
+
+def test_can_delete_post_if_logged_in(client):
+    """Can delete post"""
+    login(client, 'username1', 'password1')
+    assert client.get('/3/').status_code == 200
+
+    client.get('/3/delete')
+    print(client.get('/3/', follow_redirects=True).data)
+    print
+    assert b'Post not found' in client.get('/3/', follow_redirects=True).data
+    logout(client)
+
+
+def test_admin_can_edit_another_user_profile(client):
+    """Does not update an article if the input is an empty title"""
+    logout(client)
+    login(client, 'admin','admin')
+    before = client.get('/users/username1/')
+    assert  b"username1" in before.data
+
+    client.post('/users/username1/edit',
+            data = dict(name='new name for test1',
+                        email='Ugly text for test sdhsdjherj3eh12k;op1',
+                        password='',
+                        confirm_password=''), follow_redirects = True)
+
+    after = client.get('/users/username1/')
+    print (after.data)
+    assert b'new name for test' in after.data
+    assert b'Ugly text for test sdhsdjherj3eh12k;op' in after.data
+
+def test_admin_can_delete_another_user_profile(client):
+    """Does not update an article if the input is an empty title"""
+    logout(client)
+    login(client, 'admin','admin')
+    before = client.get('/users/username2/')
+    assert b"username2" in before.data
+    assert b'username2' in client.get('/users').data
+
+    rv = client.get('/users/username2/delete', follow_redirects = True)
+    assert rv.status_code == 200
+    assert b'User deleted' in rv.data
+    assert not b'username2' in client.get('/users').data
+    logout(client)
+
+def test_user_cannot_edit_another_user_profile(client):
+    """Does not update an article if the input is an empty title"""
+    logout(client)
+    login(client, 'username3','password3')
+    before = client.get('/users/username1/')
+    assert  b"username1" in before.data
+
+    rv = client.post('/users/username1/edit',
+            data = dict(name='new name for test',
+                        text='Ugly text for test sdhsdjherj3eh12k;op'), follow_redirects = True)
+
+    assert b'You don&#39;t have permission to modify this profile' in rv.data
+    logout(client)
+
+def test_user_cannot_delete_another_user_profile(client):
+    """Does not update an article if the input is an empty title"""
+    logout(client)
+    login(client, 'username3','password3')
+    before = client.get('/users/username1/')
+    assert  b"username1" in before.data
+
+    rv = client.get('/users/username1/delete', follow_redirects = True)
+
+    assert b'You don&#39;t have permission to modify this profile' in rv.data
+    logout(client)
 
 @mock.patch("config.config_db.ConfigDB.config_file_exists", return_value = False)
 def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):

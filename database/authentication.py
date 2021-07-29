@@ -12,11 +12,19 @@ class Authentication():
     def sign_up(self, username, name, email, password, confirm_password):
         """Signs user up"""
         user = users_repo.get().get(username)
+        users = users_repo.get().get_all()
+
+        email_taken = False
+        for item in users:
+            if item.email == email:
+                email_taken = True
+                break
+
         error = None
         if user:
-            error = "Username already taken"
-        if user is not None and user.email == email:
-            error = "Email adress already taken"
+            error = "Username is already in use"
+        if email_taken:
+            error = "Email adress is already in use"
         if password != confirm_password:
             error = "Your password must match"
         if not password:
@@ -31,10 +39,11 @@ class Authentication():
             error = "Username is required"
         if error is not None:
             flash(error)
-        else:
-            users_repo.get().insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
-            flash("You have signed up")
-            return redirect(url_for('blog.home'))
+            return redirect(url_for('auth.sign_up'))
+        
+        users_repo.get().insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
+        flash("You have signed up")
+        return redirect(url_for('blog.home'))
 
     def login(self, username, password):
         """Logs user in"""
