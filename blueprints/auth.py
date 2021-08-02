@@ -3,7 +3,7 @@ from flask import (
     Blueprint, redirect, render_template, request, url_for, session
 )
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
-from database.authentication import Authentication
+from services.auth import Authentication
 
 bp = Blueprint('auth', __name__)
 auth_service = Authentication()

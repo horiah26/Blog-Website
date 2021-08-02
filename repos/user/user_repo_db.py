@@ -40,8 +40,8 @@ class RepoUserDB(IUserRepo):
         conn.close()
 
         if user is None:
-            print("ERROR: Post not found, incorrect username")
-            flash("ERROR: Post not found, incorrect username")
+            print("ERROR: User not found, incorrect username")
+            flash("ERROR: User not found, incorrect username")
             return None
         return User(user[0], user[1], user[2], user[3], user[4], user[5])
 

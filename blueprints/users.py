@@ -8,6 +8,9 @@ from models.repo_holder import RepoHolder
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from repos.post.methods import post_misc_generator as gen
+from services.auth import Authentication
+
+auth = Authentication()
 
 users_repo = UserRepoHolder()
 posts_repo = RepoHolder()
@@ -34,11 +37,15 @@ def view_user(username):
 @permission_required()
 def delete(username):
     """Delete user"""
-    try:
-        users_repo.get().delete(username)
-        flash("User deleted")
-    except Exception:
-        flash("Delete user's posts first")
+    if username == 'admin':
+        flash("Admin cannot be deleted")
+    else:
+        try:
+            users_repo.get().delete(username)
+            flash("User deleted")
+            auth.logout()
+        except Exception:
+            flash("Delete user's posts first")
     return redirect(url_for('blog.home'))
 
 @bp.route('/users/<username>/edit', methods=['GET', 'POST'])
@@ -47,7 +54,7 @@ def delete(username):
 def edit(username):
     """Edit user"""
     user = users_repo.get().get(username)
-    if user.username != session['username'] and session['username'] != 'admin':
+    if user.username != auth.logged_user() and auth.logged_user() != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
 
@@ -82,7 +89,7 @@ def edit(username):
 def edit_required(username):
     """Edit user"""
     user = users_repo.get().get(username)
-    if user.username != session['username'] and session['username'] != 'admin':
+    if user.username != auth.logged_user() and auth.logged_user() != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
 

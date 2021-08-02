@@ -10,10 +10,11 @@ from database.database import Database
 def create_app():
     """Creates app"""
     database_type = "db"
+
     app=Flask(__name__, template_folder='templates')
     app.config.from_mapping(
         SECRET_KEY="secret",
-        DB_TYPE = database_type)
+        DB_TYPE = database_type)    
     app.app_context().push()
     
     if database_type == "db":

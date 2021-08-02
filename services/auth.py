@@ -1,7 +1,6 @@
 """Class that handles authentication"""
 from flask import flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash
-from blueprints.users import users_repo
 from models.user import User
 
 class Authentication():
@@ -11,8 +10,10 @@ class Authentication():
 
     def sign_up(self, username, name, email, password, confirm_password):
         """Signs user up"""
+
+        from blueprints.users import users_repo
         user = users_repo.get().get(username)
-        users = users_repo.get().get_all()
+        users = users_repo.get().get_all()       
 
         email_taken = False
         for item in users:
@@ -47,6 +48,7 @@ class Authentication():
 
     def login(self, username, password):
         """Logs user in"""
+        from blueprints.users import users_repo
         user = users_repo.get().get(username)
         if user is None or not user.check_password(password):
             flash('Invalid username or password')
@@ -63,7 +65,7 @@ class Authentication():
         session.pop('username', None)
         flash("You are logged out")
 
-    def get_logged_user(self):
+    def logged_user(self):
         if 'username' in session:
             return session['username']
         return 'Currently no user logged in'

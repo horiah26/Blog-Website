@@ -10,7 +10,7 @@ class ConfigDB(Config):
     """Used to interact with the config.ini file"""
     def __init__(self):
         super().__init__()
-        self.db_version = "1"
+        self.db_version = "2"
 
     def get_db_auth(self):
         """Returns database configuration information"""
@@ -34,4 +34,21 @@ class ConfigDB(Config):
         json_data['db_version'] = self.db_version
         session['db_version'] = self.db_version
         print(f"Database has been updated to version {self.db_version}")
+        super().save(json_data)
+
+    def save(self, db_auth: DbAuth):
+        """Saves data kept in DbAuth class to config.ini"""
+        new_data = db_auth.json
+        json_data = {}
+
+        try:
+            json_data = super().load()
+        except:
+            pass
+
+        json_data['host'] = new_data['host']
+        json_data['user'] = new_data['user']
+        json_data['password'] = new_data['password']
+        json_data['database'] = new_data['database']
+        
         super().save(json_data)

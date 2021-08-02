@@ -9,6 +9,7 @@ from database.database import Database
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
+from services.auth import Authentication
 
 repo_holder = RepoHolder()
 db = Database()
@@ -39,7 +40,7 @@ def create():
         else:
             post_id = repo_holder.get().next_id()
 
-            repo_holder.get().insert(Post(post_id, title, text, session['username']))
+            repo_holder.get().insert(Post(post_id, title, text, Authentication().logged_user()))
 
             flash("Post has been created")
             return redirect(url_for('blog.home'))
