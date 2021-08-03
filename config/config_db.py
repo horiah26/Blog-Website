@@ -4,7 +4,6 @@
 import os
 from flask import session, current_app
 from .config import Config
-from models.db_auth import DbAuth
 
 class ConfigDB(Config):
     """Used to interact with the config.ini file"""
@@ -12,11 +11,13 @@ class ConfigDB(Config):
         super().__init__()
         self.db_version = "2"
 
+
     def get_db_auth(self):
         """Returns database configuration information"""
-        try:
+        try:    
+            from containers.container import Container
             json_data = super().load()
-            return DbAuth(json_data['database'], json_data['host'], json_data['user'], json_data['password'])
+            return Container().db_auth_factory(json_data['database'], json_data['host'], json_data['user'], json_data['password'])
         except Exception:
             print("Couldn't load database configuration data. Check config.json file")
 
@@ -36,7 +37,7 @@ class ConfigDB(Config):
         print(f"Database has been updated to version {self.db_version}")
         super().save(json_data)
 
-    def save(self, db_auth: DbAuth):
+    def save(self, db_auth):
         """Saves data kept in DbAuth class to config.ini"""
         new_data = db_auth.json
         json_data = {}

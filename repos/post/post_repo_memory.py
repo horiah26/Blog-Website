@@ -1,10 +1,11 @@
 """Memory posts repo """
 import datetime
+from containers.container import Container
 from models.post import Post
-from models.post_preview import PostPreview
 from static import constant
-from repos.user.user_repo_factory import UserRepoFactory
 from .IPostRepo import IPostRepo
+
+container = Container()
 
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
@@ -60,19 +61,20 @@ class RepoPostsMemory(IPostRepo):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
-        users = UserRepoFactory().create_repo('memory').get_all()
+        from containers.repo_container import RepoContainer
+        users = RepoContainer().user_repo_memory_factory().get_all()
         if username:
             for post in posts:
                 for user in users:
                     if post.owner == user.username == username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
+                        previewed_posts.append(container.preview_factory(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
                         break
 
         else:
             for post in posts:
                 for user in users:
                     if post.owner == user.username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
+                        previewed_posts.append(container.preview_factory(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
                         break
 
         return previewed_posts

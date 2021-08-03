@@ -1,8 +1,10 @@
 """A class that holds posts so they can be operated on by routes in blueprints"""
 from flask import current_app
-from repos.post.post_repo_factory import PostRepoFactory
+from repos.post.IPostRepo import IPostRepo
+from containers.repo_container import RepoContainer
+from containers.container import Container
 
-class RepoHolder():
+class PostRepoHolder():
     """A class that holds posts so they can be operated on by routes in blueprints"""
     def __init__(self):
         self.posts = None
@@ -10,7 +12,13 @@ class RepoHolder():
     def create_repo(self):
         """Creates the repo"""
         db_type = current_app.config["DB_TYPE"]
-        self.posts = PostRepoFactory().create_repo(db_type)
+        if db_type == 'db':
+            self.posts = RepoContainer().post_repo_db_factory()
+        elif db_type == 'memory':
+            self.posts = RepoContainer().post_repo_memory_factory()
+
+        else:
+            print('DB_TYPE not valid. Must be \'db\' or \'memory\'')
 
     def get(self):
         """Returns all posts"""

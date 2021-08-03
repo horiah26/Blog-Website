@@ -1,18 +1,21 @@
 """Database repo"""
 import datetime
 import psycopg2
-from models.post import Post
-from models.post_preview import PostPreview
-from database.database import Database
 from static import constant
 from .IPostRepo import IPostRepo
 
-db = Database()
+from containers.container import Container
+from containers.db_container import DBContainer
+
+container = Container()
+db = DBContainer().database_factory() 
 
 class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
     def __init__(self, seed = None):
         """Initializes class and adds posts from seed if present"""
+
+
         if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
@@ -44,7 +47,7 @@ class RepoPostsDB(IPostRepo):
         if post is None:
             print("ERROR: Post not found, incorrect id")
         else:
-            return (Post(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
+            return (container.post_factory(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
 
     def delete(self, post_id):
         """Deletes post by id"""
@@ -77,7 +80,7 @@ class RepoPostsDB(IPostRepo):
         conn.close()
         posts = []
         for row in rows:
-            posts.append(Post(row[0], row[1], row[2], row[3], row[4], row[5]))
+            posts.append(container.post_factory(row[0], row[1], row[2], row[3], row[4], row[5]))
         return posts
 
     def get_previews(self, username = None):
@@ -93,7 +96,7 @@ class RepoPostsDB(IPostRepo):
         conn.close()
         posts = []
         for row in previews:
-            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+            posts.append(container.preview_factory(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
         return posts
 
     def next_id(self):

@@ -1,8 +1,9 @@
 """Only logged in user and admin have permission to modify user or user's posts"""
 from functools import wraps
 from flask import redirect, url_for, flash, session
-from services.auth import Authentication
-auth = Authentication()
+from containers.auth_container import AuthContainer
+
+auth = AuthContainer().auth_factory()
 
 def permission_required(repo_holder = None):
     """Only logged in user and admin have permission to modify user or user's posts"""

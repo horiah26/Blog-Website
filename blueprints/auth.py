@@ -3,10 +3,10 @@ from flask import (
     Blueprint, redirect, render_template, request, url_for, session
 )
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
-from services.auth import Authentication
+from containers.auth_container import AuthContainer
 
 bp = Blueprint('auth', __name__)
-auth_service = Authentication()
+auth_service = AuthContainer().auth_factory()
 
 @bp.route('/signup', methods=['GET', 'POST'])
 @redirect_to_setup

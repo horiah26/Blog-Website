@@ -1,7 +1,7 @@
 """Class that handles authentication"""
 from flask import flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash
-from models.user import User
+from containers.container import Container
 
 class Authentication():
     """Class that handles authentication"""
@@ -42,7 +42,7 @@ class Authentication():
             flash(error)
             return redirect(url_for('auth.sign_up'))
         
-        users_repo.get().insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
+        users_repo.get().insert(Container().user_factory(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
         flash("You have signed up")
         return redirect(url_for('blog.home'))
 
@@ -68,5 +68,5 @@ class Authentication():
     def logged_user(self):
         if 'username' in session:
             return session['username']
-        return 'Currently no user logged in'
+        return False
         

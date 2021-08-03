@@ -3,17 +3,16 @@ from flask import (
     Blueprint, redirect, render_template, request, url_for, flash, session
 )
 from werkzeug.security import generate_password_hash
-from models.user_repo_holder import UserRepoHolder
-from models.repo_holder import RepoHolder
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from repos.post.methods import post_misc_generator as gen
-from services.auth import Authentication
+from containers.repo_holder_container import RepoHolderContainer
+from containers.auth_container import AuthContainer
 
-auth = Authentication()
-
-users_repo = UserRepoHolder()
-posts_repo = RepoHolder()
+auth = AuthContainer().auth_factory()
+repo_holder_container = RepoHolderContainer()
+users_repo = repo_holder_container.user_repo_holder_factory()
+posts_repo = repo_holder_container.post_repo_holder_factory()
 
 bp = Blueprint('users', __name__)
 

@@ -3,11 +3,15 @@ import datetime
 import psycopg2
 
 from flask import flash
-from models.user import User
-from database.database import Database
 from .IUserRepo import IUserRepo
 
-db = Database()
+from containers.container import Container
+from containers.db_container import DBContainer
+
+container = Container()
+
+db = DBContainer().database_factory() 
+
 
 class RepoUserDB(IUserRepo):
     """Repo for posts in memory"""
@@ -43,7 +47,7 @@ class RepoUserDB(IUserRepo):
             print("ERROR: User not found, incorrect username")
             flash("ERROR: User not found, incorrect username")
             return None
-        return User(user[0], user[1], user[2], user[3], user[4], user[5])
+        return container.user_factory(user[0], user[1], user[2], user[3], user[4], user[5])
 
     def delete(self, username):
         """Deletes user by username"""
@@ -81,5 +85,5 @@ class RepoUserDB(IUserRepo):
         conn.close()
         users = []
         for row in rows:
-            users.append(User(row[0], row[1], row[2], row[3], row[4], row[5]))
+            users.append(container.user_factory(row[0], row[1], row[2], row[3], row[4], row[5]))
         return users

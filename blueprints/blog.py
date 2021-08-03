@@ -3,16 +3,19 @@ from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, session
 )
 from repos.post.methods import post_misc_generator as gen
-from models.post import Post
-from models.repo_holder import RepoHolder
-from database.database import Database
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
-from services.auth import Authentication
+from containers.container import Container
+from containers.db_container import DBContainer
+from containers.auth_container import AuthContainer
+from containers.repo_holder_container import RepoHolderContainer
 
-repo_holder = RepoHolder()
-db = Database()
+container = Container()
+auth = AuthContainer().auth_factory()
+repo_holder = RepoHolderContainer().post_repo_holder_factory()
+db = DBContainer().database_factory()
+
 bp = Blueprint('blog', __name__)
 
 @bp.route('/', methods=['GET'])
@@ -40,7 +43,7 @@ def create():
         else:
             post_id = repo_holder.get().next_id()
 
-            repo_holder.get().insert(Post(post_id, title, text, Authentication().logged_user()))
+            repo_holder.get().insert(container.post_factory(post_id, title, text, auth.logged_user()))
 
             flash("Post has been created")
             return redirect(url_for('blog.home'))
