@@ -14,6 +14,7 @@ from containers.repo_holder_container import RepoHolderContainer
 container = Container()
 auth = AuthContainer().auth_factory()
 repo_holder = RepoHolderContainer().post_repo_holder_factory()
+user_repo_holder = RepoHolderContainer().user_repo_holder_factory()
 db = DBContainer().database_factory()
 
 bp = Blueprint('blog', __name__)
@@ -87,3 +88,18 @@ def delete(post_id):
     repo_holder.get().delete(post_id)
     flash("Post has been deleted")
     return redirect(url_for('blog.home'))
+
+@bp.route('/filter', methods=['GET', 'POST'])
+@redirect_to_setup
+@permission_required(repo_holder)
+def filter():
+    """Search function"""
+    username = None
+    if request.method == 'POST':
+        username = request.form['username'].strip()
+    
+    user = user_repo_holder.get().get(username)
+    if user is None and username is not None:
+        flash('Please enter a valid username')
+    return render_template('blog/filter_view.html', user = user, posts = repo_holder.get().get_previews(username), generator = gen)
+
