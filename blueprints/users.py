@@ -5,6 +5,7 @@ from flask import (
 from werkzeug.security import generate_password_hash
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
+from blueprints.decorators.edit_required_once import edit_required_once
 from repos.post.methods import post_misc_generator as gen
 from containers.repo_holder_container import RepoHolderContainer
 from containers.auth_container import AuthContainer
@@ -85,6 +86,7 @@ def edit(username):
 @bp.route('/users/<username>/edit_required', methods=['GET', 'POST'])
 @redirect_to_setup
 @permission_required()
+@edit_required_once(users_repo)
 def edit_required(username):
     """Edit user"""
     user = users_repo.get().get(username)

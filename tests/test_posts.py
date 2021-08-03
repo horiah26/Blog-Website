@@ -1,6 +1,5 @@
 """Post tests"""
 import datetime
-from unittest import mock
 from conftest import login, logout
 
 def test_homepage_works(client):
@@ -69,27 +68,9 @@ def test_can_update_post(client):
 
     logout(client)
 
-def test_shows_posts_on_user_profile(client):
-    """Can open the last post from seed"""
-    rv = client.get('/users/username1/')
-    print (rv.data)
-    assert b'Duis a lectus in erat blandit hendrerit ' in rv.data
-
 def test_redirects_if_post_not_found(client):
     """Redirects if post at index not found"""
     assert b'Post not found' in client.get('/100/', follow_redirects=True).data
-
-def test_can_log_in_user_redirects_to_homepage(client):
-    """Tests if page is rediected after log in"""
-    login = client.post('/login',
-                data = dict(username='username3',
-                    password = 'password3'), follow_redirects=True)
-
-    assert login.status_code == 200
-
-    assert b'blog-description' in login.data
-    assert b'wrapper' in login.data
-    assert b'welcome' in login.data
 
 def admin_can_update_post(client):
     """Can update post"""
@@ -185,7 +166,6 @@ def test_does_not_update_article_with_empty_title(client):
     assert  b"<title>\nDuis a lectus\n</title>" in after.data
     assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' not in after.data
 
-
 def test_does_not_write_article_if_not_logged_in(client):
     """Cannot write article if not logged_in"""
     redirect = client.post('/create',
@@ -224,105 +204,3 @@ def test_can_delete_post_if_logged_in(client):
     print
     assert b'Post not found' in client.get('/3/', follow_redirects=True).data
     logout(client)
-
-
-def test_admin_can_edit_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
-    logout(client)
-    login(client, 'admin','admin')
-    before = client.get('/users/username1/')
-    assert  b"username1" in before.data
-
-    client.post('/users/username1/edit',
-            data = dict(name='new name for test1',
-                        email='Ugly text for test sdhsdjherj3eh12k;op1',
-                        password='',
-                        confirm_password=''), follow_redirects = True)
-
-    after = client.get('/users/username1/')
-    print (after.data)
-    assert b'new name for test' in after.data
-    assert b'Ugly text for test sdhsdjherj3eh12k;op' in after.data
-
-def test_admin_can_delete_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
-    logout(client)
-    login(client, 'admin','admin')
-    before = client.get('/users/username2/')
-    assert b"username2" in before.data
-    assert b'username2' in client.get('/users').data
-
-    rv = client.get('/users/username2/delete', follow_redirects = True)
-    assert rv.status_code == 200
-    assert b'User deleted' in rv.data
-    assert not b'username2' in client.get('/users').data
-    logout(client)
-
-def test_user_cannot_edit_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
-    logout(client)
-    login(client, 'username3','password3')
-    before = client.get('/users/username1/')
-    assert  b"username1" in before.data
-
-    rv = client.post('/users/username1/edit',
-            data = dict(name='new name for test',
-                        text='Ugly text for test sdhsdjherj3eh12k;op'), follow_redirects = True)
-
-    assert b'You don&#39;t have permission to modify this profile' in rv.data
-    logout(client)
-
-def test_user_cannot_delete_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
-    logout(client)
-    login(client, 'username3','password3')
-    before = client.get('/users/username1/')
-    assert  b"username1" in before.data
-
-    rv = client.get('/users/username1/delete', follow_redirects = True)
-
-    assert b'You don&#39;t have permission to modify this profile' in rv.data
-    logout(client)
-
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
-def test_homepage_redirects_to_setup_if_no_db_config(mock_check, client):
-    """Tests if homepage redirects if no db_config"""
-    redirected = client.get('/', follow_redirects=True)
-    assert b'blog-description' not in redirected.data
-    assert b'wrapper' not in redirected.data
-    assert b'welcome' not in redirected.data
-
-    assert b'<label class="crud_label" for="database"> Database </label> <br>' in redirected.data
-    assert b'<input type="text" class="form-title" name="database"><br>' in redirected.data
-    assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
-    assert b'<input type="submit" value="Submit">' in redirected.data
-
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
-def test_create_redirects_to_setup_if_no_db_config(mock_config_exists, client):
-    """Tests if /create redirects if no db_config"""
-    redirected = client.get('/create', follow_redirects=True)
-
-    assert b'<label class="crud_label" for="database"> Database </label> <br>' in redirected.data
-    assert b'<input type="text" class="form-title" name="database"><br>' in redirected.data
-    assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
-    assert b'<input type="submit" value="Submit">' in redirected.data
-
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
-def test_update_redirects_to_setup_if_no_db_config(mock_config_exists, client):
-    """Tests if /update redirects if no db_config"""
-    redirected = client.get('/1/update', follow_redirects=True)
-
-    assert b'<label class="crud_label" for="database"> Database </label> <br>' in redirected.data
-    assert b'<input type="text" class="form-title" name="database"><br>' in redirected.data
-    assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
-    assert b'<input type="submit" value="Submit">' in redirected.data
-
-@mock.patch("config.config.Config.config_file_exists", return_value = False)
-def test_index_redirects_to_setup_if_no_db_config(mock_config_exists, client):
-    """Tests if article at index redirects if no db_config"""
-    redirected = client.get('/1/', follow_redirects=True)
-
-    assert b'<label class="crud_label" for="database"> Database </label> <br>' in redirected.data
-    assert b'<input type="text" class="form-title" name="database"><br>' in redirected.data
-    assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
-    assert b'<input type="submit" value="Submit">' in redirected.data
