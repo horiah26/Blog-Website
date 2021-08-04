@@ -1,4 +1,5 @@
 """Blog blueprint"""
+import math  
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, session
 )
@@ -22,8 +23,21 @@ bp = Blueprint('blog', __name__)
 @bp.route('/', methods=['GET'])
 @redirect_to_setup
 def home():
-    """Route to home"""
-    return render_template('blog/home.html', posts=repo_holder.get().get_previews(), generator=gen)
+    """Route to home + pagination"""   
+    per_page = 6
+    posts=repo_holder.get().get_previews()
+
+    total_pages = math.ceil(len(posts) / per_page) 
+    pages = range (1, total_pages + 1)
+    page_num = request.args.get('page', 1, type=int)
+
+    if page_num not in pages:
+        page_num = 1
+
+    first_index = page_num * per_page
+    last_index = (page_num - 1) * per_page
+
+    return render_template('blog/home.html', posts=posts[-first_index : len(posts) - last_index][::-1], page_num = page_num, pages = pages, generator=gen)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required

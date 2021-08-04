@@ -360,10 +360,6 @@ input[type=submit]:hover {
         display: flex;
     }
 
-    .menu-buttons {
-        /* display: none;*/
-    }
-
     .navbar-links {
         display:none;
         width: 100%;
@@ -540,4 +536,39 @@ input[type=submit]:hover {
 
 #post-owner-name {
     color: darkcyan;
+}
+
+.pagination {
+    display: block;
+    justify-content: center;
+    text-align: center;
+    margin: 10px 0px 20px 0px;
+}
+
+.page-numbers a {
+    font-size: 2em;
+    margin: 5px;
+}
+.page-numbers a:hover {
+    font-size: 2em;
+    margin: 5px;
+}
+
+#active-page {
+    color: darkcyan;
+}
+
+#inactive-page {
+    color: var(--theme_white);
+}
+#inactive-page :hover {
+    color: var(--post_background);
+}
+
+.pagination:hover {
+    color: var(--post_background);
+}
+
+#arrow {
+    color: var(--theme_white);
 }

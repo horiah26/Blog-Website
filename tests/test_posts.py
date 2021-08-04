@@ -11,8 +11,8 @@ def test_homepage_works(client):
     assert b'category-tag popular' in rv.data
     assert b'profile-img' in rv.data
 
-def test_display_name_not_username_shown_in_main_cards(client):
-    """Does not update an article if the input is an empty title"""
+def test_display_name_not_username_shown_in_cards(client):
+    """Does display name is shown in cards"""
     rv = client.get('/')
     assert b' <h6 class="owner">\n                            Name 2\n                        </h6>' in rv.data
 
@@ -38,6 +38,7 @@ def test_opens_first_post_from_seed(client):
     assert bytes(time_now, 'utf-8') in rv.data
 
 def test_shows_display_name_in_post_view(client):
+    """Test shows display name in post view"""
     rv = client.get('/6/')
     print(rv.data)
     assert b'Name 2' in rv.data
@@ -97,8 +98,8 @@ def test_write_article(client):
                 data = dict(title='Ugly title for test lsdkhnsdpbjeri',
                             text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'))
 
-    newpost = client.get('/9/').data #8 posts in seed
-
+    newpost = client.get('/15/').data #14 posts in seed
+    print(newpost)
     assert b'Ugly title for test lsdkhnsdpbjeri' in newpost
     assert b'Ugly text for test asfjkoas.fnklwpgow[gp[g;pq' in newpost
 
@@ -108,30 +109,30 @@ def test_does_not_write_article_with_empty_text(client):
     """Does not write article with empty text"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/9/').status_code == 200 #post 9 exists (8 from seed + 1 created previously)
-    assert b'Post not found' in client.get('/10/', follow_redirects=True).data #post 10 does not exist
+    assert client.get('/15/').status_code == 200 
+    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
 
     client.post('/create',
             data = dict(title='Ugly title for test lsdkhnsdpbjeri',
                         text=' '), follow_redirects=True)
 
-    assert b'Post not found' in client.get('/10/', follow_redirects=True).data
+    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
 
 def test_does_not_write_article_with_empty_title(client):
     """Does not write article with empty title"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/9/').status_code == 200 #post 9 exists (8 from seed + 1 created previously))
-    assert b'Post not found' in client.get('/10/', follow_redirects=True).data #post 11 does not exist
+    assert client.get('/15/').status_code == 200 
+    assert b'Post not found' in client.get('/16/', follow_redirects=True).data 
 
     rv = client.post('/create',
                 data = dict(title=' ',
                             text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'))
     assert b'Title is required' in rv.data
-    assert b'Post not found' in client.get('/10/', follow_redirects=True).data
+    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
 
 def test_admin_can_delete_other_users_post(client):
-    """Can delete post"""
+    """Can delete other user's post"""
     login(client, 'admin', 'admin')
     assert client.get('/7/').status_code == 200
 
@@ -175,7 +176,7 @@ def test_does_not_write_article_if_not_logged_in(client):
     assert b'You must be logged in to do this' in redirect.data
 
 def test_cannot_delete_post_if_not_logged_in(client):
-    """Can delete post"""
+    """Cannot delete post if not logged in"""
     logout(client)
     assert client.get('/3/').status_code == 200
 
@@ -195,7 +196,7 @@ def test_cannot_delete_post_if_logged_in_as_another_user(client):
     logout(client)
 
 def test_can_delete_post_if_logged_in(client):
-    """Can delete post"""
+    """Can delete post if logged in"""
     login(client, 'username1', 'password1')
     assert client.get('/3/').status_code == 200
 
@@ -204,3 +205,32 @@ def test_can_delete_post_if_logged_in(client):
     print
     assert b'Post not found' in client.get('/3/', follow_redirects=True).data
     logout(client)
+
+def test_paging_works(client):
+    """Paging works"""
+    rv = client.get('/?page=1')
+    assert b'id="active-page">1</a>' in rv.data
+    assert b'id="inactive-page">2</a>' in rv.data
+    assert b'id="inactive-page">3</a>' in rv.data
+
+    assert b'Vivamus pretium dui' in rv.data
+    assert b'Nullam quis quam convallis' not in rv.data
+    assert b'Lorem ipsum dolor sit amet, consectetur adipiscing elit' not in rv.data
+
+    rv = client.get('/?page=2')
+    assert b'id="inactive-page">1</a>' in rv.data
+    assert b'id="active-page">2</a>' in rv.data
+    assert b'id="inactive-page">3</a>' in rv.data
+
+    assert b'Vivamus pretium dui' not in rv.data
+    assert b'Nullam quis quam convallis' in rv.data
+    assert b'Lorem ipsum dolor sit amet, consectetur adipiscing elit' not in rv.data
+
+    rv = client.get('/?page=3')
+    assert b'id="inactive-page">1</a>' in rv.data
+    assert b'id="inactive-page">2</a>' in rv.data
+    assert b'id="active-page">3</a>' in rv.data
+
+    assert b'Vivamus pretium dui' not in rv.data
+    assert b'Nullam quis quam convallis' not in rv.data
+    assert b'Lorem ipsum dolor sit amet, consectetur adipiscing elit' in rv.data

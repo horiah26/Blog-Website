@@ -4,17 +4,13 @@ from unittest import mock
 from conftest import login, logout
 
 def test_shows_posts_on_user_profile(client):
-    """Can open the last post from seed"""
+    """Shows posts on user profile"""
     rv = client.get('/users/username1/')
     assert b'Duis a lectus in erat blandit hendrerit' in rv.data
-
-def test_posts_show_on_user_profile(client):
-    """Can open the last post from seed"""
-    rv = client.get('/users/username1/')
     assert b'Quisque tempor fringilla velit et accumsan. Cras vitae purus sit amet tellus tempor facilisis' in rv.data
 
 def test_shows_info_on_user_profile(client):
-    """Can open the last post from seed"""
+    """Shows info on user profile"""
     rv = client.get('/users/username1/')
     assert b'Name 1\'s Profile' in rv.data
     assert b'Email: email1@g.com' in rv.data
@@ -42,7 +38,7 @@ def test_user_can_edit_own_profile(client):
     assert b'Ugly text for test sdhsdjherj3eh12k;op4' in after.data
 
 def test_user_can_delete_own_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """Does user can delete own profile"""
     logout(client)
     login(client, 'username4','password4')
     before = client.get('/users/username4/')
@@ -56,7 +52,7 @@ def test_user_can_delete_own_profile(client):
     logout(client)
 
 def test_admin_can_edit_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """Admin can edit another user's profile"""
     logout(client)
     login(client, 'admin','admin')
     before = client.get('/users/username1/')
@@ -74,7 +70,7 @@ def test_admin_can_edit_another_user_profile(client):
     assert b'Ugly text for test sdhsdjherj3eh12k;op' in after.data
 
 def test_admin_can_delete_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """Admin can delete another user's profile"""
     logout(client)
     login(client, 'admin','admin')
     before = client.get('/users/username3/')
@@ -88,7 +84,7 @@ def test_admin_can_delete_another_user_profile(client):
     logout(client)
 
 def test_user_cannot_edit_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """User cannot edit another user's profile"""
     logout(client)
     login(client, 'username3','password3')
     before = client.get('/users/username1/')
@@ -102,7 +98,7 @@ def test_user_cannot_edit_another_user_profile(client):
     logout(client)
 
 def test_user_cannot_delete_another_user_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """User cannot delete another user's profile"""
     logout(client)
     login(client, 'username3','password3')
     before = client.get('/users/username1/')
@@ -114,7 +110,7 @@ def test_user_cannot_delete_another_user_profile(client):
     logout(client)
 
 def test_not_logged_in_cannot_edit_user_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """Cannot edit user profile if not logged in"""
     logout(client)
     before = client.get('/users/username1/')
     assert  b"username1" in before.data
@@ -127,7 +123,7 @@ def test_not_logged_in_cannot_edit_user_profile(client):
     logout(client)
 
 def test_not_logged_in_cannot_delete_user_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """Cannot delete user if not logged in"""
     logout(client)
     before = client.get('/users/username1/')
     assert  b"username1" in before.data

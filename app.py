@@ -8,7 +8,7 @@ from containers.db_container import DBContainer
 
 def create_app():
     """Creates app"""
-    database_type = "db"    
+    database_type = "memory"    
 
     app=Flask(__name__, template_folder='templates')
     app.config.from_mapping(

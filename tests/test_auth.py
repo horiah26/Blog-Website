@@ -38,7 +38,7 @@ def test_does_not_log_in_if_wrong_password(client):
     assert b'welcome' not in login.data
 
 def test_does_not_log_in_if_wrong_username(client):
-    """Tests if page is not logged in if wrong password"""
+    """Tests if page is not logged in if wrong username"""
     login = client.post('/login',
                 data = dict(username='username312512',
                     password = 'password4'), follow_redirects=True)
@@ -52,7 +52,7 @@ def test_does_not_log_in_if_wrong_username(client):
     assert b'welcome' not in login.data
 
 def test_does_not_log_in_if_empty_username(client):
-    """Tests if page is not logged in if wrong password"""
+    """Tests if page is not logged in if empty username"""
     login = client.post('/login',
                 data = dict(username='',
                     password = 'password4'), follow_redirects=True)
@@ -60,7 +60,7 @@ def test_does_not_log_in_if_empty_username(client):
     assert b'Invalid username or password' in login.data
 
 def test_does_not_log_in_if_empty_password(client):
-    """Tests if page is not logged in if wrong password"""
+    """Tests if page is not logged in if empty password"""
     login = client.post('/login',
                 data = dict(username='username312512',
                     password = ''), follow_redirects=True)
@@ -82,7 +82,7 @@ def test_can_sign_up_user(client):
     assert client.get('/').status_code == 200
 
 def test_cannot_sign_up_if_password_confirm_does_not_match(client):
-    """Tests if user can sign up"""
+    """Tests that user cannot sign up if password not confirmed"""
     sign_up = client.post('/signup',
                 data = dict(username='username6',
                     name='Name nr 6',
@@ -96,7 +96,7 @@ def test_cannot_sign_up_if_password_confirm_does_not_match(client):
     assert client.get('/').status_code == 200
 
 def test_cannot_sign_up_if_user_exists(client):
-    """Tests if user can sign up"""
+    """Tests user cannot sign up if user exists"""
     sign_up = client.post('/signup',
                 data = dict(username='username1',
                     name='Name nr 6',
@@ -108,7 +108,7 @@ def test_cannot_sign_up_if_user_exists(client):
     assert client.get('/').status_code == 200
 
 def test_cannot_sign_up_if_email_already_used(client):
-    """Tests if user can sign up"""
+    """Tests user cannot sign up if email already in use"""
     sign_up = client.post('/signup',
                 data = dict(username='username6',
                     name='Name nr 6',
@@ -120,7 +120,7 @@ def test_cannot_sign_up_if_email_already_used(client):
     assert client.get('/').status_code == 200
 
 def test_cannot_sign_up_if_password_empty(client):
-    """Tests if user can sign up"""
+    """Tests user cannot sign up if password empty"""
     sign_up = client.post('/signup',
                 data = dict(username='username6',
                     name='Name nr 6',
@@ -133,7 +133,7 @@ def test_cannot_sign_up_if_password_empty(client):
 
 
 def test_cannot_sign_up_if_username_empty(client):
-    """Tests if user can sign up"""
+    """Tests cannot sign up if username is empty"""
     sign_up = client.post('/signup',
                 data = dict(username='',
                     name='Name nr 6',
@@ -146,7 +146,7 @@ def test_cannot_sign_up_if_username_empty(client):
     
 
 def test_cannot_sign_up_if_name_empty(client):
-    """Tests if user can sign up"""
+    """Tests cannot sign up if name is empty"""
     sign_up = client.post('/signup',
                 data = dict(username='username 6',
                     name='',
@@ -159,7 +159,7 @@ def test_cannot_sign_up_if_name_empty(client):
     
 
 def test_cannot_sign_up_if_email_empty(client):
-    """Tests if user can sign up"""
+    """Tests cannot sign up if email is empty"""
     sign_up = client.post('/signup',
                 data = dict(username='username 6',
                     name='Name nr 6',
@@ -172,7 +172,7 @@ def test_cannot_sign_up_if_email_empty(client):
 
 
 def test_cannot_sign_up_if_confirm_password_empty(client):
-    """Tests if user can sign up"""
+    """Tests cannot sign up if password is empty"""
     sign_up = client.post('/signup',
                 data = dict(username='username 6',
                     name='Name nr 6',
@@ -185,7 +185,7 @@ def test_cannot_sign_up_if_confirm_password_empty(client):
 
 
 def test_can_log_in_user_redirects_to_homepage(client):
-    """Tests if page is rediected after log in"""
+    """Tests can log in and redirects to homepage"""
     login = client.post('/login',
                 data = dict(username='username3',
                     password = 'password3'), follow_redirects=True)
