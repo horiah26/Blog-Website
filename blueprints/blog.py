@@ -26,7 +26,6 @@ def home():
     """Route to home + pagination"""   
     per_page = 6
     posts=repo_holder.get().get_previews()
-
     total_pages = math.ceil(len(posts) / per_page) 
     pages = range (1, total_pages + 1)
     page_num = request.args.get('page', 1, type=int)
@@ -113,7 +112,7 @@ def filter():
         username = request.form['username'].strip()
     
     user = user_repo_holder.get().get(username)
-    if user is None and username is not '':
+    if user is None and username != '':
         flash('Please enter a valid username')
     return render_template('blog/filter_view.html', user = user, posts = repo_holder.get().get_previews(username), generator = gen)
 

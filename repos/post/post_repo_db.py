@@ -14,8 +14,6 @@ class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
     def __init__(self, seed = None):
         """Initializes class and adds posts from seed if present"""
-
-
         if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
@@ -88,9 +86,9 @@ class RepoPostsDB(IPostRepo):
         conn = db.get_connection()
         cur = conn.cursor()
         if username:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, users.date_created, users.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH, username])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH, username])
         else:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, users.date_created, users.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH])
         previews = cur.fetchall()
         cur.close()
         conn.close()

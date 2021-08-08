@@ -25,7 +25,6 @@ class ConfigDB(Config):
         """Loads database version to current session"""
         json_data = super().load()
         if 'db_version' in json_data and json_data['db_version'] == self.db_version:
-            print ("Database up to date")
             return True
         return False
 

@@ -16,9 +16,11 @@ class PostRepoHolder():
             self.posts = RepoContainer().post_repo_db_factory()
         elif db_type == 'memory':
             self.posts = RepoContainer().post_repo_memory_factory()
+        elif db_type == 'alchemy':
+            self.posts = RepoContainer().post_repo_alchemy_factory()
 
         else:
-            print('DB_TYPE not valid. Must be \'db\' or \'memory\'')
+            print('DB_TYPE not valid. Must be \'db\', \'alchemy\' or \'memory\'')
 
     def get(self):
         """Returns all posts"""
