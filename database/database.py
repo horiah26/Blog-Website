@@ -7,7 +7,7 @@ container = Container()
 
 class Database():
     """Handles database operations"""
-    def __init__(self):        
+    def __init__(self):
         self.config = container.config_factory()
         self.config_db = container.config_db_factory()
 
@@ -25,7 +25,7 @@ class Database():
     def create_update_tables(self):
         """Creates the posts table"""
         if self.config.config_file_exists() and not self.config_db.db_up_to_date():
-            from containers.password_hash_container import PasswordContainer        
+            from containers.password_hash_container import PasswordContainer
             password_hasher = PasswordContainer().password_hash_factory()
             try:
                 conn = self.get_connection()
@@ -34,7 +34,7 @@ class Database():
                     command_as_string = command.read()
                     cur.execute(command_as_string)
                 cur.close()
-                conn.commit()        
+                conn.commit()
                 password_hasher.hash()
                 self.config_db.update_db_version()
                 print("Tables created or updated")

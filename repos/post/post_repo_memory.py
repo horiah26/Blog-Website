@@ -23,7 +23,7 @@ class RepoPostsMemory(IPostRepo):
                 if user.username == post.owner:
                     display_name = user.name
                     break
-                    
+
             return (post, display_name)
 
     def get_all(self):

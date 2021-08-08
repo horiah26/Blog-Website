@@ -19,7 +19,7 @@ class Config():
         """Writes json_data to config file"""
         with open(self.CONFIG_PATH, 'w') as file:
             json.dump(new_data, file)
-    
+
     def config_file_exists(self):
         """Checks if database configuration file exists"""
         if current_app.config['DB_TYPE'] == 'db' or current_app.config['DB_TYPE'] == 'alchemy':

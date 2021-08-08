@@ -1,26 +1,23 @@
 """SQLAlchemy repo"""
-import datetime
-import psycopg2
-from sqlalchemy.sql import func
-from flask import current_app
-from static import constant
-from .IPostRepo import IPostRepo
 
+import datetime
+from static import constant
+
+from sqlalchemy.sql import func
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy import create_engine  
-from sqlalchemy import Column, String  
-from sqlalchemy.ext.declarative import declarative_base  
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from config.alchemy_url import AlchURL
 
 from containers.container import Container
-from containers.db_container import DBContainer
+from .IPostRepo import IPostRepo
 
 db_string = AlchURL().get_url()
-db = create_engine(db_string)  
+db = create_engine(db_string)
 base = declarative_base()
 
-Session = sessionmaker(db)  
+Session = sessionmaker(db)
 session = Session()
 
 Base = automap_base()
@@ -31,6 +28,7 @@ User = Base.classes.users
 container = Container()
 
 class RepoPostsAlchemy(IPostRepo):
+    """SQLAlchemy repo"""
     def __init__(self, seed = None):
         """Initializes class and adds posts from seed if present"""
         if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
@@ -48,20 +46,21 @@ class RepoPostsAlchemy(IPostRepo):
         """Returns post by id"""
         post = session.query(Post.post_id, Post.title, Post.text, Post.owner, Post.date_created, Post.date_modified, User.name).join(User, User.username == Post.owner).filter(Post.post_id == post_id).first()
         return (container.post_factory(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
-        
+
     def get_all(self):
         """Returns all posts"""
         return session.query(Post).all()
 
-    def update(self, post_id, title, text): 
+    def update(self, post_id, title, text):
         """Updates post by id"""
         post = session.query(Post).filter(Post.post_id == post_id).first()
         post.title = title
-        post.text = text        
+        post.text = text
+        post.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         session.commit()
 
     def delete(self, post_id):
-        """Deletes post by id"""  
+        """Deletes post by id"""
         post = session.query(Post).filter(Post.post_id == post_id).first()
         session.delete(post)
         session.commit()
@@ -69,7 +68,7 @@ class RepoPostsAlchemy(IPostRepo):
     def get_previews(self, username = None):
         """Returns previews of posts posts"""
         previews = []
-        if username: 
+        if username:
             for post_id, title, prev_text, name, username, date_created, date_modified in session.query(Post.post_id, Post.title, func.substr(Post.text, 0, constant.PREVIEW_LENGTH), User.name, Post.owner, Post.date_created, Post.date_modified).join(User, User.username == Post.owner).filter(User.username == username).order_by(Post.post_id.desc()):
                 previews.append(container.preview_factory(post_id, title, prev_text, name, username, date_created, date_modified))
         else:
@@ -78,7 +77,5 @@ class RepoPostsAlchemy(IPostRepo):
         return previews[::-1]
 
     def next_id(self):
-        """Created to be compatible with post_repo_memory.
-            Id is assigned automatically by database"""
-        print(session.query(func.max(Post.post_id)).first()[0])#TODEL
+        """Returns next id"""
         return session.query(func.max(Post.post_id)).first()[0] + 1

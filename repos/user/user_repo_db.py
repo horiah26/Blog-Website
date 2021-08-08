@@ -3,14 +3,15 @@ import datetime
 import psycopg2
 
 from flask import flash
-from .IUserRepo import IUserRepo
 
 from containers.container import Container
 from containers.db_container import DBContainer
 
+from .IUserRepo import IUserRepo
+
 container = Container()
 
-db = DBContainer().database_factory() 
+db = DBContainer().database_factory()
 
 
 class RepoUserDB(IUserRepo):
@@ -28,7 +29,7 @@ class RepoUserDB(IUserRepo):
             "INSERT INTO users (username, name, email, password, date_created, date_modified) \
             VALUES(%s, %s, %s, %s, %s, %s)",
             (user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
-                
+
         conn.commit()
         cur.close()
         conn.close()

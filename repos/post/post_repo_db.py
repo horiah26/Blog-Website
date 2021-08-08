@@ -2,13 +2,14 @@
 import datetime
 import psycopg2
 from static import constant
-from .IPostRepo import IPostRepo
 
 from containers.container import Container
 from containers.db_container import DBContainer
 
+from .IPostRepo import IPostRepo
+
 container = Container()
-db = DBContainer().database_factory() 
+db = DBContainer().database_factory()
 
 class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""

@@ -1,6 +1,6 @@
 """Blueprint for user management"""
 from flask import (
-    Blueprint, redirect, render_template, request, url_for, flash, session
+    Blueprint, redirect, render_template, request, url_for, flash,
 )
 from werkzeug.security import generate_password_hash
 from blueprints.decorators.redirect_to_setup import redirect_to_setup

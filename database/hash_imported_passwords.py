@@ -1,6 +1,5 @@
 """Hashes the passwords of users imported from a database with posts"""
 from werkzeug.security import generate_password_hash
-from repos.user.user_repo_db import RepoUserDB
 from containers.repo_container import RepoContainer
 
 class HashImportedPasswords():

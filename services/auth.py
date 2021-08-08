@@ -13,7 +13,7 @@ class Authentication():
 
         from blueprints.users import users_repo
         user = users_repo.get().get(username)
-        users = users_repo.get().get_all()       
+        users = users_repo.get().get_all()
 
         email_taken = False
         for item in users:
@@ -41,7 +41,7 @@ class Authentication():
         if error is not None:
             flash(error)
             return redirect(url_for('auth.sign_up'))
-        
+
         users_repo.get().insert(Container().user_factory(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
         flash("You have signed up")
         return redirect(url_for('blog.home'))
@@ -66,6 +66,7 @@ class Authentication():
         flash("You are logged out")
 
     def logged_user(self):
+        """If any user is logged in return true, else return false"""
         if 'username' in session:
             return session['username']
         return False

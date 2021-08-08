@@ -1,7 +1,7 @@
 """Blog blueprint"""
-import math  
+import math
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, session
+    Blueprint, flash, redirect, render_template, request, url_for
 )
 from repos.post.methods import post_misc_generator as gen
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
@@ -23,10 +23,10 @@ bp = Blueprint('blog', __name__)
 @bp.route('/', methods=['GET'])
 @redirect_to_setup
 def home():
-    """Route to home + pagination"""   
+    """Route to home + pagination"""
     per_page = 6
     posts=repo_holder.get().get_previews()
-    total_pages = math.ceil(len(posts) / per_page) 
+    total_pages = math.ceil(len(posts) / per_page)
     pages = range (1, total_pages + 1)
     page_num = request.args.get('page', 1, type=int)
 
@@ -110,9 +110,8 @@ def filter():
     username = ''
     if request.method == 'POST':
         username = request.form['username'].strip()
-    
+
     user = user_repo_holder.get().get(username)
     if user is None and username != '':
         flash('Please enter a valid username')
     return render_template('blog/filter_view.html', user = user, posts = repo_holder.get().get_previews(username), generator = gen)
-

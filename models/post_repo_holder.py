@@ -1,8 +1,6 @@
 """A class that holds posts so they can be operated on by routes in blueprints"""
 from flask import current_app
-from repos.post.IPostRepo import IPostRepo
 from containers.repo_container import RepoContainer
-from containers.container import Container
 
 class PostRepoHolder():
     """A class that holds posts so they can be operated on by routes in blueprints"""

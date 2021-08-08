@@ -52,7 +52,7 @@ def test_opens_last_post_from_seed(client):
     assert b'view_post_text' in rv.data
     assert b'view-post-date' in rv.data
     assert b'Donec tincidunt maximus sem' in rv.data
-    
+
 def test_can_update_post(client):
     """Can update post"""
     logout(client)
@@ -109,7 +109,7 @@ def test_does_not_write_article_with_empty_text(client):
     """Does not write article with empty text"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/15/').status_code == 200 
+    assert client.get('/15/').status_code == 200
     assert b'Post not found' in client.get('/16/', follow_redirects=True).data
 
     client.post('/create',
@@ -122,8 +122,8 @@ def test_does_not_write_article_with_empty_title(client):
     """Does not write article with empty title"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/15/').status_code == 200 
-    assert b'Post not found' in client.get('/16/', follow_redirects=True).data 
+    assert client.get('/15/').status_code == 200
+    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
 
     rv = client.post('/create',
                 data = dict(title=' ',
@@ -202,7 +202,6 @@ def test_can_delete_post_if_logged_in(client):
 
     client.get('/3/delete')
     print(client.get('/3/', follow_redirects=True).data)
-    print
     assert b'Post not found' in client.get('/3/', follow_redirects=True).data
     logout(client)
 
