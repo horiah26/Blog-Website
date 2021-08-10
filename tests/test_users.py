@@ -42,7 +42,6 @@ def test_user_can_delete_own_profile(client):
     login(client, 'username4','password4')
     before = client.get('/users/username4/')
     assert b"username4" in before.data
-    assert b'username4' in client.get('/users').data
 
     rv = client.get('/users/username4/delete', follow_redirects = True)
     assert rv.status_code == 200
@@ -130,3 +129,21 @@ def test_not_logged_in_cannot_delete_user_profile(client):
 
     assert b'You don&#39;t have permission to modify this profile' in rv.data
     logout(client)
+
+def test_cannot_see_users_list_if_not_logged_in(client):
+    """Cannot see users list if not logged in"""
+    logout(client)
+    rv = client.get('/users', follow_redirects = True)
+    assert  b"Only admin has access to this page" in rv.data
+
+def test_cannot_see_users_list_if_logged_in_but_not_admin(client):
+    """Cannot see users list if logged in but not admin"""
+    login(client, 'username1','password1')
+    rv = client.get('/users', follow_redirects = True)
+    assert  b"Only admin has access to this page" in rv.data
+
+def test_can_access_users_list_if_logged_in_as_admin(client):
+    """Can access users list if logged in as admin"""
+    login(client, 'admin','admin')
+    rv = client.get('/users', follow_redirects = True)
+    assert  b"Only admin has access to this page" not in rv.data

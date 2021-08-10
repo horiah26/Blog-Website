@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.edit_required_once import edit_required_once
+from blueprints.decorators.admin_required import admin_required
 from repos.post.methods import post_misc_generator as gen
 from containers.repo_holder_container import RepoHolderContainer
 from containers.auth_container import AuthContainer
@@ -18,6 +19,7 @@ posts_repo = repo_holder_container.post_repo_holder_factory()
 bp = Blueprint('users', __name__)
 
 @bp.route('/users', methods=['GET'])
+@admin_required
 @redirect_to_setup
 def view_all():
     """View all users"""
