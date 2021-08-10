@@ -1,6 +1,7 @@
 """SQLAlchemy repo"""
 
 import datetime
+import math
 from static import constant
 
 from sqlalchemy.sql import func
@@ -10,6 +11,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from config.alchemy_url import AlchURL
 
+from dependency_injector.wiring import inject, Provide
 from containers.container import Container
 from .IPostRepo import IPostRepo
 
@@ -65,16 +67,25 @@ class RepoPostsAlchemy(IPostRepo):
         session.delete(post)
         session.commit()
 
-    def get_previews(self, username = None):
+    def get_previews(self, username = None, per_page = 6, page_num = 1):
         """Returns previews of posts posts"""
+        offset_nr = (page_num - 1) * per_page
         previews = []
         if username:
-            for post_id, title, prev_text, name, username, date_created, date_modified in session.query(Post.post_id, Post.title, func.substr(Post.text, 0, constant.PREVIEW_LENGTH), User.name, Post.owner, Post.date_created, Post.date_modified).join(User, User.username == Post.owner).filter(User.username == username).order_by(Post.post_id.desc()):
+            for post_id, title, prev_text, name, username, date_created, date_modified in session.query(Post.post_id, Post.title, func.substr(Post.text, 0, constant.PREVIEW_LENGTH), User.name, Post.owner, Post.date_created, Post.date_modified).join(User, User.username == Post.owner).filter(User.username == username).order_by(Post.post_id.desc()).slice(offset_nr, offset_nr + per_page):
                 previews.append(container.preview_factory(post_id, title, prev_text, name, username, date_created, date_modified))
         else:
-            for post_id, title, prev_text, name, username, date_created, date_modified in session.query(Post.post_id, Post.title, func.substr(Post.text, 0, constant.PREVIEW_LENGTH), User.name, Post.owner, Post.date_created, Post.date_modified).join(User, User.username == Post.owner).order_by(Post.post_id.desc()):
+            for post_id, title, prev_text, name, username, date_created, date_modified in session.query(Post.post_id, Post.title, func.substr(Post.text, 0, constant.PREVIEW_LENGTH), User.name, Post.owner, Post.date_created, Post.date_modified).join(User, User.username == Post.owner).order_by(Post.post_id.desc()).limit(per_page).offset(offset_nr):
                 previews.append(container.preview_factory(post_id, title, prev_text, name, username, date_created, date_modified))
-        return previews[::-1]
+     
+                        
+        if username:
+            total_posts = session.query(Post.post_id).filter(Post.owner == username).count()
+        else:
+            total_posts = session.query(Post.post_id).count()
+            
+        total_pages = math.ceil(total_posts / per_page)
+        return (previews, total_pages)
 
     def next_id(self):
         """Returns next id"""

@@ -29,8 +29,24 @@ def view_all():
 @redirect_to_setup
 def view_user(username):
     """View user"""
+    per_page = 6
+    page_num = request.args.get('page', 1, type=int)
+    previews_pages = posts_repo.get().get_previews(username, per_page, page_num)
+    previews = previews_pages[0]
+    total_pages = previews_pages[1]
+    
+    print(total_pages, "pages")
+    if total_pages == 1:
+        pages = [1]
+        print(pages)
+    else:
+        pages = range (1, total_pages + 1)
+
+    if page_num not in pages:
+        page_num = 1
+
     if users_repo.get().get(username):
-        return render_template('users/view.html', user = users_repo.get().get(username), posts = posts_repo.get().get_previews(username), generator = gen)
+        return render_template('users/view.html', user = users_repo.get().get(username),page_num = page_num, pages = pages, posts = previews, generator = gen)
     flash('User not found')
     return redirect(url_for('users.view_all'))
 

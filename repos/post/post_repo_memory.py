@@ -1,5 +1,6 @@
 """Memory posts repo """
 import datetime
+import math
 from containers.container import Container
 from models.post import Post
 from static import constant
@@ -57,24 +58,30 @@ class RepoPostsMemory(IPostRepo):
             post_id = max(post.post_id for post in self.posts) + 1
         return post_id
 
-    def get_previews(self, username = None):
+    def get_previews(self, username = None, per_page = 6, page_num = 1):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
         from containers.repo_container import RepoContainer
         users = RepoContainer().user_repo_memory_factory().get_all()
         if username:
-            for post in posts:
+            for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username == username:
                         previewed_posts.append(container.preview_factory(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
                         break
 
         else:
-            for post in posts:
+            for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username:
                         previewed_posts.append(container.preview_factory(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
                         break
 
-        return previewed_posts
+        total_posts = len(previewed_posts)
+        total_pages = math.ceil(total_posts / per_page)
+
+        if total_pages == 0:
+            total_pages = 1
+
+        return (previewed_posts[(page_num - 1) * per_page : (page_num) * per_page], total_pages)

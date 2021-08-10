@@ -98,6 +98,10 @@ li, a {
     color: var(--theme_white);
 }
 
+.crud_form submit{
+    margin-right: -50px;
+}
+
 input[type=text], input[type=password], textarea {
     border: 5px solid #203647;
     background-color: #203647;
@@ -571,4 +575,16 @@ input[type=submit]:hover {
 
 #arrow {
     color: var(--theme_white);
+}
+
+select {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    color:var(--theme_white);
+    background-color: var(--navbar_color);
+}
+
+#reset{
+    margin-left: -6px;
 }

@@ -1,10 +1,14 @@
 """Database repo"""
+import math
 import datetime
 import psycopg2
 from static import constant
 
 from containers.container import Container
 from containers.db_container import DBContainer
+from models.post import Post
+from models.post_preview import PostPreview
+from models.user import User
 
 from .IPostRepo import IPostRepo
 
@@ -46,7 +50,7 @@ class RepoPostsDB(IPostRepo):
         if post is None:
             print("ERROR: Post not found, incorrect id")
         else:
-            return (container.post_factory(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
+            return (Post(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
 
     def delete(self, post_id):
         """Deletes post by id"""
@@ -79,24 +83,36 @@ class RepoPostsDB(IPostRepo):
         conn.close()
         posts = []
         for row in rows:
-            posts.append(container.post_factory(row[0], row[1], row[2], row[3], row[4], row[5]))
+            posts.append(Post(row[0], row[1], row[2], row[3], row[4], row[5]))
         return posts
 
-    def get_previews(self, username = None):
+    def get_previews(self, username = None, per_page = 6, page_num = 1):
         """Returns previews of posts posts"""
         conn = db.get_connection()
         cur = conn.cursor()
+        offset_nr = (page_num - 1) * per_page
+
         if username:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH, username])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
         else:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC;", [constant.PREVIEW_LENGTH])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
         previews = cur.fetchall()
+        
+        if username:
+            cur.execute ("SELECT COUNT(*) FROM posts WHERE owner = %s", [username])
+        else:
+            cur.execute ("SELECT COUNT(*) FROM posts")
+
+        total_posts = cur.fetchone()[0]
+        total_pages = math.ceil(total_posts / per_page)
+
         cur.close()
         conn.close()
         posts = []
+
         for row in previews:
-            posts.append(container.preview_factory(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
-        return posts
+            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+        return (posts, total_pages)
 
     def next_id(self):
         """Created to be compatible with post_repo_memory.

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{user.name}}{% endblock %}
+{% block title %}{{user.name}}'s Profile'{% endblock %}
 
 {% block header %}<h1 class="crud-title">{{user.name}}'s Profile</h1>{% endblock %}
 
@@ -21,6 +21,7 @@
 
 
 <div class="wrapper">
+    {% if posts is defined and posts %}
     {% for preview in posts %}
     <a href="{{url_for('blog.show', post_id = preview.post_id)}}">
         <div class="card">
@@ -54,6 +55,38 @@
         </div>
     </a>
     {% endfor %}
+    {% endif %}
+</div>
+
+
+<div class="pagination">
+    <div class="page-numbers">
+        {% if page_num > 1 %}
+        <a href="{{ url_for('users.view_user', username = user.username, page=page_num - 1) }}"
+           class="arrow">
+            &laquo;
+        </a>
+        {% endif %}
+
+        {% for page in pages %}
+        {% if page %}
+        {% if page == page_num %}
+        <a href="{{ url_for('users.view_user', username = user.username, page=page_num)}}"
+           id="active-page">{{  page }}</a>
+        {% else %}
+        <a href="{{ url_for('users.view_user', username = user.username, page=page)}}"
+           id="inactive-page">{{  page }}</a>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
+        {% if page_num < pages[-1] %}
+        <a href="{{ url_for('users.view_user', username = user.username, page=page_num + 1) }}"
+           id="arrow">
+            &raquo;
+        </a>
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}
