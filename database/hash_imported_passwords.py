@@ -1,11 +1,12 @@
 """Hashes the passwords of users imported from a database with posts"""
 from werkzeug.security import generate_password_hash
-from containers.repo_container import RepoContainer
+from dependency_injector.wiring import inject, Provide
 
+@inject
 class HashImportedPasswords():
     """Hashes the passwords of users imported from a database with posts"""
-    def __init__(self):
-        self.repo = RepoContainer().user_repo_db_factory()
+    def __init__(self, repo = Provide['user_repo_db']):
+        self.repo = repo
 
     def hash(self):
         """Hashes the passwords of users imported from a database with posts"""

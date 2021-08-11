@@ -1,19 +1,19 @@
 """Class that handles authentication"""
 from flask import flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash
-from containers.container import Container
+from dependency_injector.wiring import inject, Provide
+from models.user import User
 
 class Authentication():
     """Class that handles authentication"""
-    def __init__(self):
-        pass
+    def __init__(self, user_repo_holder = Provide['user_repo_holder']):
+        self.user_repo = user_repo_holder.get()
 
     def sign_up(self, username, name, email, password, confirm_password):
         """Signs user up"""
 
-        from blueprints.users import users_repo
-        user = users_repo.get().get(username)
-        users = users_repo.get().get_all()
+        user = self.user_repo.get(username)
+        users = self.user_repo.get_all()
 
         email_taken = False
         for item in users:
@@ -42,14 +42,13 @@ class Authentication():
             flash(error)
             return redirect(url_for('auth.sign_up'))
 
-        users_repo.get().insert(Container().user_factory(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
+        self.user_repo.insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
         flash("You have signed up")
         return redirect(url_for('blog.home'))
 
     def login(self, username, password):
         """Logs user in"""
-        from blueprints.users import users_repo
-        user = users_repo.get().get(username)
+        user = self.user_repo.get(username)
         if user is None or not user.check_password(password):
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))

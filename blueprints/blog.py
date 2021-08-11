@@ -7,22 +7,18 @@ from repos.post.methods import post_misc_generator as gen
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
-from containers.container import Container
-from containers.db_container import DBContainer
-from containers.auth_container import AuthContainer
-from containers.repo_holder_container import RepoHolderContainer
+from dependency_injector.wiring import inject, Provide
 
-container = Container()
-auth = AuthContainer().auth_factory()
-post_repo_holder = RepoHolderContainer().post_repo_holder_factory()
-user_repo_holder = RepoHolderContainer().user_repo_holder_factory()
-db = DBContainer().database_factory()
+from models.post import Post
+from models.post_preview import PostPreview
+from models.user import User
 
 bp = Blueprint('blog', __name__)
 
 @bp.route('/', methods=['GET', 'POST'])
 @redirect_to_setup
-def home():
+@inject
+def home(post_repo_holder = Provide['post_repo_holder'], user_repo_holder = Provide['user_repo_holder']):
     """Route to home + pagination + filter by user"""
     if not 'filter_user' in session:        
             session['filter_user'] = None
@@ -53,7 +49,8 @@ def home():
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @redirect_to_setup
-def create():
+@inject
+def create(auth = Provide['auth'], post_repo_holder = Provide['post_repo_holder']):
     """Route to creating new posts"""
     if request.method == 'POST':
         title = request.form['title'].strip()
@@ -69,7 +66,7 @@ def create():
         else:
             post_id = post_repo_holder.get().next_id()
 
-            post_repo_holder.get().insert(container.post_factory(post_id, title, text, auth.logged_user()))
+            post_repo_holder.get().insert(Post(post_id, title, text, auth.logged_user()))
 
             flash("Post has been created")
             return redirect(url_for('blog.home'))
@@ -77,7 +74,8 @@ def create():
 
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
-def show(post_id):
+@inject
+def show(post_id, post_repo_holder = Provide['post_repo_holder']):
     """Route to show post by id"""
     post_and_display_name = post_repo_holder.get().get(post_id)
     if post_and_display_name:
@@ -87,10 +85,11 @@ def show(post_id):
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
 @redirect_to_setup
-@permission_required(post_repo_holder)
-def update(post_id):
+@permission_required
+@inject
+def update(post_id, post_repo_holder = Provide['post_repo_holder']):
     """Route to update existing posts"""
-    post = post_repo_holder.get().get(post_id)
+    post = post_repo_holder.get().get(post_id)[0]
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
@@ -98,17 +97,19 @@ def update(post_id):
         if not title:
             title = post.title
         elif not text:
+            print(post)
             text = post.text
         else:
             post_repo_holder.get().update(post_id, title, text)
             flash("Post has been updated")
             return redirect(url_for('blog.home'))
-    return render_template('blog/update_post.html', post=post[0])
+    return render_template('blog/update_post.html', post=post)
 
 @bp.route('/<int:post_id>/delete', methods=['GET'])
 @redirect_to_setup
-@permission_required(post_repo_holder)
-def delete(post_id):
+@permission_required
+@inject
+def delete(post_id, post_repo_holder = Provide['post_repo_holder']):
     """Route to delete posts"""
     post_repo_holder.get().delete(post_id)
     flash("Post has been deleted")
@@ -116,7 +117,7 @@ def delete(post_id):
 
 @bp.route('/filter', methods=['GET', 'POST'])
 @redirect_to_setup
-@permission_required(post_repo_holder)
+@permission_required
 def filter():
     """Search function"""
     username = ''

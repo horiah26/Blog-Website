@@ -3,29 +3,29 @@ import math
 import datetime
 import psycopg2
 from static import constant
+from dependency_injector.wiring import inject, Provide
 
-from containers.container import Container
-from containers.db_container import DBContainer
 from models.post import Post
 from models.post_preview import PostPreview
 from models.user import User
-
 from .IPostRepo import IPostRepo
 
-container = Container()
-db = DBContainer().database_factory()
 
 class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
-    def __init__(self, seed = None):
+    @inject
+    def __init__(self,
+                seed = None,
+                db = Provide['database']):
         """Initializes class and adds posts from seed if present"""
+        self.db = db
         if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
 
     def insert(self, post):
         """Add a new post"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO posts (title, text, owner, date_created, date_modified) \
@@ -38,7 +38,7 @@ class RepoPostsDB(IPostRepo):
 
     def get(self, post_id):
         """Returns post by id"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute("SELECT post_id, title, text, owner, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
         post = cur.fetchone()
@@ -54,7 +54,7 @@ class RepoPostsDB(IPostRepo):
 
     def delete(self, post_id):
         """Deletes post by id"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute("DELETE FROM posts WHERE post_id = %s;", (post_id,))
         conn.commit()
@@ -63,7 +63,7 @@ class RepoPostsDB(IPostRepo):
 
     def update(self, post_id, title, text):
         """Updates post by id"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
@@ -75,7 +75,7 @@ class RepoPostsDB(IPostRepo):
 
     def get_all(self):
         """Returns all posts"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute("SELECT * FROM posts;")
         rows = cur.fetchall()
@@ -88,7 +88,7 @@ class RepoPostsDB(IPostRepo):
 
     def get_previews(self, username = None, per_page = 6, page_num = 1):
         """Returns previews of posts posts"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         offset_nr = (page_num - 1) * per_page
 

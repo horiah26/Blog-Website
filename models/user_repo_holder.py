@@ -1,21 +1,23 @@
 """A class that holds posts so they can be operated on by routes in blueprints"""
 from flask import current_app
-from containers.repo_container import RepoContainer
+from dependency_injector.wiring import inject, Provide
 
 class UserRepoHolder():
     """A class that holds posts so they can be operated on by routes in blueprints"""
     def __init__(self):
         self.users = None
 
-    def create_repo(self):
+    def create_repo(self, user_repo_db = Provide['user_repo_db'],
+                    user_repo_memory = Provide['user_repo_memory'],
+                    user_repo_alchemy = Provide['user_repo_alchemy']):
         """Creates the repo"""
         db_type = current_app.config["DB_TYPE"]
         if db_type == 'db':
-            self.users = RepoContainer().user_repo_db_factory()
+            self.users = user_repo_db
         elif db_type == 'memory':
-            self.users = RepoContainer().user_repo_memory_factory()
+            self.users = user_repo_memory
         elif db_type == 'alchemy':
-            self.users = RepoContainer().user_repo_alchemy_factory()
+            self.users = user_repo_alchemy
         else:
             print('DB_TYPE not valid. Must be \'db\', \'alchemy\' or \'memory\'')
 

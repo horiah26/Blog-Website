@@ -1,29 +1,27 @@
 """Memory posts repo"""
 import datetime
 import psycopg2
+from dependency_injector.wiring import inject, Provide
 
 from flask import flash
 
-from containers.container import Container
-from containers.db_container import DBContainer
+from models.user import User
 
 from .IUserRepo import IUserRepo
-
-container = Container()
-
-db = DBContainer().database_factory()
 
 
 class RepoUserDB(IUserRepo):
     """Repo for posts in memory"""
-    def __init__(self, seed = None):
+    def __init__(self, seed = None, 
+                 db = Provide['database']):
+        self.db = db
         if seed is not None and len(self.get_all()) == 0:
             for user in seed:
                 self.insert(user)
 
     def insert(self, user):
         """Add a new user"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO users (username, name, email, password, date_created, date_modified) \
@@ -36,7 +34,7 @@ class RepoUserDB(IUserRepo):
 
     def get(self, username):
         """Returns user object by username"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute("SELECT * FROM users WHERE username = %s;", (username,))
         user = cur.fetchone()
@@ -48,11 +46,11 @@ class RepoUserDB(IUserRepo):
             print("ERROR: User not found, incorrect username")
             flash("ERROR: User not found, incorrect username")
             return None
-        return container.user_factory(user[0], user[1], user[2], user[3], user[4], user[5])
+        return User(user[0], user[1], user[2], user[3], user[4], user[5])
 
     def delete(self, username):
         """Deletes user by username"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute("DELETE FROM users WHERE username = %s;", (username,))
         conn.commit()
@@ -61,7 +59,7 @@ class RepoUserDB(IUserRepo):
 
     def update(self, username, name, email, password):
         """Updates user by id"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
@@ -73,7 +71,7 @@ class RepoUserDB(IUserRepo):
 
     def get_all(self):
         """Returns all users"""
-        conn = db.get_connection()
+        conn = self.db.get_connection()
         cur = conn.cursor()
         try:
             cur.execute("SELECT * FROM users;")
@@ -86,5 +84,5 @@ class RepoUserDB(IUserRepo):
         conn.close()
         users = []
         for row in rows:
-            users.append(container.user_factory(row[0], row[1], row[2], row[3], row[4], row[5]))
+            users.append(User(row[0], row[1], row[2], row[3], row[4], row[5]))
         return users

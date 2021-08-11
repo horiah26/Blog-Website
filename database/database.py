@@ -1,18 +1,19 @@
 """Conects to the database"""
 import psycopg2
-
-from containers.container import Container
-
-container = Container()
+from dependency_injector.wiring import inject, Provide
 
 class Database():
     """Handles database operations"""
-    def __init__(self):
-        self.config = container.config_factory()
-        self.config_db = container.config_db_factory()
+    @inject
+    def __init__(self,
+                config = Provide['config'],
+                config_db = Provide['config_db']):
+        self.config = config
+        self.config_db = config_db
 
     def get_connection(self):
         """Conects to the database"""
+        print(self.config_db.get_db_auth())#TODEL
         db_config = self.config_db.get_db_auth().json
         try:
             return psycopg2.connect(database = db_config['database'],
@@ -22,11 +23,9 @@ class Database():
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    def create_update_tables(self):
+    def create_update_tables(self, password_hasher = Provide['password_hash']):
         """Creates the posts table"""
         if self.config.config_file_exists() and not self.config_db.db_up_to_date():
-            from containers.password_hash_container import PasswordContainer
-            password_hasher = PasswordContainer().password_hash_factory()
             try:
                 conn = self.get_connection()
                 cur = conn.cursor()

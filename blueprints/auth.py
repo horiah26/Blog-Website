@@ -3,14 +3,14 @@ from flask import (
     Blueprint, redirect, render_template, request, url_for, session
 )
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
-from containers.auth_container import AuthContainer
+from dependency_injector.wiring import inject, Provide
 
 bp = Blueprint('auth', __name__)
-auth_service = AuthContainer().auth_factory()
 
 @bp.route('/signup', methods=['GET', 'POST'])
 @redirect_to_setup
-def sign_up():
+@inject
+def sign_up(auth = Provide['auth']):
     """Creates a new user"""
     if request.method == 'POST':
         username = request.form['username'].strip()
@@ -19,12 +19,13 @@ def sign_up():
         password = request.form['password'].strip()
         confirm_password = request.form['confirm_password'].strip()
 
-        return auth_service.sign_up(username, name, email, password, confirm_password)
+        return auth.sign_up(username, name, email, password, confirm_password)
     return render_template('auth/sign_up.html')
 
 @bp.route('/login', methods=['GET', 'POST'])
 @redirect_to_setup
-def login():
+@inject
+def login(auth = Provide['auth']):
     """Log in user"""
     if request.method == 'POST':
         session.pop('username', None)
@@ -32,13 +33,14 @@ def login():
         username = request.form['username'].strip()
         password = request.form['password'].strip()
 
-        return auth_service.login(username, password)
+        return auth.login(username, password)
 
     return render_template('auth/login.html')
 
 @bp.route('/logout', methods=['GET', 'POST'])
 @redirect_to_setup
-def logout():
+@inject
+def logout(auth = Provide['auth']):
     """Log out user"""
-    auth_service.logout()
+    auth.logout()
     return redirect(url_for('blog.home'))

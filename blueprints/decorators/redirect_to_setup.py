@@ -4,8 +4,8 @@ from flask import redirect, url_for
 from containers.container import Container
 container = Container()
 
-config = container.config_factory()
-config_db = container.config_db_factory()
+config = container.config()
+config_db = container.config_db()
 
 def redirect_to_setup(f):
     """Added so app could be inserted as a parameter in the other wrapper"""

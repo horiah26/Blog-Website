@@ -1,24 +1,27 @@
 """Memory posts repo """
 import datetime
 import math
-from containers.container import Container
+
 from models.post import Post
+from models.post_preview import PostPreview
+from models.user import User
+from dependency_injector.wiring import inject, Provide
+
 from static import constant
 from .IPostRepo import IPostRepo
 
-container = Container()
-
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
-    def __init__(self, seed):
+    @inject
+    def __init__(self, seed, users_repo_holder = Provide['user_repo_memory']):
         self.posts = seed
+        self.users_repo_holder = users_repo_holder
 
     def get(self, post_id):
         """Returns post by id"""
         post = next((post for post in self.posts if post.post_id == post_id), None)
         if post is not None:
-            from blueprints.users import users_repo
-            users = users_repo.get().get_all()
+            users = self.users_repo_holder.get_all()
             display_name = None
             for user in users:
                 if user.username == post.owner:
@@ -62,20 +65,19 @@ class RepoPostsMemory(IPostRepo):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
-        from containers.repo_container import RepoContainer
-        users = RepoContainer().user_repo_memory_factory().get_all()
+        users = self.users_repo_holder.get_all()
         if username:
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username == username:
-                        previewed_posts.append(container.preview_factory(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
                         break
 
         else:
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username:
-                        previewed_posts.append(container.preview_factory(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.date_created, post.date_modified))
                         break
 
         total_posts = len(previewed_posts)

@@ -109,27 +109,27 @@ def test_does_not_write_article_with_empty_text(client):
     """Does not write article with empty text"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/15/').status_code == 200
-    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
+    assert client.get('/14/').status_code == 200
+    assert b'Post not found' in client.get('/15/', follow_redirects=True).data
 
-    client.post('/create',
+    rv = client.post('/create',
             data = dict(title='Ugly title for test lsdkhnsdpbjeri',
                         text=' '), follow_redirects=True)
 
-    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
+    assert b'Text is required' in rv.data
 
 def test_does_not_write_article_with_empty_title(client):
     """Does not write article with empty title"""
     login(client, 'username1', 'password1')
 
-    assert client.get('/15/').status_code == 200
-    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
+    assert client.get('/14/').status_code == 200
+    assert b'Post not found' in client.get('/15/', follow_redirects=True).data
 
     rv = client.post('/create',
                 data = dict(title=' ',
                             text='Ugly text for test asfjkoas.fnklwpgow[gp[g;pq'))
     assert b'Title is required' in rv.data
-    assert b'Post not found' in client.get('/16/', follow_redirects=True).data
+    assert b'Post not found' in client.get('/15/', follow_redirects=True).data
 
 def test_admin_can_delete_other_users_post(client):
     """Can delete other user's post"""
