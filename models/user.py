@@ -1,6 +1,5 @@
 """The user class"""
 import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
 
 class User():
     """The user class"""
@@ -29,11 +28,3 @@ class User():
         if self.username == username:
             return self
         return None
-
-    def set_hashed_password(self, password):
-        """Hashes password"""
-        self.password = generate_password_hash(password, method='pbkdf2:sha512:100')
-
-    def check_password(self, secret):
-        """Checks hassed password"""
-        return check_password_hash(self.password, secret)

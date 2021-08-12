@@ -12,11 +12,12 @@ def permission_required(f):
         return auth
 
     @inject
-    def get_post_repo_holder(post_repo_holder = Provide['post_repo_holder']):
-        return post_repo_holder
+    def get_post_repo(post_repo = Provide['post_repo']):
+        return post_repo
 
     @wraps(f)
     def wrapped(*args, **kwargs):
+        
         """decorator"""
         auth = get_auth()
         if 'username' in kwargs:
@@ -24,7 +25,7 @@ def permission_required(f):
                 flash("You don't have permission to modify this profile")
                 return redirect(url_for('blog.home'))
         if 'post_id' in kwargs:
-            if 'username' not in session or auth.logged_user() != get_post_repo_holder().get().get(kwargs['post_id'])[0].owner and auth.logged_user() != 'admin':
+            if 'username' not in session or auth.logged_user() != get_post_repo().get(kwargs['post_id'])[0].owner and auth.logged_user() != 'admin':
                 flash("You don't have permission to modify this post")
                 return redirect(url_for('blog.home'))
         return f(*args, **kwargs)

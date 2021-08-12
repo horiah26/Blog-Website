@@ -11,27 +11,23 @@ from config.config_db import ConfigDB
 from config.config import Config
 from database.database import Database
 from services.auth import Authentication
-from database.hash_imported_passwords import HashImportedPasswords
-
+from services.hasher import Hasher
 from config.alchemy_url import AlchURL
 
-from repos.post.post_repo_db import RepoPostsDB
-from repos.post.post_repo_memory import RepoPostsMemory
 from repos.post.post_repo_alchemy import RepoPostsAlchemy
 from repos.post.seed import get as post_seed
 
-from repos.user.user_repo_db import RepoUserDB
-from repos.user.user_repo_memory import RepoUserMemory
 from repos.user.user_repo_alchemy import RepoUserAlchemy
 from repos.user.seed import get as user_seed
 
-from models.post_repo_holder import PostRepoHolder
-from models.user_repo_holder import UserRepoHolder
-
-class Container(containers.DeclarativeContainer):
+class ContainerAlchemy(containers.DeclarativeContainer):
     """General purpose container"""
 
     config = providers.Configuration()
+    
+    hasher = providers.Factory(
+        Hasher
+    )
 
     config_db = providers.Factory(
         ConfigDB
@@ -47,50 +43,18 @@ class Container(containers.DeclarativeContainer):
     
     auth = providers.Factory(
         Authentication
-    )
-    
-    password_hash = providers.Factory(
-        HashImportedPasswords
-    )
+    )    
 
     alch_url = providers.Factory(
         AlchURL
     )
 
-    post_repo_db = providers.Singleton(
-        RepoPostsDB,
-        seed = post_seed()
-    )
-
-    post_repo_memory = providers.Singleton(
-        RepoPostsMemory,
-        seed = post_seed()
-    )
-
-    post_repo_alchemy = providers.Singleton(
+    post_repo = providers.Singleton(
         RepoPostsAlchemy,
         seed = post_seed()
     )
 
-    user_repo_db = providers.Singleton(
-        RepoUserDB,
-        seed = user_seed()
-    )
-
-    user_repo_memory = providers.Singleton(
-        RepoUserMemory,
-        seed = user_seed()
-    )
-
-    user_repo_alchemy = providers.Singleton(
+    user_repo = providers.Singleton(
         RepoUserAlchemy,
         seed = user_seed()
-    )
-    
-    post_repo_holder = providers.Singleton(
-        PostRepoHolder
-    )
-
-    user_repo_holder = providers.Singleton(
-        UserRepoHolder
     )

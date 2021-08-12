@@ -2,13 +2,16 @@
 from werkzeug.security import generate_password_hash
 
 from models.user import User
-
-user1 = User("username1", "Name 1", "email1@g.com", generate_password_hash("password1", method='pbkdf2:sha512:100'))
-user2 = User("username2", "Name 2", "email2@g.com", generate_password_hash("password2", method='pbkdf2:sha512:100'))
-user3 = User("username3", "Name 3", "email3@g.com", generate_password_hash("password3", method='pbkdf2:sha512:100'))
-user4 = User("username4", "Name 4", "email4@g.com", generate_password_hash("password4", method='pbkdf2:sha512:100'))
-admin = User("admin", "admin", "admin@g.com", generate_password_hash("admin", method='pbkdf2:sha512:100'))
+from services.hasher import Hasher
 
 def get():
     """Returns seed"""
+    hasher = Hasher()
+
+    user1 = User("username1", "Name 1", "email1@g.com", hasher.hash("password1"))
+    user2 = User("username2", "Name 2", "email2@g.com", hasher.hash("password2"))
+    user3 = User("username3", "Name 3", "email3@g.com", hasher.hash("password3"))
+    user4 = User("username4", "Name 4", "email4@g.com", hasher.hash("password4"))
+    admin = User("admin", "admin", "admin@g.com", hasher.hash("admin"))
+
     return [user1, user2, user3, user4, admin]

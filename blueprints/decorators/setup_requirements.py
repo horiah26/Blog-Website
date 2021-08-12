@@ -4,22 +4,23 @@ from functools import wraps
 from flask import redirect, url_for, flash
 from dependency_injector.wiring import inject, Provide
 
-@inject
 def setup_requirements(f):
-    """decorator"""    
+    """decorator"""   
+    
     @inject
     def get_auth(auth = Provide['auth']):
         return auth
     
     @inject
     def get_config_db(config_db = Provide['config_db']):
-        return auth
+        return config_db
 
     @inject
     def get_config(config = Provide['config']):
         return config
 
     @wraps(f)
+    @inject
     def wrapped(*args, **kwargs):
         """decorator"""
         if get_config().config_file_exists():

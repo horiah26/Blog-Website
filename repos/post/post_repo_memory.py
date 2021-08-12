@@ -13,15 +13,15 @@ from .IPostRepo import IPostRepo
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
     @inject
-    def __init__(self, seed, users_repo_holder = Provide['user_repo_memory']):
+    def __init__(self, seed, user_repo = Provide['user_repo']):
         self.posts = seed
-        self.users_repo_holder = users_repo_holder
+        self.user_repo = user_repo
 
     def get(self, post_id):
         """Returns post by id"""
         post = next((post for post in self.posts if post.post_id == post_id), None)
         if post is not None:
-            users = self.users_repo_holder.get_all()
+            users = self.user_repo.get_all()
             display_name = None
             for user in users:
                 if user.username == post.owner:
@@ -65,7 +65,7 @@ class RepoPostsMemory(IPostRepo):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
-        users = self.users_repo_holder.get_all()
+        users = self.user_repo.get_all()
         if username:
             for post in posts[::-1]:
                 for user in users:

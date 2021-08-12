@@ -2,13 +2,10 @@
 import datetime
 import psycopg2
 from dependency_injector.wiring import inject, Provide
-
 from flask import flash
 
 from models.user import User
-
 from .IUserRepo import IUserRepo
-
 
 class RepoUserDB(IUserRepo):
     """Repo for posts in memory"""

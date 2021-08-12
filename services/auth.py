@@ -1,15 +1,14 @@
 """Class that handles authentication"""
 from flask import flash, redirect, url_for, session
-from werkzeug.security import generate_password_hash
 from dependency_injector.wiring import inject, Provide
 from models.user import User
 
 class Authentication():
     """Class that handles authentication"""
-    def __init__(self, user_repo_holder = Provide['user_repo_holder']):
-        self.user_repo = user_repo_holder.get()
+    def __init__(self, user_repo = Provide['user_repo']):
+        self.user_repo = user_repo
 
-    def sign_up(self, username, name, email, password, confirm_password):
+    def sign_up(self, username, name, email, password, confirm_password, hasher = Provide['hasher']):
         """Signs user up"""
 
         user = self.user_repo.get(username)
@@ -42,14 +41,14 @@ class Authentication():
             flash(error)
             return redirect(url_for('auth.sign_up'))
 
-        self.user_repo.insert(User(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100')))
+        self.user_repo.insert(User(username, name, email, hasher.hash(password)))
         flash("You have signed up")
         return redirect(url_for('blog.home'))
-
-    def login(self, username, password):
+    @inject
+    def login(self, username, password, hasher = Provide['hasher']):
         """Logs user in"""
         user = self.user_repo.get(username)
-        if user is None or not user.check_password(password):
+        if user is None or not hasher.check_password(user, password):
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))
         session['username'] = user.username

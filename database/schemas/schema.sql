@@ -26,13 +26,6 @@ ALTER TABLE users ALTER COLUMN date_modified DROP NOT NULL;
 INSERT INTO users (username)
 SELECT DISTINCT owner FROM posts WHERE owner NOT IN(SELECT username FROM users);
 
-INSERT INTO users VALUES('admin', 
-                        'admin', 
-                        'admin@temporary.com', 
-                        'admin',  
-                        CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' )),
-                        CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' )))
-                        ON CONFLICT DO NOTHING;
 
 UPDATE users
 SET name = username, 

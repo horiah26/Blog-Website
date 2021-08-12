@@ -17,6 +17,10 @@ class Config():
 
     def save(self, new_data):
         """Writes json_data to config file"""
+        try:
+            os.remove(self.CONFIG_PATH)
+        except:
+            pass
         with open(self.CONFIG_PATH, 'w') as file:
             json.dump(new_data, file)
 

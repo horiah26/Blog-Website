@@ -16,18 +16,18 @@ bp = Blueprint('users', __name__)
 @admin_required
 @redirect_to_setup
 @inject
-def view_all(auth = Provide['auth'], user_repo_holder = Provide['user_repo_holder']):
+def view_all(auth = Provide['auth'], user_repo = Provide['user_repo']):
     """View all users"""
-    return render_template('users/view_all.html', users = user_repo_holder.get().get_all(), auth = auth)
+    return render_template('users/view_all.html', users = user_repo.get_all(), auth = auth)
 
 @bp.route('/users/<username>/', methods=['GET'])
 @redirect_to_setup
 @inject
-def view_user(username, user_repo_holder = Provide['user_repo_holder'], post_repo_holder = Provide['post_repo_holder']):
+def view_user(username, user_repo = Provide['user_repo'], post_repo = Provide['post_repo']):
     """View user"""
     per_page = 6
     page_num = request.args.get('page', 1, type=int)
-    previews_pages = post_repo_holder.get().get_previews(username, per_page, page_num)
+    previews_pages = post_repo.get_previews(username, per_page, page_num)
     previews = previews_pages[0]
     total_pages = previews_pages[1]
     
@@ -40,8 +40,8 @@ def view_user(username, user_repo_holder = Provide['user_repo_holder'], post_rep
     if page_num not in pages:
         page_num = 1
 
-    if user_repo_holder.get().get(username):
-        return render_template('users/view.html', user = user_repo_holder.get().get(username),page_num = page_num, pages = pages, posts = previews, generator = gen)
+    if user_repo.get(username):
+        return render_template('users/view.html', user = user_repo.get(username),page_num = page_num, pages = pages, posts = previews, generator = gen)
     flash('User not found')
     return redirect(url_for('users.view_all'))
 
@@ -49,13 +49,13 @@ def view_user(username, user_repo_holder = Provide['user_repo_holder'], post_rep
 @redirect_to_setup
 @permission_required
 @inject
-def delete(username, auth = Provide['auth'], user_repo_holder = Provide['user_repo_holder']):
+def delete(username, auth = Provide['auth'], user_repo = Provide['user_repo']):
     """Delete user"""
     if username == 'admin':
         flash("Admin cannot be deleted")
     else:
         try:
-            user_repo_holder.get().delete(username)
+            user_repo.delete(username)
             flash("User deleted")
             auth.logout()
         except Exception:
@@ -66,9 +66,9 @@ def delete(username, auth = Provide['auth'], user_repo_holder = Provide['user_re
 @redirect_to_setup
 @permission_required
 @inject
-def edit(username, auth = Provide['auth'], user_repo_holder = Provide['user_repo_holder']):
+def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], hasher = Provide['hasher']):
     """Edit user"""
-    user = user_repo_holder.get().get(username)
+    user = user_repo.get(username)
     if user.username != auth.logged_user() and auth.logged_user() != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
@@ -91,9 +91,9 @@ def edit(username, auth = Provide['auth'], user_repo_holder = Provide['user_repo
             elif not email:
                 email = user.email
             if not password:
-                user_repo_holder.get().update(username, name, email, user.password)
+                user_repo.update(username, name, email, user.password)
             else:
-                user_repo_holder.get().update(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100'))
+                user_repo.update(username, name, email, hasher.hash(password))
             flash("User profile has been modified")
             return redirect(url_for('users.view_user', username = user.username))
     return render_template('auth/edit.html', user = user)
@@ -103,9 +103,9 @@ def edit(username, auth = Provide['auth'], user_repo_holder = Provide['user_repo
 @permission_required
 @edit_required_once
 @inject
-def edit_required(username, auth = Provide['auth'], user_repo_holder = Provide['user_repo_holder']):
+def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_repo'], hasher = Provide['hasher']):
     """Edit user"""
-    user = user_repo_holder.get().get(username)
+    user = user_repo.get(username)
     if user.username != auth.logged_user() and auth.logged_user() != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
@@ -128,7 +128,7 @@ def edit_required(username, auth = Provide['auth'], user_repo_holder = Provide['
         if error is not None:
             flash(error)
         else:
-            user_repo_holder.get().update(username, name, email, generate_password_hash(password, method='pbkdf2:sha512:100'))
+            user_repo.update(username, name, email, hasher.hash(password))
             flash("User profile has been modified")
             return redirect(url_for('users.view_user', username = user.username))
     return render_template('auth/edit_required.html', user = user)

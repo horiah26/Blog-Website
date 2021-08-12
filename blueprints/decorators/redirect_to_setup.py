@@ -1,18 +1,23 @@
 """Redirects to setup page if db not configured"""
 from functools import wraps
 from flask import redirect, url_for
-from containers.container import Container
-container = Container()
-
-config = container.config()
-config_db = container.config_db()
+from dependency_injector.wiring import inject, Provide
 
 def redirect_to_setup(f):
     """Added so app could be inserted as a parameter in the other wrapper"""
+    
+    @inject
+    def get_config(config = Provide['config']):
+        return config
+    
+    @inject
+    def get_config_db(config_db = Provide['config_db']):
+        return config_db
+
     @wraps(f)
     def redirect_if_no_db(*args, **kwargs):
         """Redirects to setup page if db not configured"""
-        if not config.config_file_exists() or not config_db.db_up_to_date():
+        if not get_config().config_file_exists() or not get_config_db().db_up_to_date():
             return redirect(url_for('setup.setup_db'))
 
         return f(*args, **kwargs)

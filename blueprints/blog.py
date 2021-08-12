@@ -18,7 +18,7 @@ bp = Blueprint('blog', __name__)
 @bp.route('/', methods=['GET', 'POST'])
 @redirect_to_setup
 @inject
-def home(post_repo_holder = Provide['post_repo_holder'], user_repo_holder = Provide['user_repo_holder']):
+def home(post_repo = Provide['post_repo'], user_repo = Provide['user_repo']):
     """Route to home + pagination + filter by user"""
     if not 'filter_user' in session:        
             session['filter_user'] = None
@@ -34,7 +34,7 @@ def home(post_repo_holder = Provide['post_repo_holder'], user_repo_holder = Prov
             page_num = 1;
         
     per_page = 6
-    previews_pages = post_repo_holder.get().get_previews(session['filter_user'], per_page, page_num)
+    previews_pages = post_repo.get_previews(session['filter_user'], per_page, page_num)
 
     previews = previews_pages[0]
 
@@ -42,15 +42,13 @@ def home(post_repo_holder = Provide['post_repo_holder'], user_repo_holder = Prov
     pages = range (1, total_pages + 1)
     if page_num not in pages:
         page_num = 1
-
-    users = user_repo_holder.get().get_all()
-    return render_template('blog/home.html', posts = previews, users = users, page_num = page_num, pages = pages, generator=gen)
+    return render_template('blog/home.html', posts = previews, users = user_repo.get_all(), page_num = page_num, pages = pages, generator=gen)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @redirect_to_setup
 @inject
-def create(auth = Provide['auth'], post_repo_holder = Provide['post_repo_holder']):
+def create(auth = Provide['auth'], post_repo = Provide['post_repo']):
     """Route to creating new posts"""
     if request.method == 'POST':
         title = request.form['title'].strip()
@@ -64,9 +62,9 @@ def create(auth = Provide['auth'], post_repo_holder = Provide['post_repo_holder'
         if error is not None:
             flash(error)
         else:
-            post_id = post_repo_holder.get().next_id()
+            post_id = post_repo.next_id()
 
-            post_repo_holder.get().insert(Post(post_id, title, text, auth.logged_user()))
+            post_repo.insert(Post(post_id, title, text, auth.logged_user()))
 
             flash("Post has been created")
             return redirect(url_for('blog.home'))
@@ -75,9 +73,9 @@ def create(auth = Provide['auth'], post_repo_holder = Provide['post_repo_holder'
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
 @inject
-def show(post_id, post_repo_holder = Provide['post_repo_holder']):
+def show(post_id, post_repo = Provide['post_repo']):
     """Route to show post by id"""
-    post_and_display_name = post_repo_holder.get().get(post_id)
+    post_and_display_name = post_repo.get(post_id)
     if post_and_display_name:
         return render_template('blog/show_post.html', post = post_and_display_name[0], display_name = post_and_display_name[1])
     flash('Post not found')
@@ -87,9 +85,9 @@ def show(post_id, post_repo_holder = Provide['post_repo_holder']):
 @redirect_to_setup
 @permission_required
 @inject
-def update(post_id, post_repo_holder = Provide['post_repo_holder']):
+def update(post_id, post_repo = Provide['post_repo']):
     """Route to update existing posts"""
-    post = post_repo_holder.get().get(post_id)[0]
+    post = post_repo.get(post_id)[0]
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
@@ -100,7 +98,7 @@ def update(post_id, post_repo_holder = Provide['post_repo_holder']):
             print(post)
             text = post.text
         else:
-            post_repo_holder.get().update(post_id, title, text)
+            post_repo.update(post_id, title, text)
             flash("Post has been updated")
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
@@ -109,9 +107,9 @@ def update(post_id, post_repo_holder = Provide['post_repo_holder']):
 @redirect_to_setup
 @permission_required
 @inject
-def delete(post_id, post_repo_holder = Provide['post_repo_holder']):
+def delete(post_id, post_repo = Provide['post_repo']):
     """Route to delete posts"""
-    post_repo_holder.get().delete(post_id)
+    post_repo.delete(post_id)
     flash("Post has been deleted")
     return redirect(url_for('blog.home'))
 
@@ -126,9 +124,9 @@ def filter():
         if request.form['action'] == 'Search':
             username = request.form['user'].strip()
 
-    user = user_repo_holder.get().get(username)
-    users = user_repo_holder.get().get_all()
+    user = user_repo.get(username)
+    users = user_repo.get_all()
     users.insert(0, None)
     if user is None and username != '':
         flash('Please enter a valid username')
-    return render_template('blog/filter_view.html', user = user, posts = post_repo_holder.get().get_previews(username), users = user_repo_holder.get().get_all(), generator = gen)
+    return render_template('blog/filter_view.html', user = user, posts = post_repo.get_previews(username), users = user_repo.get_all(), generator = gen)
