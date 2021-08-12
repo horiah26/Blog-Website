@@ -1,10 +1,11 @@
-
+"""Handles password hashing"""
 from werkzeug.security import generate_password_hash, check_password_hash
 from dependency_injector.wiring import inject, Provide
 
 from models.user import User
 
 class Hasher():
+    """Handles password hashing"""
     def __init__(self):
         pass
 

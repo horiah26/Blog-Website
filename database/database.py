@@ -5,9 +5,7 @@ from dependency_injector.wiring import inject, Provide
 class Database():
     """Handles database operations"""
     @inject
-    def __init__(self,
-                config = Provide['config'],
-                config_db = Provide['config_db']):
+    def __init__(self, config = Provide['config'], config_db = Provide['config_db']):
         self.config = config
         self.config_db = config_db
 

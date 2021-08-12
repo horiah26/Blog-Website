@@ -20,7 +20,7 @@ from models.user import User
 class RepoPostsAlchemy(IPostRepo):
     """SQLAlchemy repo"""
     @inject
-    def __init__(self, seed = None, alch_url = Provide['alch_url']):
+    def __init__(self, alch_url, seed = None):
         """Initializes class and adds posts from seed if present"""
         db = create_engine(alch_url.get_url())
         base = declarative_base()

@@ -5,7 +5,7 @@ from models.user import User
 
 class Authentication():
     """Class that handles authentication"""
-    def __init__(self, user_repo = Provide['user_repo']):
+    def __init__(self, user_repo):
         self.user_repo = user_repo
 
     def sign_up(self, username, name, email, password, confirm_password, hasher = Provide['hasher']):

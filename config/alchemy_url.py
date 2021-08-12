@@ -1,12 +1,11 @@
 """Creates the url for engine configuration in alchemy repos"""
+from dependency_injector.wiring import inject, Provide
 
-from config.config_db import ConfigDB
-config = ConfigDB()
 
 class AlchURL():
     """Creates the url for engine configuration in alchemy repos"""
-    def __init__(self):
-        self.db_auth = config.get_db_auth().json
+    def __init__(self, config_db):
+        self.db_auth = config_db.get_db_auth().json
         self.port = '5432'
 
     def get_url(self):

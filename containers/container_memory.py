@@ -37,25 +37,25 @@ class ContainerMemory(containers.DeclarativeContainer):
         Config
     )
 
-    database = providers.Factory(
-        Database
-    )
-    
-    auth = providers.Factory(
-        Authentication
-    )    
-
-    alch_url = providers.Factory(
-        AlchURL
-    )
-
-
-    post_repo = providers.Singleton(
-        RepoPostsMemory,
-        seed = post_seed()
-    )
-
     user_repo = providers.Singleton(
         RepoUserMemory,
         seed = user_seed()
     )
+
+    post_repo = providers.Singleton(
+        RepoPostsMemory,
+        seed = post_seed(),
+        user_repo = user_repo
+    )
+    
+    auth = providers.Factory(
+        Authentication,
+        user_repo = user_repo
+    )
+
+    database = providers.Factory(
+        Database,
+        config = config,
+        config_db = config_db
+    )
+

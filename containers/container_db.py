@@ -1,4 +1,4 @@
-"""General purpose container"""
+"""Database container"""
 from dependency_injector import containers, providers
 from dependency_injector.wiring import inject, Provide
     
@@ -21,7 +21,7 @@ from repos.user.user_repo_db import RepoUserDB
 from repos.user.seed import get as user_seed
 
 class ContainerDB(containers.DeclarativeContainer):
-    """General purpose container"""
+    """Database container"""
 
     config = providers.Configuration()
     
@@ -36,25 +36,27 @@ class ContainerDB(containers.DeclarativeContainer):
     config = providers.Factory(
         Config
     )
+    
 
     database = providers.Factory(
-        Database
+        Database,
+        config = config,
+        config_db = config_db
     )
-    
-    auth = providers.Factory(
-        Authentication
-    )    
-
-    alch_url = providers.Factory(
-        AlchURL
-    )
-
+        
     post_repo = providers.Singleton(
         RepoPostsDB,
+        db = database,
         seed = post_seed()
     )
 
     user_repo = providers.Singleton(
         RepoUserDB,
+        db = database,
         seed = user_seed()
+    )
+
+    auth = providers.Factory(
+        Authentication,
+        user_repo = user_repo
     )

@@ -15,7 +15,7 @@ from .IUserRepo import IUserRepo
 class RepoUserAlchemy(IUserRepo):
     """SQLAlchemy repo"""
     @inject
-    def __init__(self, seed = None, alch_url = Provide['alch_url']):
+    def __init__(self, alch_url, seed = None):
         """Initializes class and adds users from seed if present"""
 
         db = create_engine(alch_url.get_url())

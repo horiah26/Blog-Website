@@ -13,7 +13,7 @@ from .IPostRepo import IPostRepo
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
     @inject
-    def __init__(self, seed, user_repo = Provide['user_repo']):
+    def __init__(self, seed, user_repo):
         self.posts = seed
         self.user_repo = user_repo
 

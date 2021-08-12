@@ -1,6 +1,7 @@
 """Fixtures and methods common among multiple test files"""
 import pytest
 from app import create_app
+from services.init_injection import InitInjection
 
 @pytest.fixture()
 def client():
@@ -9,6 +10,7 @@ def client():
     app.config.from_mapping(
         SECRET_KEY="secret",
         DB_TYPE = "memory")
+    app.container = InitInjection('memory').get_container()
     app.app_context().push()
     yield app.test_client()
 

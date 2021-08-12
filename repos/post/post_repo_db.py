@@ -14,9 +14,7 @@ from .IPostRepo import IPostRepo
 class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
     @inject
-    def __init__(self,
-                seed = None,
-                db = Provide['database']):
+    def __init__(self, db, seed = None):
         """Initializes class and adds posts from seed if present"""
         self.db = db
         if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:

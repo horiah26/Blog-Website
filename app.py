@@ -10,7 +10,7 @@ from database.database import Database
 
 def create_app():
     """Creates app"""
-    database_type = "memory"
+    database_type = "db"
 
     app=Flask(__name__, template_folder='templates')
     app.config.from_mapping(

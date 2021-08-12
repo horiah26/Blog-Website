@@ -37,24 +37,31 @@ class ContainerAlchemy(containers.DeclarativeContainer):
         Config
     )
 
-    database = providers.Factory(
-        Database
-    )
-    
-    auth = providers.Factory(
-        Authentication
-    )    
-
     alch_url = providers.Factory(
-        AlchURL
+        AlchURL,
+        config_db = config_db
     )
 
     post_repo = providers.Singleton(
         RepoPostsAlchemy,
-        seed = post_seed()
+        seed = post_seed(),
+        alch_url = alch_url
     )
 
     user_repo = providers.Singleton(
         RepoUserAlchemy,
-        seed = user_seed()
+        seed = user_seed(),
+        alch_url = alch_url
     )
+    
+    auth = providers.Factory(
+        Authentication,
+        user_repo = user_repo
+    )
+
+    database = providers.Factory(
+        Database,
+        config = config,
+        config_db = config_db
+    )
+
