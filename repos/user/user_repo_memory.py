@@ -2,6 +2,7 @@
 import datetime
 from models.user import User
 from .IUserRepo import IUserRepo
+from dependency_injector.wiring import inject, Provide
 
 class RepoUserMemory(IUserRepo):
     """Repo for posts in memory"""
@@ -41,3 +42,14 @@ class RepoUserMemory(IUserRepo):
             if user.username == username:
                 del self.users[i]
                 break
+    @inject
+    def get_users_with_posts(self, post_repo = Provide['post_repo']):
+        """Returns all users that have at least one active post"""
+        posts = post_repo.get_all()
+        users_with_posts = []
+        for user in self.users:
+            for post in posts:
+                if user.username == post.owner:
+                    users_with_posts.append(user)
+        
+        return list(set(users_with_posts))

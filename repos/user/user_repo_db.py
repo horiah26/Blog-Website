@@ -82,3 +82,21 @@ class RepoUserDB(IUserRepo):
         for row in rows:
             users.append(User(row[0], row[1], row[2], row[3], row[4], row[5]))
         return users
+
+    def get_users_with_posts(self):
+        """Returns all users that have at least one active post"""
+        conn = self.db.get_connection()
+        cur = conn.cursor()
+        try:
+            cur.execute("SELECT DISTINCT * FROM users WHERE username in (SELECT DISTINCT owner from posts);")
+        except Exception as error:
+            print(error)
+            flash(error)
+            return []
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        users = []
+        for row in rows:
+            users.append(User(row[0], row[1], row[2], row[3], row[4], row[5]))
+        return users

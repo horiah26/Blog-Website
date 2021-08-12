@@ -22,3 +22,7 @@ class IUserRepo (ABC):
     @abstractmethod
     def delete(self, username):
         """Delete user"""
+
+    @abstractmethod
+    def get_users_with_posts(self):
+        """Return users with posts"""

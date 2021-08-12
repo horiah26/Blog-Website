@@ -42,7 +42,7 @@ def home(post_repo = Provide['post_repo'], user_repo = Provide['user_repo']):
     pages = range (1, total_pages + 1)
     if page_num not in pages:
         page_num = 1
-    return render_template('blog/home.html', posts = previews, users = user_repo.get_all(), page_num = page_num, pages = pages, generator=gen)
+    return render_template('blog/home.html', posts = previews, users = user_repo.get_users_with_posts(), page_num = page_num, pages = pages, generator=gen)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required

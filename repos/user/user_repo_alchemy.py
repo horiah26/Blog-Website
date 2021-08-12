@@ -71,3 +71,11 @@ class RepoUserAlchemy(IUserRepo):
         user = self.session.query(self.User).filter(self.User.username == username).one()
         self.session.delete(user)
         self.session.commit()
+
+    def get_users_with_posts(self):
+        """Returns all users"""
+        users = []
+        query = self.session.query(self.User).join(self.Post, self.User.username == self.Post.owner)
+        for user in query:
+            users.append(User(user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
+        return users
