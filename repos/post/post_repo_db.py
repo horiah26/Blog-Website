@@ -17,7 +17,7 @@ class RepoPostsDB(IPostRepo):
     def __init__(self, db, seed = None):
         """Initializes class and adds posts from seed if present"""
         self.db = db
-        if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
+        if seed is not None and db.config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
 

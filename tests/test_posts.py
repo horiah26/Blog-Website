@@ -204,7 +204,7 @@ def test_can_delete_post_if_logged_in(client):
     print(client.get('/3/', follow_redirects=True).data)
     assert b'Post not found' in client.get('/3/', follow_redirects=True).data
     logout(client)
-
+    
 def test_paging_works(client):
     """Paging works"""
     rv = client.get('/?page=1')
@@ -233,3 +233,23 @@ def test_paging_works(client):
     assert b'Vivamus pretium dui' not in rv.data
     assert b'Nullam quis quam convallis' not in rv.data
     assert b'Lorem ipsum dolor sit amet, consectetur adipiscing elit' in rv.data
+
+
+def test_filter_works(client):
+    """Filter posts by user works"""
+    with client.session_transaction() as session:
+        session['filter_user'] = 'username1'
+    rv = client.get('/')
+
+    assert b'Name 1\'s posts' in rv.data    
+
+    assert b'Duis a lectus' in rv.data
+    assert b'Aliquam at leo' in rv.data
+    assert b'Pellentesque tincidunt' in rv.data
+    assert b'Lorem Ipsum' in rv.data
+
+
+    assert b'In et leo ac erat' not in rv.data
+    assert b'Sed quis tellus luctus' not in rv.data
+    assert b'Vivamus pretium dui' not in rv.data
+    assert b'In et leo ac erat' not in rv.data

@@ -112,21 +112,3 @@ def delete(post_id, post_repo = Provide['post_repo']):
     post_repo.delete(post_id)
     flash("Post has been deleted")
     return redirect(url_for('blog.home'))
-
-@bp.route('/filter', methods=['GET', 'POST'])
-@redirect_to_setup
-@permission_required
-def filter():
-    """Search function"""
-    username = ''
-    if request.method == 'POST':
-        print(request.form, " Req form")
-        if request.form['action'] == 'Search':
-            username = request.form['user'].strip()
-
-    user = user_repo.get(username)
-    users = user_repo.get_all()
-    users.insert(0, None)
-    if user is None and username != '':
-        flash('Please enter a valid username')
-    return render_template('blog/filter_view.html', user = user, posts = post_repo.get_previews(username), users = user_repo.get_all(), generator = gen)

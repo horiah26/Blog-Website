@@ -20,7 +20,7 @@ from models.user import User
 class RepoPostsAlchemy(IPostRepo):
     """SQLAlchemy repo"""
     @inject
-    def __init__(self, alch_url, seed = None):
+    def __init__(self, config, alch_url, seed = None):
         """Initializes class and adds posts from seed if present"""
         db = create_engine(alch_url.get_url())
         base = declarative_base()
@@ -35,7 +35,7 @@ class RepoPostsAlchemy(IPostRepo):
         self.Post = Base.classes.posts
         self.User = Base.classes.users
 
-        if seed is not None and self.get_all() is not None and len(self.get_all()) == 0:
+        if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
             print(len(self.get_all()))
             for post in seed:
                 self.insert(post)

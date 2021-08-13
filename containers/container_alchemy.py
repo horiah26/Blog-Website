@@ -44,12 +44,14 @@ class ContainerAlchemy(containers.DeclarativeContainer):
 
     post_repo = providers.Singleton(
         RepoPostsAlchemy,
+        config = config,
         seed = post_seed(),
         alch_url = alch_url
     )
 
     user_repo = providers.Singleton(
         RepoUserAlchemy,
+        config = config,
         seed = user_seed(),
         alch_url = alch_url
     )
