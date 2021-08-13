@@ -17,7 +17,7 @@ def redirect_to_setup(f):
     @wraps(f)
     def redirect_if_no_db(*args, **kwargs):
         """Redirects to setup page if db not configured"""
-        if not get_config().config_file_exists() or not get_config_db().db_up_to_date():
+        if not get_config().config_file_exists():
             return redirect(url_for('setup.setup_db'))
 
         return f(*args, **kwargs)

@@ -83,7 +83,4 @@ class RepoPostsMemory(IPostRepo):
         total_posts = len(previewed_posts)
         total_pages = math.ceil(total_posts / per_page)
 
-        if total_pages == 0:
-            total_pages = 1
-
         return (previewed_posts[(page_num - 1) * per_page : (page_num) * per_page], total_pages)
