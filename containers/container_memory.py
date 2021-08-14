@@ -16,6 +16,7 @@ from config.alchemy_url import AlchURL
 
 from repos.post.post_repo_memory import RepoPostsMemory
 from repos.post.seed import get as post_seed
+from repos.post.image_repo import ImageRepo
 
 from repos.user.user_repo_memory import RepoUserMemory
 from repos.user.seed import get as user_seed
@@ -40,6 +41,10 @@ class ContainerMemory(containers.DeclarativeContainer):
     user_repo = providers.Singleton(
         RepoUserMemory,
         seed = user_seed()
+    )
+
+    img_repo = providers.Singleton(
+        ImageRepo
     )
 
     post_repo = providers.Singleton(

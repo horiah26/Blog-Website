@@ -16,6 +16,7 @@ from config.alchemy_url import AlchURL
 
 from repos.post.post_repo_db import RepoPostsDB
 from repos.post.seed import get as post_seed
+from repos.post.image_repo import ImageRepo
 
 from repos.user.user_repo_db import RepoUserDB
 from repos.user.seed import get as user_seed
@@ -36,7 +37,10 @@ class ContainerDB(containers.DeclarativeContainer):
     config = providers.Factory(
         Config
     )
-    
+
+    img_repo = providers.Singleton(
+        ImageRepo
+    )    
 
     database = providers.Factory(
         Database,

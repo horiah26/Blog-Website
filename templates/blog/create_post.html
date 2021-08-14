@@ -5,11 +5,14 @@
 {% block header %}<h1 class="crud-title">Create a new Post</h1>{% endblock %}
 
 {% block content %}
-	<form method="POST" class="crud_form">
-		<label class="crud_label" for="title"> Title </label> <br>
-		<input type="text" class="form-title" name = "title"><br>
-		<label  class="crud_label" for="text"> Text </label> <br>
-		<textarea type="text" class="form-title" name = "text" rows="10"> </textarea><br>
-		<input type="submit" value="Create post">
-	</form>
+<form method="POST" class="crud_form" enctype="multipart/form-data">
+<label class="crud_label" for="title"> Title </label> <br>
+<input type="text" class="form-title" name="title"><br>
+<label class="crud_label" for="text"> Text </label> <br>
+<textarea type="text" class="form-title" name="text" rows="10"> </textarea><br>
+
+<label for="img" class="file-upload">Upload image</label>
+<input type="file"  id="img" name="img" accept="image/*">
+<input type="submit" value="Create post">
+</form>
 {% endblock %}

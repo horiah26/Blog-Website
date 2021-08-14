@@ -16,5 +16,6 @@ class PostPreview:
         text = text.rsplit(' ', 1)[0]
         if text[-1] == ",":
             text = text[:-1]
-        text += "..."
+        if len(text) > 100:
+            text += "..."
         return text

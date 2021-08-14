@@ -12,6 +12,7 @@ from blueprints import setup
 from blueprints import users
 from blueprints import blog
 from blueprints import auth as bp_auth
+from repos.post import image_repo
 from blueprints.decorators import setup_requirements
 from blueprints.decorators import permission_required
 from blueprints.decorators import admin_required
@@ -57,7 +58,8 @@ class InitInjection():
                                         edit_required_once,
                                         post_repo_memory,
                                         user_repo_memory,
-                                        config])
+                                        config,
+                                        image_repo])
    
     def get_container(self):
         return self.container

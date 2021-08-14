@@ -48,11 +48,16 @@ def home(post_repo = Provide['post_repo'], user_repo = Provide['user_repo']):
 @login_required
 @redirect_to_setup
 @inject
-def create(auth = Provide['auth'], post_repo = Provide['post_repo']):
+def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = Provide['img_repo']):
     """Route to creating new posts"""
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
+        if 'img' not in request.files:
+            flash('No img part')
+
+        image = request.files['img']
+        img_repo.save(image)
 
         error = None
         if not title:
