@@ -39,11 +39,12 @@ class RepoPostsMemory(IPostRepo):
         if isinstance(post, Post):
             self.posts.append(post)
 
-    def update(self, post_id, title, text):
+    def update(self, post_id, title, text, img_id):
         """Updates post by id"""
         post = self.get(post_id)[0]
         post.title = title
         post.text = text
+        post.img_id = img_id
         post.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
 
     def delete(self, post_id):

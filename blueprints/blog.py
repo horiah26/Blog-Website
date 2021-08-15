@@ -60,7 +60,12 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
 
         if 'img' in request.files:
             image = request.files['img']
-            img_id = img_repo.save(image)
+            if img_repo.allowed_file(image.filename):
+                img_id = img_repo.save(image)
+            else:
+                flash("File format not supported. Format must be one of the following: \"pdf\", \"png\", \"jpg\", \"jpeg\", \"gif\"")
+                return redirect(url_for('blog.create'))
+  
 
         error = None
         if not title:
@@ -93,24 +98,29 @@ def show(post_id, post_repo = Provide['post_repo']):
 @redirect_to_setup
 @permission_required
 @inject
-def update(post_id, post_repo = Provide['post_repo']):
+def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_repo']):
     """Route to update existing posts"""
     post = post_repo.get(post_id)[0]
+    img_id = post.img_id
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
-
+            
         if 'img' in request.files:
             image = request.files['img']
-            img_repo.save(image)
-            
+            if img_repo.allowed_file(image.filename):
+                img_id = img_repo.save(image)
+            else:
+                flash("File format not supported. Format must be one of the following: \"pdf\", \"png\", \"jpg\", \"jpeg\", \"gif\"")
+                return redirect(url_for('blog.update', post_id = post_id))
+
         if not title:
             title = post.title
         elif not text:
             print(post)
             text = post.text
         else:
-            post_repo.update(post_id, title, text)
+            post_repo.update(post_id, title, text, img_id)
             flash("Post has been updated")
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)

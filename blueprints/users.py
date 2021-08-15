@@ -33,7 +33,6 @@ def view_user(username, user_repo = Provide['user_repo'], post_repo = Provide['p
     
     if total_pages == 1:
         pages = [1]
-        print(pages)
     else:
         pages = range (1, total_pages + 1)
 

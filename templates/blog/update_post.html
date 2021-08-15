@@ -3,11 +3,15 @@
 {% block title %}Update post{% endblock %}
 {% block content %}
 <h1 class="crud-title">Edit "{{post.title}}"</h1>
-<form method="POST" class="crud_form">
+<form method="POST" class="crud_form" enctype="multipart/form-data">
     <label class="crud_label" for="title"> Title </label> <br>
     <input type="text" class="form-title" name="title" value="{{post.title}}"><br>
     <label class="crud_label" for="text"> Text </label> <br>
     <textarea type="text" class="form-title" name="text" rows="10"> {{post.text}}</textarea><br>
+
+    <label for="img" class="file-upload">Upload image</label>
+    <input type="file" id="img" name="img" accept="image/*">
+
     <input type="submit" value="Save">
 </form>
 {% endblock %}
