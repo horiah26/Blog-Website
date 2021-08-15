@@ -13,12 +13,10 @@ def create_app():
 
     container = InitInjection(database_type).get_container()
 
-    UPLOAD_FOLDER = 'static/uploads'
-
     app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY="secret",
-        UPLOAD_FOLDER = UPLOAD_FOLDER,
+        UPLOAD_FOLDER = 'static/uploads',
         DB_TYPE = database_type)
     app.container = container    
     app.app_context().push()

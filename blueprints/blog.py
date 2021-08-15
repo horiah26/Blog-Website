@@ -1,5 +1,6 @@
 """Blog blueprint"""
 import math
+import os
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, session
 )
@@ -37,11 +38,13 @@ def home(post_repo = Provide['post_repo'], user_repo = Provide['user_repo']):
     previews_pages = post_repo.get_previews(session['filter_user'], per_page, page_num)
 
     previews = previews_pages[0]
-
     total_pages = previews_pages[1]
+
     pages = range (1, total_pages + 1)
+
     if page_num not in pages:
         page_num = 1
+
     return render_template('blog/home.html', posts = previews, users = user_repo.get_users_with_posts(), page_num = page_num, pages = pages, generator=gen)
 
 @bp.route('/create', methods=['GET', 'POST'])
@@ -53,11 +56,11 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
-        if 'img' not in request.files:
-            flash('No img part')
+        img_id = 0
 
-        image = request.files['img']
-        img_repo.save(image)
+        if 'img' in request.files:
+            image = request.files['img']
+            img_id = img_repo.save(image)
 
         error = None
         if not title:
@@ -69,7 +72,7 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
         else:
             post_id = post_repo.next_id()
 
-            post_repo.insert(Post(post_id, title, text, auth.logged_user()))
+            post_repo.insert(Post(post_id, title, text, auth.logged_user(), img_id))
 
             flash("Post has been created")
             return redirect(url_for('blog.home'))
@@ -97,6 +100,10 @@ def update(post_id, post_repo = Provide['post_repo']):
         title = request.form['title'].strip()
         text = request.form['text'].strip()
 
+        if 'img' in request.files:
+            image = request.files['img']
+            img_repo.save(image)
+            
         if not title:
             title = post.title
         elif not text:
