@@ -27,7 +27,6 @@ class RepoPostsAlchemy(IPostRepo):
 
         Session = sessionmaker(db)
         self.session = Session()
-        print(self.session)
 
         Base = automap_base()
         Base.prepare(db, reflect=True)
@@ -36,30 +35,34 @@ class RepoPostsAlchemy(IPostRepo):
         self.User = Base.classes.users
 
         if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
-            print(len(self.get_all()))
             for post in seed:
                 self.insert(post)
                 
     def insert(self, post):
         """Add a new post"""
-        new_post = self.Post(post_id = post.post_id, title = post.title, text = post.text, owner = post.owner, date_created = post.date_created, date_modified = post.date_modified)
+        new_post = self.Post(post_id = post.post_id, title = post.title, text = post.text, owner = post.owner, img_id = post.img_id, date_created = post.date_created, date_modified = post.date_modified)
         self.session.add(new_post)
         self.session.commit()
 
     def get(self, post_id):
         """Returns post by id"""
-        post = self.session.query(self.Post.post_id, self.Post.title, self.Post.text, self.Post.owner, self.Post.date_created, self.Post.date_modified, self.User.name).join(self.User, self.User.username == self.Post.owner).filter(self.Post.post_id == post_id).first()
-        return (Post(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
+        post = self.session.query(self.Post.post_id, self.Post.title, self.Post.text, self.Post.owner, self.Post.img_id, self.Post.date_created, self.Post.date_modified, self.User.name).join(self.User, self.User.username == self.Post.owner).filter(self.Post.post_id == post_id).first()
+        return (Post(post[0], post[1], post[2], post[3], post[4], post[5], post[6]), post[7])
 
     def get_all(self):
         """Returns all posts"""
-        return self.session.query(self.Post).all()
+        query_posts = self.session.query(self.Post).all()
+        posts = []
+        for post in query_posts:
+            posts.append(Post(post.post_id, post.title, post.text, post.owner, post.img_id, post.date_created, post.date_modified))
+        return posts
 
-    def update(self, post_id, title, text):
+    def update(self, post_id, title, text, img_id):
         """Updates post by id"""
         post = self.session.query(self.Post).filter(self.Post.post_id == post_id).first()
         post.title = title
         post.text = text
+        post.img_id = img_id
         post.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         self.session.commit()
 
@@ -73,20 +76,21 @@ class RepoPostsAlchemy(IPostRepo):
         """Returns previews of posts posts"""
         offset_nr = (page_num - 1) * per_page
         previews = []
+              
         if username:
-            for post_id, title, prev_text, name, username, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).filter(self.User.username == username).order_by(self.Post.post_id.desc()).slice(offset_nr, offset_nr + per_page):
-                previews.append(PostPreview(post_id, title, prev_text, name, username, date_created, date_modified))
+            total_posts = self.session.query(self.Post).filter(self.Post.owner == username).count()
         else:
-            for post_id, title, prev_text, name, username, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).order_by(self.Post.post_id.desc()).limit(per_page).offset(offset_nr):
-                previews.append(PostPreview(post_id, title, prev_text, name, username, date_created, date_modified))
-     
-                        
-        if username:
-            total_posts = self.session.query(self.Post.post_id).filter(self.Post.owner == username).count()
-        else:
-            total_posts = self.session.query(self.Post.post_id).count()
+            total_posts = self.session.query(self.Post).count()            
             
         total_pages = math.ceil(total_posts / per_page)
+
+        if username:
+            for post_id, title, prev_text, name, username, img_id, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.img_id, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).filter(self.User.username == username).order_by(self.Post.post_id.desc()).slice(offset_nr, offset_nr + per_page):
+                previews.append(PostPreview(post_id, title, prev_text, name, username, img_id, date_created, date_modified))
+        else:
+            for post_id, title, prev_text, name, username, img_id, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.img_id, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).order_by(self.Post.post_id.desc()).limit(per_page).offset(offset_nr):
+                previews.append(PostPreview(post_id, title, prev_text, name, username, img_id, date_created, date_modified))
+
         return (previews, total_pages)
 
     def next_id(self):

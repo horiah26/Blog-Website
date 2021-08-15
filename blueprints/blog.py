@@ -8,6 +8,7 @@ from repos.post.methods import post_misc_generator as gen
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
+
 from dependency_injector.wiring import inject, Provide
 
 from models.post import Post
@@ -60,11 +61,12 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
 
         if 'img' in request.files:
             image = request.files['img']
-            if img_repo.allowed_file(image.filename):
-                img_id = img_repo.save(image)
-            else:
-                flash("File format not supported. Format must be one of the following: \"pdf\", \"png\", \"jpg\", \"jpeg\", \"gif\"")
-                return redirect(url_for('blog.create'))
+            if image.filename != '':
+                if img_repo.allowed_file(image.filename):
+                    img_id = img_repo.save(image)
+                else:
+                    flash("File format not supported. Format must be one of the following: \"pdf\", \"png\", \"jpg\", \"jpeg\", \"gif\, \"bmp\"")
+                    return redirect(url_for('blog.create'))
   
 
         error = None
@@ -111,13 +113,12 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
             if img_repo.allowed_file(image.filename):
                 img_id = img_repo.save(image)
             else:
-                flash("File format not supported. Format must be one of the following: \"pdf\", \"png\", \"jpg\", \"jpeg\", \"gif\"")
+                flash("File format not supported. Format must be one of the following: \"pdf\", \"png\", \"jpg\", \"jpeg\", \"gif\", \"bmp\"")
                 return redirect(url_for('blog.update', post_id = post_id))
 
         if not title:
             title = post.title
         elif not text:
-            print(post)
             text = post.text
         else:
             post_repo.update(post_id, title, text, img_id)

@@ -3,16 +3,18 @@ import os
 import copy
 from os import path, listdir
 from os.path import isfile, join
+from werkzeug.datastructures import FileStorage
 
 from flask import current_app
+from dependency_injector.wiring import inject, Provide
 
 class ImageRepo():
     """Handles images for posts"""
     def __init__(self):
+        self.extension = '.png'
         self.images = []
         self.path = current_app.config['UPLOAD_FOLDER']         
-        self.update_image_list()
-        self.extension = '.png'
+        self.delete_unused()
 
     def save(self, image) -> int:
         """Saves image to uploads folder and returns an id"""
@@ -42,7 +44,7 @@ class ImageRepo():
 
     def allowed_file(self, filename):
         """Checks the image file has the correct extension"""
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in set(['pdf', 'png', 'jpg', 'jpeg', 'gif'])
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in set(['pdf', 'png', 'jpg', 'jpeg', 'gif', 'bmp'])
 
     def get_id(self):
         """Returns id for new uploaded picture"""
@@ -58,6 +60,18 @@ class ImageRepo():
         for image_nr in files_in_uploads:
             if image_nr:
                 self.images.append(int(image_nr))
+    @inject
+    def delete_unused(self, post_repo = Provide['post_repo']):
+        """Deletes unused images from uploads folder"""
+        if current_app.config['DB_TYPE'] in ['db', 'alchemy']:
+            self.update_image_list()
+            used_images_list = set(map(lambda x: x.img_id, post_repo.get_all()))
+
+            for img in self.images:
+                if img not in used_images_list:
+                    self.delete(img)
+                
+            self.update_image_list()
 
     def delete(self, img_id):
         """Deletes image by id"""

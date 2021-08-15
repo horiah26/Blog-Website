@@ -26,7 +26,7 @@ class Config():
 
     def config_file_exists(self):
         """Checks if database configuration file exists"""
-        if current_app.config['DB_TYPE'] == 'db' or current_app.config['DB_TYPE'] == 'alchemy':
+        if current_app.config['DB_TYPE'] in ['db', 'alchemy']:
             return os.path.isfile(self.CONFIG_PATH)
         if current_app.config['DB_TYPE'] == 'memory':
             return True

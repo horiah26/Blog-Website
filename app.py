@@ -6,6 +6,7 @@ from blueprints import blog
 from blueprints import auth
 
 from services.init_injection import InitInjection
+from dependency_injector.wiring import inject, Provide, Provider
 
 def create_app():
     """Creates app"""
@@ -22,7 +23,8 @@ def create_app():
     app.app_context().push()
     
     if database_type in ["db", "alchemy"]:
-        container.database.create_update_tables()
+        db = container.database()
+        db.create_update_tables()
 
     app.register_blueprint(setup.bp)
     app.register_blueprint(users.bp)

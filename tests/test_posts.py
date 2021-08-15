@@ -11,6 +11,11 @@ def test_homepage_works(client):
     assert b'category-tag popular' in rv.data
     assert b'profile-img' in rv.data
 
+def test_post_image_shown(client):
+    """Tests if homepage works"""
+    rv = client.get('/')
+    assert b'src="static/uploads/0.png"' in rv.data
+
 def test_display_name_not_username_shown_in_cards(client):
     """Does display name is shown in cards"""
     rv = client.get('/')

@@ -8,7 +8,7 @@ class ConfigDB(Config):
     """Used to interact with the config.ini file"""
     def __init__(self):
         super().__init__()
-        self.db_version = "2"
+        self.db_version = "3"
 
     def get_db_auth(self):
         """Returns database configuration information"""

@@ -26,9 +26,9 @@ class RepoPostsDB(IPostRepo):
         conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO posts (title, text, owner, date_created, date_modified) \
-            VALUES(%s, %s, %s, %s, %s)",
-            (post.title, post.text, post.owner, post.date_created, post.date_modified))
+            "INSERT INTO posts (title, text, owner, img_id, date_created, date_modified) \
+            VALUES(%s, %s, %s, %s, %s, %s)",
+            (post.title, post.text, post.owner, post.img_id, post.date_created, post.date_modified))
 
         conn.commit()
         cur.close()
@@ -38,7 +38,7 @@ class RepoPostsDB(IPostRepo):
         """Returns post by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT post_id, title, text, owner, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
+        cur.execute("SELECT post_id, title, text, owner, img_id, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
         post = cur.fetchone()
 
         conn.commit()
@@ -48,7 +48,7 @@ class RepoPostsDB(IPostRepo):
         if post is None:
             print("ERROR: Post not found, incorrect id")
         else:
-            return (Post(post[0], post[1], post[2], post[3], post[4], post[5]), post[6])
+            return (Post(post[0], post[1], post[2], post[3], post[4], post[5], post[6]), post[7])
 
     def delete(self, post_id):
         """Deletes post by id"""
@@ -59,14 +59,14 @@ class RepoPostsDB(IPostRepo):
         cur.close()
         conn.close()
 
-    def update(self, post_id, title, text):
+    def update(self, post_id, title, text, img_id):
         """Updates post by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
         time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
-            "UPDATE posts SET title = %s, text = %s, date_modified = %s WHERE post_id = %s",
-            (title, text, time_now, post_id))
+            "UPDATE posts SET title = %s, text = %s, img_id = %s, date_modified = %s WHERE post_id = %s",
+            (title, text, img_id, time_now, post_id))
         conn.commit()
         cur.close()
         conn.close()
@@ -81,7 +81,7 @@ class RepoPostsDB(IPostRepo):
         conn.close()
         posts = []
         for row in rows:
-            posts.append(Post(row[0], row[1], row[2], row[3], row[4], row[5]))
+            posts.append(Post(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
         return posts
 
     def get_previews(self, username = None, per_page = 6, page_num = 1):
@@ -91,9 +91,9 @@ class RepoPostsDB(IPostRepo):
         offset_nr = (page_num - 1) * per_page
 
         if username:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
         else:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
         previews = cur.fetchall()
         
         if username:
@@ -109,7 +109,7 @@ class RepoPostsDB(IPostRepo):
         posts = []
 
         for row in previews:
-            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
         return (posts, total_pages)
 
     def next_id(self):
