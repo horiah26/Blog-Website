@@ -16,7 +16,7 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_mapping(
-        SECRET_KEY="secret",
+        SECRET_KEY = "secret",
         UPLOAD_FOLDER = 'static/uploads',
         DB_TYPE = database_type)
     app.container = container    

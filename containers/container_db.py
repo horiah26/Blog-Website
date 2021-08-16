@@ -47,10 +47,6 @@ class ContainerDB(containers.DeclarativeContainer):
         config = config,
         config_db = config_db
     )
-
-    database_obj = providers.Object(
-        Database
-    )
         
     post_repo = providers.Singleton(
         RepoPostsDB,

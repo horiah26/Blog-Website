@@ -1,6 +1,7 @@
 """Post tests"""
 import datetime
 from conftest import login, logout
+from werkzeug.datastructures import FileStorage
 
 def test_homepage_works(client):
     """Tests if homepage works"""
@@ -11,10 +12,71 @@ def test_homepage_works(client):
     assert b'category-tag popular' in rv.data
     assert b'profile-img' in rv.data
 
-def test_post_image_shown(client):
-    """Tests if homepage works"""
+def test_post_default_image_shown(client):
+    """Tests if posts show default image 0.png"""
     rv = client.get('/')
     assert b'src="static/uploads/0.png"' in rv.data
+
+def test_can_change_post_image(client):
+    """Tests if homepage works"""
+    
+    login(client, 'username2', 'password2')
+    rv = client.get('/')
+    assert b'src="static/uploads/1.png"' not in rv.data
+
+
+    with open('static/test_pic/test.png', 'rb') as fp:
+        image = FileStorage(fp)
+
+        response = client.post('/10/update',
+                                follow_redirects=True,
+                                content_type='multipart/form-data',
+                                data=dict(text = 'text',
+                                    title = 'title',
+                                    img = image))   
+        print(response.data)
+        assert b'src="static/uploads/1.png"' in response.data
+    
+def test_can_add_post_with_image(client):
+    """Can add a new post with image"""
+    
+    login(client, 'username2', 'password2')
+    rv = client.get('/')
+    assert b'src="static/uploads/1.png"' not in rv.data
+
+
+    with open('static/test_pic/test.png', 'rb') as fp:
+        image = FileStorage(fp)
+
+        response = client.post('/create',
+                                follow_redirects=True,
+                                content_type='multipart/form-data',
+                                data=dict(text = 'text',
+                                    title = 'title',
+                                    img = image))   
+        print(response.data)
+        assert b'src="static/uploads/1.png"' in response.data
+
+def test_cannot_change_post_image_if_txt_extension(client):
+    """Tests if homepage works"""
+    
+    login(client, 'username2', 'password2')
+    rv = client.get('/')
+    assert b'src="static/uploads/1.png"' not in rv.data
+
+
+    with open('static/test_pic/test.txt', 'rb') as fp:
+        image = FileStorage(fp)
+
+        response = client.post('/11/update',
+                                follow_redirects=True,
+                                content_type='multipart/form-data',
+                                data=dict(text = 'text',
+                                    title = 'title',
+                                    img = image))   
+        print(response.data)
+        assert b'src="static/uploads/1.png"' not in rv.data
+        assert b'File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp' in response.data
 
 def test_display_name_not_username_shown_in_cards(client):
     """Does display name is shown in cards"""

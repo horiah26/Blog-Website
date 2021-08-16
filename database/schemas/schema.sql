@@ -35,7 +35,7 @@ date_created =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW(
 date_modified =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' ))
 WHERE password is NULL;
 
-ALTER TABLE posts ADD COLUMN img_id int NOT NULL DEFAULT 0;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS img_id int NOT NULL DEFAULT 0;
 
 ALTER TABLE users ALTER COLUMN name SET NOT NULL;
 ALTER TABLE users ALTER COLUMN email SET NOT NULL;

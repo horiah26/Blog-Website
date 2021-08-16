@@ -10,8 +10,15 @@
     <textarea type="text" class="form-title" name="text" rows="10"> {{post.text}}</textarea><br>
 
     <label for="img" class="file-upload">Upload image</label>
-    <input type="file" id="img" name="img" accept="image/*">
-
+    <input type="file" id="img" name="img" accept="image/*" onchange="show_name()">
     <input type="submit" value="Save">
+
+    <p id="filename">Please upload an image</p>
+
+    <script>
+        function show_name() {
+            document.getElementById("filename").innerHTML = document.getElementById("img").files[0].name;
+        }
+    </script>
 </form>
 {% endblock %}

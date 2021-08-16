@@ -1,29 +1,25 @@
 """Handles images for posts"""
 import os
 import copy
-from os import path, listdir
+from os import path
 from os.path import isfile, join
 from werkzeug.datastructures import FileStorage
 
 from flask import current_app
 from dependency_injector.wiring import inject, Provide
 
-class ImageRepo():
+class ImageRepoMemory():
     """Handles images for posts"""
     def __init__(self):
         self.extension = '.png'
-        self.images = []
-        self.path = current_app.config['UPLOAD_FOLDER']         
-        self.update_image_list()
+        self.images = [0]    
 
     def save(self, image) -> int:
         """Saves image to uploads folder and returns an id"""
-        self.update_image_list()
         if image:
             img_id = self.get_id()
-            image.save(os.path.join(self.path, str(img_id) + self.extension))
+            self.images.append(img_id)
             return img_id
-
         return 0
 
     def allowed_file(self, filename):
@@ -32,30 +28,19 @@ class ImageRepo():
 
     def get_id(self):
         """Returns id for new uploaded picture"""
-        self.update_image_list()
         if len(self.images) == 0:   
             return 0         
         return max(self.images) + 1
 
-    def update_image_list(self):
-        """Reads all images from upload folders and keeps their names as integers in a list"""
-        self.images = []
-        files_in_uploads = [f.rsplit('.', 1)[0] for f in listdir(self.path) if isfile(join(self.path, f)) and self.allowed_file(f)]
-        for image_nr in files_in_uploads:
-            if image_nr:
-                self.images.append(int(image_nr))
     @inject
     def delete_unused(self, post_repo = Provide['post_repo']):
         """Deletes unused images from uploads folder"""
         if current_app.config['DB_TYPE'] in ['db', 'alchemy']:
-            self.update_image_list()
             used_images_list = set(map(lambda x: x.img_id, post_repo.get_all()))
 
             for img in self.images:
                 if img not in used_images_list:
                     self.delete(img)
-                
-            self.update_image_list()
 
     def delete(self, img_id):
         """Deletes image by id"""
