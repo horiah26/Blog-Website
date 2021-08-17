@@ -1,8 +1,8 @@
 """
     Used to interact with the database section in config.ini
 """
-from .config import Config
 from models.db_auth import DbAuth
+from .config import Config
 
 class ConfigDB(Config):
     """Used to interact with the config.ini file"""

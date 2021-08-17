@@ -2,13 +2,13 @@
 from flask import (
     Blueprint, redirect, render_template, request, url_for, flash,
 )
-from werkzeug.security import generate_password_hash
+from dependency_injector.wiring import inject, Provide
+
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.edit_required_once import edit_required_once
 from blueprints.decorators.admin_required import admin_required
 from repos.post.methods import post_misc_generator as gen
-from dependency_injector.wiring import inject, Provide
 
 bp = Blueprint('users', __name__)
 
@@ -30,7 +30,7 @@ def view_user(username, user_repo = Provide['user_repo'], post_repo = Provide['p
     previews_pages = post_repo.get_previews(username, per_page, page_num)
     previews = previews_pages[0]
     total_pages = previews_pages[1]
-    
+
     if total_pages == 1:
         pages = [1]
     else:

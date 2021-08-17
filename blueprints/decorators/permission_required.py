@@ -3,10 +3,10 @@ from functools import wraps
 from flask import redirect, url_for, flash, session
 from dependency_injector.wiring import inject, Provide
 
-    
+
 def permission_required(f):
     """decorator"""
-    
+
     @inject
     def get_auth(auth = Provide['auth']):
         return auth
@@ -17,7 +17,7 @@ def permission_required(f):
 
     @wraps(f)
     def wrapped(*args, **kwargs):
-        
+
         """decorator"""
         auth = get_auth()
         if 'username' in kwargs:

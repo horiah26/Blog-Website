@@ -1,9 +1,7 @@
 """Handles images for posts"""
 import os
-import copy
-from os import path, listdir
+from os import listdir
 from os.path import isfile, join
-from werkzeug.datastructures import FileStorage
 
 from flask import current_app
 from dependency_injector.wiring import inject, Provide
@@ -13,7 +11,7 @@ class ImageRepo():
     def __init__(self):
         self.extension = '.png'
         self.images = []
-        self.path = current_app.config['UPLOAD_FOLDER']         
+        self.path = current_app.config['UPLOAD_FOLDER']
         self.update_image_list()
 
     def save(self, image) -> int:
@@ -33,8 +31,8 @@ class ImageRepo():
     def get_id(self):
         """Returns id for new uploaded picture"""
         self.update_image_list()
-        if len(self.images) == 0:   
-            return 0         
+        if len(self.images) == 0:
+            return 0
         return max(self.images) + 1
 
     def update_image_list(self):
@@ -54,11 +52,11 @@ class ImageRepo():
             for img in self.images:
                 if img not in used_images_list:
                     self.delete(img)
-                
+
             self.update_image_list()
 
     def delete(self, img_id):
         """Deletes image by id"""
         del_path = self.path + '/' + str(img_id) + self.extension
         if os.path.exists(del_path):
-             os.remove(del_path)
+            os.remove(del_path)

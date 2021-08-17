@@ -4,15 +4,12 @@ import math
 
 from models.post import Post
 from models.post_preview import PostPreview
-from models.user import User
-from dependency_injector.wiring import inject, Provide
 
 from static import constant
 from .IPostRepo import IPostRepo
 
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
-    @inject
     def __init__(self, seed, user_repo):
         self.posts = seed
         self.user_repo = user_repo
@@ -78,7 +75,6 @@ class RepoPostsMemory(IPostRepo):
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username:
-                        post1 = (PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, post.date_created, post.date_modified))
                         previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, post.date_created, post.date_modified))
                         break
 

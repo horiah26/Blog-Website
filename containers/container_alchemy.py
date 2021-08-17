@@ -1,18 +1,12 @@
 """General purpose container"""
 from dependency_injector import containers, providers
-from dependency_injector.wiring import inject, Provide
-    
-from sqlalchemy.ext.automap import automap_base
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 
 from config.config_db import ConfigDB
 from config.config import Config
+from config.alchemy_url import AlchURL
 from database.database import Database
 from services.auth import Authentication
 from services.hasher import Hasher
-from config.alchemy_url import AlchURL
 
 from repos.post.post_repo_alchemy import RepoPostsAlchemy
 from repos.post.seed import get as post_seed
@@ -25,7 +19,7 @@ class ContainerAlchemy(containers.DeclarativeContainer):
     """General purpose container"""
 
     config = providers.Configuration()
-    
+
     hasher = providers.Factory(
         Hasher
     )
@@ -60,7 +54,7 @@ class ContainerAlchemy(containers.DeclarativeContainer):
         seed = user_seed(),
         alch_url = alch_url
     )
-    
+
     auth = providers.Factory(
         Authentication,
         user_repo = user_repo
@@ -71,4 +65,3 @@ class ContainerAlchemy(containers.DeclarativeContainer):
         config = config,
         config_db = config_db
     )
-

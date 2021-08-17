@@ -1,7 +1,7 @@
 """Post tests"""
 import datetime
-from conftest import login, logout
 from werkzeug.datastructures import FileStorage
+from conftest import login, logout
 
 def test_homepage_works(client):
     """Tests if homepage works"""
@@ -18,8 +18,8 @@ def test_post_default_image_shown(client):
     assert b'src="static/uploads/0.png"' in rv.data
 
 def test_can_change_post_image(client):
-    """Tests if homepage works"""
-    
+    """Tests can edit post image"""
+
     login(client, 'username2', 'password2')
     rv = client.get('/')
     assert b'src="static/uploads/1.png"' not in rv.data
@@ -33,13 +33,13 @@ def test_can_change_post_image(client):
                                 content_type='multipart/form-data',
                                 data=dict(text = 'text',
                                     title = 'title',
-                                    img = image))   
+                                    img = image))
         print(response.data)
         assert b'src="static/uploads/1.png"' in response.data
-    
+
 def test_can_add_post_with_image(client):
     """Can add a new post with image"""
-    
+
     login(client, 'username2', 'password2')
     rv = client.get('/')
     assert b'src="static/uploads/1.png"' not in rv.data
@@ -53,13 +53,13 @@ def test_can_add_post_with_image(client):
                                 content_type='multipart/form-data',
                                 data=dict(text = 'text',
                                     title = 'title',
-                                    img = image))   
+                                    img = image))
         print(response.data)
         assert b'src="static/uploads/1.png"' in response.data
 
 def test_cannot_change_post_image_if_txt_extension(client):
-    """Tests if homepage works"""
-    
+    """Tests post doesn't work if extension not in allowed extensions list"""
+
     login(client, 'username2', 'password2')
     rv = client.get('/')
     assert b'src="static/uploads/1.png"' not in rv.data
@@ -73,7 +73,7 @@ def test_cannot_change_post_image_if_txt_extension(client):
                                 content_type='multipart/form-data',
                                 data=dict(text = 'text',
                                     title = 'title',
-                                    img = image))   
+                                    img = image))
         print(response.data)
         assert b'src="static/uploads/1.png"' not in rv.data
         assert b'File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp' in response.data
@@ -271,7 +271,7 @@ def test_can_delete_post_if_logged_in(client):
     print(client.get('/3/', follow_redirects=True).data)
     assert b'Post not found' in client.get('/3/', follow_redirects=True).data
     logout(client)
-    
+
 def test_paging_works(client):
     """Paging works"""
     rv = client.get('/?page=1')
@@ -308,7 +308,7 @@ def test_filter_works(client):
         session['filter_user'] = 'username1'
     rv = client.get('/')
 
-    assert b'Name 1\'s posts' in rv.data    
+    assert b'Name 1\'s posts' in rv.data
 
     assert b'Duis a lectus' in rv.data
     assert b'Aliquam at leo' in rv.data

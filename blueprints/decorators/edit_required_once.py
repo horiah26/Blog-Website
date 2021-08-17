@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 
 def edit_required_once(f):
     """Edit_required only when email contains @temporary.com"""
-        
+
     @wraps(f)
     @inject
     def wrapped(user_repo = Provide['user_repo'], *args, **kwargs):

@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 
 def login_required(f):
     """decorator"""
-    
+
     @wraps(f)
     @inject
     def wrapped(auth = Provide['auth'], *args, **kwargs):

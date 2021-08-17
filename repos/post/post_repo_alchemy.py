@@ -7,23 +7,18 @@ from static import constant
 from sqlalchemy.sql import func
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
-from dependency_injector.wiring import inject, Provide
-from .IPostRepo import IPostRepo
 
 from models.post import Post
 from models.post_preview import PostPreview
-from models.user import User
+
+from .IPostRepo import IPostRepo
 
 class RepoPostsAlchemy(IPostRepo):
     """SQLAlchemy repo"""
-    @inject
     def __init__(self, config, alch_url, seed = None):
         """Initializes class and adds posts from seed if present"""
         db = create_engine(alch_url.get_url())
-        base = declarative_base()
 
         Session = sessionmaker(db)
         self.session = Session()
@@ -37,7 +32,7 @@ class RepoPostsAlchemy(IPostRepo):
         if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
-                
+
     def insert(self, post):
         """Add a new post"""
         new_post = self.Post(post_id = post.post_id, title = post.title, text = post.text, owner = post.owner, img_id = post.img_id, date_created = post.date_created, date_modified = post.date_modified)
@@ -76,12 +71,12 @@ class RepoPostsAlchemy(IPostRepo):
         """Returns previews of posts posts"""
         offset_nr = (page_num - 1) * per_page
         previews = []
-              
+
         if username:
             total_posts = self.session.query(self.Post).filter(self.Post.owner == username).count()
         else:
-            total_posts = self.session.query(self.Post).count()            
-            
+            total_posts = self.session.query(self.Post).count()
+
         total_pages = math.ceil(total_posts / per_page)
 
         if username:

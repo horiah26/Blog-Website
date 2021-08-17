@@ -1,10 +1,5 @@
 """Handles images for posts"""
 import os
-import copy
-from os import path
-from os.path import isfile, join
-from werkzeug.datastructures import FileStorage
-
 from flask import current_app
 from dependency_injector.wiring import inject, Provide
 
@@ -12,7 +7,7 @@ class ImageRepoMemory():
     """Handles images for posts"""
     def __init__(self):
         self.extension = '.png'
-        self.images = [0]    
+        self.images = [0]
 
     def save(self, image) -> int:
         """Saves image to uploads folder and returns an id"""
@@ -28,8 +23,8 @@ class ImageRepoMemory():
 
     def get_id(self):
         """Returns id for new uploaded picture"""
-        if len(self.images) == 0:   
-            return 0         
+        if len(self.images) == 0:
+            return 0
         return max(self.images) + 1
 
     @inject
@@ -46,4 +41,4 @@ class ImageRepoMemory():
         """Deletes image by id"""
         del_path = self.path + '/' + str(img_id) + self.extension
         if os.path.exists(del_path):
-             os.remove(del_path)
+            os.remove(del_path)

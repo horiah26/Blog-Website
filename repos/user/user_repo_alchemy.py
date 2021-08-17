@@ -4,9 +4,7 @@ import psycopg2
 
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from dependency_injector.wiring import inject, Provide
 
 from models.user import User
 
@@ -14,12 +12,10 @@ from .IUserRepo import IUserRepo
 
 class RepoUserAlchemy(IUserRepo):
     """SQLAlchemy repo"""
-    @inject
     def __init__(self, config, alch_url, seed = None):
         """Initializes class and adds users from seed if present"""
 
         db = create_engine(alch_url.get_url())
-        base = declarative_base()
 
         Session = sessionmaker(db)
         self.session = Session()

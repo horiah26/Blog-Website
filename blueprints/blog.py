@@ -1,19 +1,15 @@
 """Blog blueprint"""
-import math
-import os
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, session
 )
+from dependency_injector.wiring import inject, Provide
+
 from repos.post.methods import post_misc_generator as gen
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
 
-from dependency_injector.wiring import inject, Provide
-
 from models.post import Post
-from models.post_preview import PostPreview
-from models.user import User
 
 bp = Blueprint('blog', __name__)
 
@@ -22,19 +18,19 @@ bp = Blueprint('blog', __name__)
 @inject
 def home(post_repo = Provide['post_repo'], user_repo = Provide['user_repo']):
     """Route to home + pagination + filter by user"""
-    if not 'filter_user' in session:        
-            session['filter_user'] = None
+    if 'filter_user' not in session:
+        session['filter_user'] = None
 
     page_num = request.args.get('page', 1, type=int)
 
     if request.method == 'POST':
         if request.form['action'] == 'Search':
             session['filter_user'] = request.form['user'].strip()
-            page_num = 1;
+            page_num = 1
         if request.form['action'] == 'Reset':
             session['filter_user'] = None
-            page_num = 1;
-        
+            page_num = 1
+
     per_page = 6
     previews_pages = post_repo.get_previews(session['filter_user'], per_page, page_num)
 
@@ -67,7 +63,7 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
                 else:
                     flash("File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp")
                     return redirect(url_for('blog.create'))
-  
+
 
         error = None
         if not title:
@@ -107,12 +103,11 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
     if request.method == 'POST':
         title = request.form['title'].strip()
         text = request.form['text'].strip()
-            
+
         if 'img' in request.files:
             image = request.files['img']
             if img_repo.allowed_file(image.filename):
                 img_id = img_repo.save(image)
-                img_repo.delete_unused()
             else:
                 flash("File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp")
                 return redirect(url_for('blog.update', post_id = post_id))
@@ -123,6 +118,7 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
             text = post.text
         else:
             post_repo.update(post_id, title, text, img_id)
+            img_repo.delete_unused()
             flash("Post has been updated")
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)

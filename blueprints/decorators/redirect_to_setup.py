@@ -5,11 +5,11 @@ from dependency_injector.wiring import inject, Provide
 
 def redirect_to_setup(f):
     """Added so app could be inserted as a parameter in the other wrapper"""
-    
+
     @inject
     def get_config(config = Provide['config']):
         return config
-    
+
     @inject
     def get_config_db(config_db = Provide['config_db']):
         return config_db

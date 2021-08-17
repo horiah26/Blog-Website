@@ -3,17 +3,14 @@ import math
 import datetime
 import psycopg2
 from static import constant
-from dependency_injector.wiring import inject, Provide
 
 from models.post import Post
 from models.post_preview import PostPreview
-from models.user import User
 from .IPostRepo import IPostRepo
 
 
 class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
-    @inject
     def __init__(self, db, seed = None):
         """Initializes class and adds posts from seed if present"""
         self.db = db
@@ -26,8 +23,9 @@ class RepoPostsDB(IPostRepo):
         conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO posts (title, text, owner, img_id, date_created, date_modified) \
-            VALUES(%s, %s, %s, %s, %s, %s)",
+            """
+            INSERT INTO posts (title, text, owner, img_id, date_created, date_modified) \
+            VALUES(%s, %s, %s, %s, %s, %s)""",
             (post.title, post.text, post.owner, post.img_id, post.date_created, post.date_modified))
 
         conn.commit()
@@ -80,8 +78,9 @@ class RepoPostsDB(IPostRepo):
         cur.close()
         conn.close()
         posts = []
+
         for row in rows:
-            posts.append(Post(row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
+            posts.append(Post(row[0], row[1], row[2], row[3], row[6], row[5], row[4]))
         return posts
 
     def get_previews(self, username = None, per_page = 6, page_num = 1):
@@ -95,7 +94,7 @@ class RepoPostsDB(IPostRepo):
         else:
             cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
         previews = cur.fetchall()
-        
+
         if username:
             cur.execute ("SELECT COUNT(*) FROM posts WHERE owner = %s", [username])
         else:

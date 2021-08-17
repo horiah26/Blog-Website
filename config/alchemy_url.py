@@ -1,6 +1,4 @@
 """Creates the url for engine configuration in alchemy repos"""
-from dependency_injector.wiring import inject, Provide
-
 
 class AlchURL():
     """Creates the url for engine configuration in alchemy repos"""

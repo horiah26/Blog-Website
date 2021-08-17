@@ -1,8 +1,8 @@
 """Memory posts repo"""
 import datetime
+from dependency_injector.wiring import inject, Provide
 from models.user import User
 from .IUserRepo import IUserRepo
-from dependency_injector.wiring import inject, Provide
 
 class RepoUserMemory(IUserRepo):
     """Repo for posts in memory"""
@@ -51,5 +51,5 @@ class RepoUserMemory(IUserRepo):
             for post in posts:
                 if user.username == post.owner:
                     users_with_posts.append(user)
-        
+
         return list(set(users_with_posts))

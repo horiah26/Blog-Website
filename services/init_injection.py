@@ -1,3 +1,4 @@
+"""Handles injection preparation for flask app"""
 from repos.post import post_repo_db
 from repos.post import post_repo_alchemy
 from repos.post import post_repo_memory
@@ -5,6 +6,7 @@ from repos.user import user_repo_db
 from repos.user import user_repo_alchemy
 from repos.user import user_repo_memory
 from repos.user import seed as user_seed
+from repos.post import image_repo
 from database import database
 from services import auth
 from config import config
@@ -12,7 +14,6 @@ from blueprints import setup
 from blueprints import users
 from blueprints import blog
 from blueprints import auth as bp_auth
-from repos.post import image_repo
 from blueprints.decorators import setup_requirements
 from blueprints.decorators import permission_required
 from blueprints.decorators import admin_required
@@ -28,6 +29,7 @@ from containers.container_alchemy import ContainerAlchemy
 import app
 
 class InitInjection():
+    """Handles injection preparation for flask app"""
     def __init__(self, database_type):
         if database_type == 'db':
             self.container = ContainerDB()
@@ -60,7 +62,7 @@ class InitInjection():
                                         user_repo_memory,
                                         config,
                                         image_repo])
-   
-    def get_container(self):
-        return self.container
 
+    def get_container(self):
+        """Returns container"""
+        return self.container

@@ -5,12 +5,12 @@ from flask import redirect, url_for, flash
 from dependency_injector.wiring import inject, Provide
 
 def setup_requirements(f):
-    """decorator"""   
-    
+    """decorator"""
+
     @inject
     def get_auth(auth = Provide['auth']):
         return auth
-    
+
     @inject
     def get_config_db(config_db = Provide['config_db']):
         return config_db

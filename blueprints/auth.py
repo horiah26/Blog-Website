@@ -2,8 +2,8 @@
 from flask import (
     Blueprint, redirect, render_template, request, url_for, session
 )
-from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from dependency_injector.wiring import inject, Provide
+from blueprints.decorators.redirect_to_setup import redirect_to_setup
 
 bp = Blueprint('auth', __name__)
 

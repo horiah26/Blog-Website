@@ -6,11 +6,10 @@ from blueprints import blog
 from blueprints import auth
 
 from services.init_injection import InitInjection
-from dependency_injector.wiring import inject, Provide, Provider
 
 def create_app():
     """Creates app"""
-    database_type = "memory"
+    database_type = "alchemy"
 
     container = InitInjection(database_type).get_container()
 
