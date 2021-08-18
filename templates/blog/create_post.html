@@ -11,16 +11,18 @@
 <label class="crud_label" for="text"> Text </label> <br>
 <textarea type="text" class="form-title" name="text" rows="10"> </textarea><br>
 
+    <img id="preview" src="#" alt="" width="290" />
 <label for="img" class="file-upload">Upload image</label>
 <input type="file" id="img" name="img" accept="image/*" onchange="show_name()">
 <input type="submit" value="Create post">
 
-<p id="filename">Please upload an image</p>
-
 <script>
-    function show_name() {
-        document.getElementById("filename").innerHTML = document.getElementById("img").files[0].name;
-    }
+ img.onchange = evt => {
+  const [file] = img.files
+  if (file) {
+    preview.src = URL.createObjectURL(file)
+  }
+}
 </script>
 </form>
 {% endblock %}
