@@ -617,3 +617,35 @@ input[type="file"] {
 display:block;
 margin-top:10px;
 }
+
+#statistics {
+    margin-top: 110px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    #statistics td, #statistics th {
+        border: 1px solid black;
+        padding: 8px;
+    }
+
+    #statistics tr:nth-child(even) {
+        background-color: var(--navbar_color);
+        color: var(--theme_white)
+    }
+    #statistics tr:nth-child(odd) {
+        color: var(--theme_white)
+    }
+
+    #statistics tr:hover {
+        background-color: var(--theme_white);
+        color: var(--post_background);
+    }
+
+    #statistics th {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        text-align: left;
+        background-color: #202020;
+        color: white;
+    }

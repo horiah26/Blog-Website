@@ -1,7 +1,7 @@
 """SQLAlchemy repo"""
 
 import math
-import datetime
+from datetime import datetime
 from static import constant
 
 from sqlalchemy.sql import func
@@ -59,7 +59,7 @@ class RepoPostsAlchemy(IPostRepo):
         post.title = title
         post.text = text
         post.img_id = img_id
-        post.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+        post.date_modified = datetime.now().strftime("%B %d %Y - %H:%M")
         self.session.commit()
 
     def delete(self, post_id):

@@ -8,6 +8,7 @@ from repos.post.methods import post_misc_generator as gen
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
+from blueprints.decorators.admin_required import admin_required
 
 from models.post import Post
 
@@ -134,3 +135,11 @@ def delete(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
     img_repo.delete_unused()
     flash("Post has been deleted")
     return redirect(url_for('blog.home'))
+
+@bp.route('/statistics', methods=['GET'])
+@admin_required
+@redirect_to_setup
+@inject
+def statistics(statistics = Provide['statistics']):
+    """Route to delete posts"""
+    return render_template('blog/statistics.html', statistics=statistics.get())

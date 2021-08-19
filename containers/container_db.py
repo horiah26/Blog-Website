@@ -6,6 +6,7 @@ from config.config import Config
 from database.database import Database
 from services.auth import Authentication
 from services.hasher import Hasher
+from services.statistics import Statistics
 
 from repos.post.post_repo_db import RepoPostsDB
 from repos.post.seed import get as post_seed
@@ -57,3 +58,7 @@ class ContainerDB(containers.DeclarativeContainer):
         Authentication,
         user_repo = user_repo
     )
+
+    statistics = providers.Factory(
+        Statistics,
+        post_repo = post_repo)

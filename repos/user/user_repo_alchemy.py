@@ -1,5 +1,5 @@
 """SQLAlchemy repo"""
-import datetime
+from datetime import datetime
 import psycopg2
 
 from sqlalchemy.ext.automap import automap_base
@@ -60,7 +60,7 @@ class RepoUserAlchemy(IUserRepo):
         user.name = name
         user.email = email
         user.password = password
-        user.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+        user.date_modified = datetime.now().strftime("%B %d %Y - %H:%M")
         self.session.commit()
 
     def delete(self, username):

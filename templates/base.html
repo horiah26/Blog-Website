@@ -27,6 +27,7 @@
         <ul class="navbar-links">
             {% if session['username'] == 'admin' %}
             <li><a class="menu-buttons" href="{{url_for('users.view_all')}}"><span>Users</span></a></li>
+            <li><a class="menu-buttons" href="{{url_for('blog.statistics')}}"><span>Statistics</span></a></li>
             {% endif %}
             {% if session['username'] %}
             <li><a class="menu-buttons" href="{{url_for('blog.create')}}"><span>Write</span></a></li>

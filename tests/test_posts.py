@@ -1,5 +1,5 @@
 """Post tests"""
-import datetime
+from datetime import datetime
 from werkzeug.datastructures import FileStorage
 from conftest import login, logout
 
@@ -11,6 +11,39 @@ def test_homepage_works(client):
     assert b'welcome' in rv.data
     assert b'category-tag popular' in rv.data
     assert b'profile-img' in rv.data
+
+def test_statistics_page_works(client):
+    """Tests that statistics are shown correctly"""
+    login(client, 'admin', 'admin')
+    
+    rv = client.get('/statistics')
+
+    assert(b"""    <tr>
+        <td class="month">2021-8</td>
+        <td class="posts">3</td>
+    </tr>
+    
+    <tr>
+        <td class="month">2021-6</td>
+        <td class="posts">5</td>
+    </tr>
+    
+    <tr>
+        <td class="month">2021-1</td>
+        <td class="posts">4</td>
+    </tr>
+    
+    <tr>
+        <td class="month">2020-5</td>
+        <td class="posts">2</td>
+    </tr>""") in rv.data
+
+def test_cannot_access_statistics_unless_admin(client):
+    """Tests cannot access statistics unless admin"""
+    login(client, 'username2', 'password2')
+    
+    rv = client.get('/statistics', follow_redirects=True)
+    assert b'Only admin has access to this page' in rv.data
 
 def test_post_default_image_shown(client):
     """Tests if posts show default image 0.png"""
@@ -86,7 +119,7 @@ def test_display_name_not_username_shown_in_cards(client):
 def test_shows_date_correctly(client):
     """Tests the date is shown correctly"""
     rv = client.get('/1/')
-    time_now = datetime.datetime.now().strftime("%B %d %Y")
+    time_now = datetime.now().strftime("%B %d %Y")
 
     assert bytes(time_now, 'utf-8') in rv.data
 
@@ -100,7 +133,7 @@ def test_opens_first_post_from_seed(client):
     assert b'view-post-date' in rv.data
     assert b'Suspendisse dui elit' in rv.data
 
-    time_now = datetime.datetime.now().strftime("%B %d %Y")
+    time_now = datetime.now().strftime("%B %d %Y")
 
     assert bytes(time_now, 'utf-8') in rv.data
 

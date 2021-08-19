@@ -1,5 +1,5 @@
 """Memory posts repo"""
-import datetime
+from datetime import datetime
 from dependency_injector.wiring import inject, Provide
 from models.user import User
 from .IUserRepo import IUserRepo
@@ -34,7 +34,7 @@ class RepoUserMemory(IUserRepo):
             user.name = name
             user.email = email
             user.password = password
-            user.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+            user.date_modified = datetime.now().strftime("%B %d %Y - %H:%M")
 
     def delete(self, username):
         """Deletes post by id"""

@@ -1,5 +1,5 @@
 """Memory posts repo """
-import datetime
+from datetime import datetime
 import math
 
 from models.post import Post
@@ -43,7 +43,7 @@ class RepoPostsMemory(IPostRepo):
         post.title = title
         post.text = text
         post.img_id = img_id
-        post.modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+        post.modified = datetime.now().strftime("%B %d %Y - %H:%M")
 
     def delete(self, post_id):
         """Deletes post by id"""

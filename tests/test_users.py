@@ -1,5 +1,5 @@
 """User tests"""
-import datetime
+from datetime import datetime
 from conftest import login, logout
 
 def test_shows_posts_on_user_profile(client):
@@ -14,7 +14,7 @@ def test_shows_info_on_user_profile(client):
     assert b'Name 1\'s Profile' in rv.data
     assert b'Email: email1@g.com' in rv.data
     assert b'Username: username1' in rv.data
-    time_now = datetime.datetime.now().strftime("%B %d %Y")
+    time_now = datetime.now().strftime("%B %d %Y")
 
     assert bytes(f"Date joined: {time_now}", 'utf-8') in rv.data
     assert bytes(f"Profile last modified: {time_now}", 'utf-8') in rv.data

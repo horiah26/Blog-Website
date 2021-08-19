@@ -9,6 +9,7 @@ from repos.user import seed as user_seed
 from repos.post import image_repo
 from database import database
 from services import auth
+from services import statistics
 from config import config
 from blueprints import setup
 from blueprints import users
@@ -61,7 +62,8 @@ class InitInjection():
                                         post_repo_memory,
                                         user_repo_memory,
                                         config,
-                                        image_repo])
+                                        image_repo,
+                                        statistics])
 
     def get_container(self):
         """Returns container"""

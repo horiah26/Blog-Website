@@ -7,6 +7,7 @@ from config.alchemy_url import AlchURL
 from database.database import Database
 from services.auth import Authentication
 from services.hasher import Hasher
+from services.statistics import Statistics
 
 from repos.post.post_repo_alchemy import RepoPostsAlchemy
 from repos.post.seed import get as post_seed
@@ -65,3 +66,7 @@ class ContainerAlchemy(containers.DeclarativeContainer):
         config = config,
         config_db = config_db
     )
+
+    statistics = providers.Factory(
+        Statistics,
+        post_repo = post_repo)

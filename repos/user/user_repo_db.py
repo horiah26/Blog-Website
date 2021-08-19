@@ -1,5 +1,5 @@
 """Memory posts repo"""
-import datetime
+from datetime import datetime
 import psycopg2
 from flask import flash
 
@@ -57,7 +57,7 @@ class RepoUserDB(IUserRepo):
         """Updates user by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
-        time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+        time_now = datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
             "UPDATE users SET name = %s, email = %s, password = %s, date_modified = %s WHERE username = %s",
             (name, email, password, time_now, username))

@@ -1,6 +1,6 @@
 """Database repo"""
 import math
-import datetime
+from datetime import datetime
 import psycopg2
 from static import constant
 
@@ -63,7 +63,7 @@ class RepoPostsDB(IPostRepo):
         """Updates post by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
-        time_now = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+        time_now = datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
             "UPDATE posts SET title = %s, text = %s, img_id = %s, date_modified = %s WHERE post_id = %s",
             (title, text, img_id, time_now, post_id))
