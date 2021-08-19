@@ -9,7 +9,7 @@ from services.init_injection import InitInjection
 
 def create_app():
     """Creates app"""
-    database_type = "alchemy"
+    database_type = "db"
 
     container = InitInjection(database_type).get_container()
 

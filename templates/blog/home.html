@@ -61,10 +61,10 @@
                             {{preview.owner}}
                         </h6>
                         <h6 class="date-created">
-                            {% if preview.date_modified[16:] == preview.date_created[12:] %}
-                            {{preview.date_created}}
+                            {% if preview.date.modified[16:] == preview.date.created[12:] %}
+                            {{preview.date.created}}
                             {% else %}
-                            {{preview.date_modified}}
+                            {{preview.date.modified}}
                             {% endif %}
                         </h6>
                     </div>

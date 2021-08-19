@@ -26,7 +26,7 @@ class ImageRepo():
 
     def allowed_file(self, filename):
         """Checks the image file has the correct extension"""
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in set(['pdf', 'png', 'jpg', 'jpeg', 'gif', 'bmp'])
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
 
     def get_id(self):
         """Returns id for new uploaded picture"""

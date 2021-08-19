@@ -23,10 +23,10 @@
                                     {{user.username}}
                                 </h6>
                                 <h6 class="date-created">
-                                    {% if user.date_modified[16:] == user.date_created[12:] %}
-                                    {{user.date_created}}
+                                    {% if user.date.modified[16:] == user.date.created[12:] %}
+                                    {{user.date.created}}
                                     {% else %}
-                                    {{user.date_modified}}
+                                    {{user.date.modified}}
                                     {% endif %}
                                 </h6>
                             </div>

@@ -3,6 +3,7 @@ import datetime
 import math
 
 from models.post import Post
+from models.date import Date
 from models.post_preview import PostPreview
 
 from static import constant
@@ -42,7 +43,7 @@ class RepoPostsMemory(IPostRepo):
         post.title = title
         post.text = text
         post.img_id = img_id
-        post.date_modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
+        post.modified = datetime.datetime.now().strftime("%B %d %Y - %H:%M")
 
     def delete(self, post_id):
         """Deletes post by id"""
@@ -68,14 +69,14 @@ class RepoPostsMemory(IPostRepo):
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username == username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, post.date_created, post.date_modified))
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, Date(post.date.created, post.date.modified)))
                         break
 
         else:
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, post.date_created, post.date_modified))
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, Date(post.date.created, post.date.modified)))
                         break
 
         total_posts = len(previewed_posts)

@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.user import User
+from models.date import Date
 
 from .IUserRepo import IUserRepo
 
@@ -33,7 +34,7 @@ class RepoUserAlchemy(IUserRepo):
 
     def insert(self, user):
         """Add a new user"""
-        new_user = self.User(username = user.username, name = user.name, email = user.email, password = user.password, date_created = user.date_created, date_modified = user.date_modified)
+        new_user = self.User(username = user.username, name = user.name, email = user.email, password = user.password, created = user.date.created, modified = user.date.modified)
         self.session.add(new_user)
         self.session.commit()
 
@@ -42,14 +43,14 @@ class RepoUserAlchemy(IUserRepo):
         user = self.session.query(self.User).get(username)
         if user is None:
             return None
-        return User(user.username, user.name, user.email, user.password, user.date_created, user.date_modified)
+        return User(user.username, user.name, user.email, user.password, Date(user.date_created, user.date_modified))
 
     def get_all(self):
         """Returns all users"""
         users = []
         query = self.session.query(self.User).all()
         for user in query:
-            users.append(User(user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
+            users.append(User(user.username, user.name, user.email, user.password, Date(user.date_created, user.date_modified)))
         return users
 
     def update(self, username, name, email, password):
@@ -73,5 +74,5 @@ class RepoUserAlchemy(IUserRepo):
         users = []
         query = self.session.query(self.User).join(self.Post, self.User.username == self.Post.owner)
         for user in query:
-            users.append(User(user.username, user.name, user.email, user.password, user.date_created, user.date_modified))
+            users.append(User(user.username, user.name, user.email, user.password, Date(user.date_created, user.date_modified)))
         return users

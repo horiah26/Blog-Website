@@ -76,7 +76,7 @@ def test_cannot_change_post_image_if_txt_extension(client):
                                     img = image))
         print(response.data)
         assert b'src="static/uploads/1.png"' not in rv.data
-        assert b'File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp' in response.data
+        assert b'File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp' in response.data
 
 def test_display_name_not_username_shown_in_cards(client):
     """Does display name is shown in cards"""

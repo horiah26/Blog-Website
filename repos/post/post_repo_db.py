@@ -5,6 +5,7 @@ import psycopg2
 from static import constant
 
 from models.post import Post
+from models.date import Date
 from models.post_preview import PostPreview
 from .IPostRepo import IPostRepo
 
@@ -24,9 +25,10 @@ class RepoPostsDB(IPostRepo):
         cur = conn.cursor()
         cur.execute(
             """
+            SELECT setval(pg_get_serial_sequence('posts', 'post_id'), (SELECT MAX(post_id) FROM posts)+1);
             INSERT INTO posts (title, text, owner, img_id, date_created, date_modified) \
             VALUES(%s, %s, %s, %s, %s, %s)""",
-            (post.title, post.text, post.owner, post.img_id, post.date_created, post.date_modified))
+            (post.title, post.text, post.owner, post.img_id, post.date.created, post.date.modified))
 
         conn.commit()
         cur.close()
@@ -46,7 +48,7 @@ class RepoPostsDB(IPostRepo):
         if post is None:
             print("ERROR: Post not found, incorrect id")
         else:
-            return (Post(post[0], post[1], post[2], post[3], post[4], post[5], post[6]), post[7])
+            return (Post(post[0], post[1], post[2], post[3], post[4], Date(post[5], post[6])), post[7])
 
     def delete(self, post_id):
         """Deletes post by id"""
@@ -80,7 +82,7 @@ class RepoPostsDB(IPostRepo):
         posts = []
 
         for row in rows:
-            posts.append(Post(row[0], row[1], row[2], row[3], row[6], row[5], row[4]))
+            posts.append(Post(row[0], row[1], row[2], row[3], row[6], Date(row[4], row[5])))
         return posts
 
     def get_previews(self, username = None, per_page = 6, page_num = 1):
@@ -108,7 +110,7 @@ class RepoPostsDB(IPostRepo):
         posts = []
 
         for row in previews:
-            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
+            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], Date(row[6], row[7])))
         return (posts, total_pages)
 
     def next_id(self):

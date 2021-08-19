@@ -61,7 +61,7 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
                 if img_repo.allowed_file(image.filename):
                     img_id = img_repo.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
                     return redirect(url_for('blog.create'))
 
 
@@ -106,11 +106,12 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
 
         if 'img' in request.files:
             image = request.files['img']
-            if img_repo.allowed_file(image.filename):
-                img_id = img_repo.save(image)
-            else:
-                flash("File format not supported. Format must be one of the following: pdf, png, jpg, jpeg, gif, bmp")
-                return redirect(url_for('blog.update', post_id = post_id))
+            if image.filename != '':
+                if img_repo.allowed_file(image.filename):
+                    img_id = img_repo.save(image)
+                else:
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    return redirect(url_for('blog.update', post_id = post_id))
 
         if not title:
             title = post.title
