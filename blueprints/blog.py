@@ -137,7 +137,7 @@ def delete(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
     return redirect(url_for('blog.home'))
 
 @bp.route('/statistics', methods=['GET'])
-@admin_required
+@login_required
 @redirect_to_setup
 @inject
 def statistics(statistics = Provide['statistics']):

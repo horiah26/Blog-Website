@@ -38,12 +38,11 @@ def test_statistics_page_works(client):
         <td class="posts">2</td>
     </tr>""") in rv.data
 
-def test_cannot_access_statistics_unless_admin(client):
+def test_cannot_access_statistics_if_not_logged_in(client):
     """Tests cannot access statistics unless admin"""
-    login(client, 'username2', 'password2')
-    
+    logout(client)    
     rv = client.get('/statistics', follow_redirects=True)
-    assert b'Only admin has access to this page' in rv.data
+    assert b'You must be logged in to do this' in rv.data
 
 def test_post_default_image_shown(client):
     """Tests if posts show default image 0.png"""
