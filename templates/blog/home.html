@@ -55,7 +55,7 @@
             <a href="{{url_for('users.view_user', username = preview.owner_username)}}">
                 <div class="card-profile">
                     <img class="profile-img"
-                         src="https://images.unsplash.com/photo-1526835746352-0b9da4054862?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80" />
+                         src="/static/uploads/profile/{{preview.profile_id}}.png" />
                     <div class="card-profile-info">
                         <h6 class="owner">
                             {{preview.owner}}

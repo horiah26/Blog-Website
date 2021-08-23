@@ -1,9 +1,12 @@
-"""Handles images for posts"""
+"""Handles images for user profiles"""
 import os
+from os import listdir
+from os.path import isfile, join
+
 from flask import current_app
 from dependency_injector.wiring import inject, Provide
 
-class ImageRepoMemory():
+class ProfileImageRepo():
     """Handles images for posts"""
     def __init__(self):
         self.extension = '.png'
@@ -26,6 +29,3 @@ class ImageRepoMemory():
         if len(self.images) == 0:
             return 0
         return max(self.images) + 1
-
-    def delete_unused(self, post_repo = Provide['post_repo']):
-        pass

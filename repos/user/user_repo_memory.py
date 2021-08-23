@@ -27,13 +27,14 @@ class RepoUserMemory(IUserRepo):
         if isinstance(user, User):
             self.users.append(user)
 
-    def update(self, username, name, email, password):
+    def update(self, username, name, email, img_id, password):
         """Updates post by id"""
         user = self.get(username)
         if user is not None:
             user.name = name
             user.email = email
             user.password = password
+            user.img_id = img_id
             user.date_modified = datetime.now().strftime("%B %d %Y - %H:%M")
 
     def delete(self, username):

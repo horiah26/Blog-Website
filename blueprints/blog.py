@@ -116,7 +116,7 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
 
         if not title:
             title = post.title
-        elif not text:
+        if not text:
             text = post.text
         else:
             post_repo.update(post_id, title, text, img_id)

@@ -22,6 +22,7 @@ ALTER TABLE users ALTER COLUMN email DROP NOT NULL;
 ALTER TABLE users ALTER COLUMN password DROP NOT NULL;
 ALTER TABLE users ALTER COLUMN date_created DROP NOT NULL;
 ALTER TABLE users ALTER COLUMN date_modified DROP NOT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS img_id int NOT NULL DEFAULT 0;
 
 INSERT INTO users (username)
 SELECT DISTINCT owner FROM posts WHERE owner NOT IN(SELECT username FROM users);
@@ -32,7 +33,8 @@ SET name = username,
 email = CONCAT(username,'@temporary.com'), 
 password = username, 
 date_created =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' )),
-date_modified =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' ))
+date_modified =  CONCAT( TO_CHAR(NOW() :: DATE, 'Mon dd yyyy - ' ),  TO_CHAR(NOW() :: TIME, 'HH24:MI' )),
+img_id = 0
 WHERE password is NULL;
 
 ALTER TABLE posts ADD COLUMN IF NOT EXISTS img_id int NOT NULL DEFAULT 0;

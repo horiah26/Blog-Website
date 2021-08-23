@@ -10,8 +10,9 @@ bp = Blueprint('auth', __name__)
 @bp.route('/signup', methods=['GET', 'POST'])
 @redirect_to_setup
 @inject
-def sign_up(auth = Provide['auth']):
+def sign_up(auth = Provide['auth'], user_img = Provide['profile_img_repo']):
     """Creates a new user"""
+    img_id = 0
     if request.method == 'POST':
         username = request.form['username'].strip()
         email = request.form['email'].strip()
@@ -19,7 +20,16 @@ def sign_up(auth = Provide['auth']):
         password = request.form['password'].strip()
         confirm_password = request.form['confirm_password'].strip()
 
-        return auth.sign_up(username, name, email, password, confirm_password)
+        if 'img' in request.files:          
+            image = request.files['img']
+            if image.filename != '':
+                if user_img.allowed_file(image.filename):
+                    img_id = user_img.save(image)
+                else:
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    return redirect(url_for('auth.sign_up'))
+
+        return auth.sign_up(username, name, email, password, confirm_password, img_id)
     return render_template('auth/sign_up.html')
 
 @bp.route('/login', methods=['GET', 'POST'])

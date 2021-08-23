@@ -8,7 +8,7 @@ class Authentication():
     def __init__(self, user_repo):
         self.user_repo = user_repo
 
-    def sign_up(self, username, name, email, password, confirm_password, hasher = Provide['hasher']):
+    def sign_up(self, username, name, email, password, confirm_password, img_id, hasher = Provide['hasher']):
         """Signs user up"""
 
         user = self.user_repo.get(username)
@@ -40,8 +40,7 @@ class Authentication():
         if error is not None:
             flash(error)
             return redirect(url_for('auth.sign_up'))
-
-        self.user_repo.insert(User(username, name, email, hasher.hash(password)))
+        self.user_repo.insert(User(username, name, email, hasher.hash(password), img_id))
         flash("You have signed up")
         return redirect(url_for('blog.home'))
     @inject

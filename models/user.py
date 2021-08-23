@@ -4,15 +4,10 @@ from models.date import Date
 
 class User():
     """The user class"""
-    def __init__(self, username, name, email, password, date = Date()):
+    def __init__(self, username, name, email, password, img_id, date = Date()):
         self.username = username
         self.name = name
         self.email = email
-        self.password = password        
+        self.password = password
+        self.img_id = img_id
         self.date = date
-
-    def get(self, username):
-        """Returns this post"""
-        if self.username == username:
-            return self
-        return None

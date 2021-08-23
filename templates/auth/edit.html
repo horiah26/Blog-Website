@@ -5,7 +5,7 @@
 {% block header %}<h1 class="crud-title">Edit profile</h1>{% endblock %}
 
 {% block content %}
-                  <form method="POST" class="crud_form">
+                  <form method="POST" class="crud_form" enctype="multipart/form-data">
                       <label class="crud_label" for="signup"> Your name </label> <br>
                       <input type="text" class="form-title" name="name"><br>
 
@@ -17,8 +17,9 @@
 
                       <label class="crud_label" for="signup"> Confirm change password  </label> <br>
                       <input type="password" class="form-title" name="confirm_password"><br>
-
-                      <br>
+                      <img id="preview" src="#" alt="" width="290" />
+                      <label for="img" class="file-upload">Upload image</label>
+                      <input type="file" id="img" name="img" accept="image/*" onchange="show_name()">
                       <input type="submit" value="Confirm edit">
                   </form>
 {% endblock %}

@@ -1,5 +1,6 @@
 """User tests"""
 from datetime import datetime
+from werkzeug.datastructures import FileStorage
 from conftest import login, logout
 
 def test_shows_posts_on_user_profile(client):
@@ -7,6 +8,33 @@ def test_shows_posts_on_user_profile(client):
     rv = client.get('/users/username1/')
     assert b'Duis a lectus in erat blandit hendrerit' in rv.data
     assert b'Quisque tempor fringilla velit et accumsan. Cras vitae purus sit amet tellus tempor facilisis' in rv.data
+
+def test_shows_profile_pic_on_user_profile(client):
+    """Shows profile pic on user profile"""
+    rv = client.get('/users/username1/')
+    assert b'src="/static/uploads/profile/0.png"' in rv.data
+
+def test_can_change_profile_pic(client):
+    """Can change profile pic"""
+    login(client, 'username2', 'password2')
+    rv = client.get('/users/username2')
+    assert b'src="static/uploads/profile/1.png"' not in rv.data
+
+
+    with open('static/test_pic/test.png', 'rb') as fp:
+        image = FileStorage(fp)
+
+        response = client.post('/users/username2/edit',
+                                follow_redirects=True,
+                                content_type='multipart/form-data',
+                                data=dict(name = '',
+                                    email = '',
+                                    password = '',
+                                    confirm_password = '',
+                                    img = image))
+        print(response.data)
+        assert b'src="/static/uploads/profile/1.png"' in response.data
+
 
 def test_shows_info_on_user_profile(client):
     """Shows info on user profile"""

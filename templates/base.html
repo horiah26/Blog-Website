@@ -25,18 +25,24 @@
         {% endif %}
         {% endwith %}
         <ul class="navbar-links">
+            <div class="nav-buttons">
+
+                {% if session['username'] %}
+            <li><a class="menu-buttons" href="{{url_for('auth.logout')}}"><span>Log out</span></a></li>
+            <li><a class="menu-buttons" href="{{url_for('users.view_user', username=session['username'])}}"><span>Profile</span></a></li>
+            <li><a class="menu-buttons" href="{{url_for('blog.create')}}"><span>Write</span></a></li>
             {% if session['username'] == 'admin' %}
             <li><a class="menu-buttons" href="{{url_for('users.view_all')}}"><span>Users</span></a></li>
             <li><a class="menu-buttons" href="{{url_for('blog.statistics')}}"><span>Statistics</span></a></li>
             {% endif %}
-            {% if session['username'] %}
-            <li><a class="menu-buttons" href="{{url_for('blog.create')}}"><span>Write</span></a></li>
-            <li><a class="menu-buttons" href="{{url_for('auth.logout')}}"><span>Log out</span></a></li>
-            {% else %}
+            {% endif %}
+            </div>
+            <li><a class="username" href="#">{{session['username']}}</a></li>
+
+            {% if not session['username'] %}
             <li><a class="menu-buttons" href="{{url_for('auth.login')}}"><span>Log in</span></a></li>
             <li><a class="menu-buttons" href="{{url_for('auth.sign_up')}}"><span>Sign-up</span></a></li>
             {% endif %}
-            <li><a id="username" href="{{url_for('users.view_user', username=session['username'])}}">{{session['username']}}</a></li>
         </ul>
     </nav>
 
@@ -49,6 +55,7 @@
 
     <script src="{{url_for('static', filename="js/hide_nav.js")}}"></script>
     <script src="{{url_for('static', filename="js/collapse_nav.js")}}"></script>
+    <script src="{{url_for('static', filename="js/preview_image.js")}}"></script>
 </body>
 
 </html>

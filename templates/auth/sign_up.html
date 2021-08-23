@@ -5,22 +5,24 @@
 {% block header %}<h1 class="crud-title">Sign up</h1>{% endblock %}
 
 {% block content %}
-    <form method="POST" class="crud_form">
-        <label class="crud_label" for="signup"> Username </label> <br>
-        <input type="text" class="form-title" name="username"><br>
+                  <form method="POST" class="crud_form" enctype="multipart/form-data">
+                      <label class="crud_label" for="signup"> Username </label> <br>
+                      <input type="text" class="form-title" name="username"><br>
 
-        <label class="crud_label" for="signup"> Your name </label> <br>
-        <input type="text" class="form-title" name="name"><br>
+                      <label class="crud_label" for="signup"> Your name </label> <br>
+                      <input type="text" class="form-title" name="name"><br>
 
-        <label class="crud_label" for="signup"> Email adress </label> <br>
-        <input type="text" class="form-title" name="email"><br>
+                      <label class="crud_label" for="signup"> Email adress </label> <br>
+                      <input type="text" class="form-title" name="email"><br>
 
-        <label class="crud_label" for="signup"> Password </label> <br>
-        <input type="password" class="form-title" name="password"><br>
+                      <label class="crud_label" for="signup"> Password </label> <br>
+                      <input type="password" class="form-title" name="password"><br>
 
-        <label class="crud_label" for="signup">Confirm Password</label> <br>
-        <input type="password" class="form-title" name="confirm_password"><br>
-        <br />
-        <input type="submit" value="Sign up">
-    </form>
+                      <label class="crud_label" for="signup">Confirm Password</label> <br>
+                      <input type="password" class="form-title" name="confirm_password"><br>
+                      <img id="preview" src="#" alt="" width="290" />
+                      <label for="img" class="file-upload">Upload image</label>
+                      <input type="file" id="img" name="img" accept="image/*" onchange="show_name()">
+                      <input type="submit" value="Sign up">                 
+                  </form>
 {% endblock %}

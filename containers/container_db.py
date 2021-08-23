@@ -14,6 +14,7 @@ from repos.post.image_repo import ImageRepo
 
 from repos.user.user_repo_db import RepoUserDB
 from repos.user.seed import get as user_seed
+from repos.user.profile_image_repo import ProfileImageRepo
 
 class ContainerDB(containers.DeclarativeContainer):
     """Database container"""
@@ -62,3 +63,7 @@ class ContainerDB(containers.DeclarativeContainer):
     statistics = providers.Factory(
         Statistics,
         post_repo = post_repo)
+    
+    profile_img_repo = providers.Factory(
+        ProfileImageRepo
+    )

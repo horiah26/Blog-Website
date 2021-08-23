@@ -38,7 +38,7 @@ class RepoPostsDB(IPostRepo):
         """Returns post by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT post_id, title, text, owner, img_id, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
+        cur.execute("SELECT post_id, title, text, owner, posts.img_id, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
         post = cur.fetchone()
 
         conn.commit()
@@ -92,9 +92,9 @@ class RepoPostsDB(IPostRepo):
         offset_nr = (page_num - 1) * per_page
 
         if username:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
         else:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
+            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
         previews = cur.fetchall()
 
         if username:
@@ -110,7 +110,7 @@ class RepoPostsDB(IPostRepo):
         posts = []
 
         for row in previews:
-            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], Date(row[6], row[7])))
+            posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6], Date(row[7], row[8])))
         return (posts, total_pages)
 
     def next_id(self):

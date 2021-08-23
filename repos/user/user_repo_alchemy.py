@@ -34,7 +34,7 @@ class RepoUserAlchemy(IUserRepo):
 
     def insert(self, user):
         """Add a new user"""
-        new_user = self.User(username = user.username, name = user.name, email = user.email, password = user.password, created = user.date.created, modified = user.date.modified)
+        new_user = self.User(username = user.username, name = user.name, email = user.email, password = user.password, img_id = user.img_id, date_created = user.date.created, date_modified = user.date.modified)
         self.session.add(new_user)
         self.session.commit()
 
@@ -43,23 +43,24 @@ class RepoUserAlchemy(IUserRepo):
         user = self.session.query(self.User).get(username)
         if user is None:
             return None
-        return User(user.username, user.name, user.email, user.password, Date(user.date_created, user.date_modified))
+        return User(user.username, user.name, user.email, user.password, user.img_id, Date(user.date_created, user.date_modified))
 
     def get_all(self):
         """Returns all users"""
         users = []
         query = self.session.query(self.User).all()
         for user in query:
-            users.append(User(user.username, user.name, user.email, user.password, Date(user.date_created, user.date_modified)))
+            users.append(User(user.username, user.name, user.email, user.password, user.img_id, Date(user.date_created, user.date_modified)))
         return users
 
-    def update(self, username, name, email, password):
+    def update(self, username, name, email, img_id, password):
         """Updates user by id"""
         user = self.session.query(self.User).filter(self.User.username == username).one()
         user.username = username
         user.name = name
         user.email = email
         user.password = password
+        user.img_id = img_id
         user.date_modified = datetime.now().strftime("%B %d %Y - %H:%M")
         self.session.commit()
 

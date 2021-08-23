@@ -69,14 +69,14 @@ class RepoPostsMemory(IPostRepo):
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username == username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, Date(post.date.created, post.date.modified)))
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, user.img_id, Date(post.date.created, post.date.modified)))
                         break
 
         else:
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, Date(post.date.created, post.date.modified)))
+                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, user.img_id, Date(post.date.created, post.date.modified)))
                         break
 
         total_posts = len(previewed_posts)

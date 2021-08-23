@@ -9,13 +9,13 @@ from services.init_injection import InitInjection
 
 def create_app():
     """Creates app"""
-    database_type = "db"
+    database_type = "memory"
 
     container = InitInjection(database_type).get_container()
 
     app = Flask(__name__)
     app.config.from_mapping(
-        SECRET_KEY = "memory",
+        SECRET_KEY = "secret key",
         UPLOAD_FOLDER = 'static/uploads',
         DB_TYPE = database_type)
     app.container = container    

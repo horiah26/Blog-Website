@@ -20,9 +20,9 @@ class RepoUserDB(IUserRepo):
         conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO users (username, name, email, password, date_created, date_modified) \
-            VALUES(%s, %s, %s, %s, %s, %s)",
-            (user.username, user.name, user.email, user.password, user.date.created, user.date.modified))
+            "INSERT INTO users (username, name, email, password, img_id, date_created, date_modified) \
+            VALUES(%s, %s, %s, %s, %s, %s, %s)",
+            (user.username, user.name, user.email, user.password, user.img_id, user.date.created, user.date.modified))
 
         conn.commit()
         cur.close()
@@ -39,10 +39,8 @@ class RepoUserDB(IUserRepo):
         conn.close()
 
         if user is None:
-            print("ERROR: User not found, incorrect username")
-            flash("ERROR: User not found, incorrect username")
             return None
-        return User(user[0], user[1], user[2], user[3], Date(user[4], user[5]))
+        return User(user[0], user[1], user[2], user[3], user[6], Date(user[4], user[5]))
 
     def delete(self, username):
         """Deletes user by username"""
@@ -53,14 +51,14 @@ class RepoUserDB(IUserRepo):
         cur.close()
         conn.close()
 
-    def update(self, username, name, email, password):
+    def update(self, username, name, email, img_id, password):
         """Updates user by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
         time_now = datetime.now().strftime("%B %d %Y - %H:%M")
         cur.execute(
-            "UPDATE users SET name = %s, email = %s, password = %s, date_modified = %s WHERE username = %s",
-            (name, email, password, time_now, username))
+            "UPDATE users SET name = %s, email = %s, password = %s, img_id = %s, date_modified = %s WHERE username = %s",
+            (name, email, password, img_id, time_now, username))
         conn.commit()
         cur.close()
         conn.close()
@@ -80,7 +78,7 @@ class RepoUserDB(IUserRepo):
         conn.close()
         users = []
         for row in rows:
-            users.append(User(row[0], row[1], row[2], row[3], Date(row[4], row[5])))
+            users.append(User(row[0], row[1], row[2], row[3], row[6], Date(row[4], row[5])))
         return users
 
     def get_users_with_posts(self):
@@ -98,5 +96,5 @@ class RepoUserDB(IUserRepo):
         conn.close()
         users = []
         for row in rows:
-            users.append(User(row[0], row[1], row[2], row[3], Date(row[4], row[5])))
+            users.append(User(row[0], row[1], row[2], row[3], row[6], Date(row[4], row[5])))
         return users

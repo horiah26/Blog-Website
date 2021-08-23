@@ -18,6 +18,8 @@ bp = Blueprint('users', __name__)
 @inject
 def view_all(auth = Provide['auth'], user_repo = Provide['user_repo']):
     """View all users"""
+    users = user_repo.get_all()
+    print(users[0].img_id)
     return render_template('users/view_all.html', users = user_repo.get_all(), auth = auth)
 
 @bp.route('/users/<username>/', methods=['GET'])
@@ -65,9 +67,10 @@ def delete(username, auth = Provide['auth'], user_repo = Provide['user_repo']):
 @redirect_to_setup
 @permission_required
 @inject
-def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], hasher = Provide['hasher']):
+def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], hasher = Provide['hasher'], user_img = Provide['profile_img_repo']):
     """Edit user"""
     user = user_repo.get(username)
+    img_id = user.img_id
     if user.username != auth.logged_user() and auth.logged_user() != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
@@ -77,6 +80,15 @@ def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], has
         name = request.form['name'].strip()
         password = request.form['password'].strip()
         confirm_password = request.form['confirm_password'].strip()
+
+        if 'img' in request.files:
+            image = request.files['img']
+            if image.filename != '':
+                if user_img.allowed_file(image.filename):
+                    img_id = user_img.save(image)
+                else:
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    return redirect(url_for('auth.sign_up'))            
 
         error = None
         if password != confirm_password:
@@ -87,12 +99,12 @@ def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], has
         else:
             if not name:
                 name = user.name
-            elif not email:
+            if not email:
                 email = user.email
             if not password:
-                user_repo.update(username, name, email, user.password)
+                user_repo.update(username, name, email, img_id, user.password)
             else:
-                user_repo.update(username, name, email, hasher.hash(password))
+                user_repo.update(username, name, email, img_id, hasher.hash(password))
             flash("User profile has been modified")
             return redirect(url_for('users.view_user', username = user.username))
     return render_template('auth/edit.html', user = user)
@@ -102,9 +114,10 @@ def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], has
 @permission_required
 @edit_required_once
 @inject
-def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_repo'], hasher = Provide['hasher']):
+def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_repo'], hasher = Provide['hasher'], user_img = Provide['profile_img_repo']):
     """Edit user"""
     user = user_repo.get(username)
+    img_id = user.img_id
     if user.username != auth.logged_user() and auth.logged_user() != 'admin':
         print('Only the User cand edit their post')
         return redirect(url_for('blog.home'))
@@ -114,6 +127,15 @@ def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_re
         name = request.form['name'].strip()
         password = request.form['password'].strip()
         confirm_password = request.form['confirm_password'].strip()
+
+        if 'img' in request.files:
+            image = request.files['img']
+            if image.filename != '':
+                if user_img.allowed_file(image.filename):
+                    img_id = user_img.save(image)
+                else:
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    return redirect(url_for('auth.sign_up'))     
 
         error = None
         if password != confirm_password:
@@ -127,7 +149,7 @@ def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_re
         if error is not None:
             flash(error)
         else:
-            user_repo.update(username, name, email, hasher.hash(password))
+            user_repo.update(username, name, email, img_id, hasher.hash(password))
             flash("User profile has been modified")
             return redirect(url_for('users.view_user', username = user.username))
     return render_template('auth/edit_required.html', user = user)

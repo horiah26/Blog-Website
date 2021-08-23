@@ -15,6 +15,7 @@ from repos.post.image_repo_memory import ImageRepoMemory
 
 from repos.user.user_repo_memory import RepoUserMemory
 from repos.user.seed import get as user_seed
+from repos.user.profile_image_repo_memory import ProfileImageRepo
 
 class ContainerMemory(containers.DeclarativeContainer):
     """General purpose container"""
@@ -61,4 +62,9 @@ class ContainerMemory(containers.DeclarativeContainer):
 
     statistics = providers.Factory(
         Statistics,
-        post_repo = post_repo)
+        post_repo = post_repo
+    )
+
+    profile_img_repo = providers.Factory(
+        ProfileImageRepo
+    )
