@@ -18,11 +18,17 @@
             <span class="bar"></span>
             <span class="bar"></span>
         </a>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <ul class=flashes>
-            <li>{{ messages[0] }}</li>
+        {% if messages[0][0] == 'error' %}
+        <ul>
+            <li class="error">{{ messages[0][1] }}</li>
         </ul>
+        {% else %}
+        <ul>
+            <li class="flashes">{{ messages[0][1] }}</li>
+        </ul>
+        {% endif %}
         {% endif %}
         {% endwith %}
         <ul class="navbar-links">

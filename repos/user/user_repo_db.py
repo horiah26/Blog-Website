@@ -70,8 +70,7 @@ class RepoUserDB(IUserRepo):
         try:
             cur.execute("SELECT * FROM users;")
         except Exception as error:
-            print(error)
-            flash(error)
+            flash(error, "error")
             return []
         rows = cur.fetchall()
         cur.close()
@@ -88,8 +87,7 @@ class RepoUserDB(IUserRepo):
         try:
             cur.execute("SELECT DISTINCT * FROM users WHERE username in (SELECT DISTINCT owner from posts);")
         except Exception as error:
-            print(error)
-            flash(error)
+            flash(error, "error")
             return []
         rows = cur.fetchall()
         cur.close()

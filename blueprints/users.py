@@ -43,7 +43,7 @@ def view_user(username, user_repo = Provide['user_repo'], post_repo = Provide['p
 
     if user_repo.get(username):
         return render_template('users/view.html', user = user_repo.get(username),page_num = page_num, pages = pages, posts = previews, generator = gen)
-    flash('User not found')
+    flash('User not found', "error")
     return redirect(url_for('users.view_all'))
 
 @bp.route('/users/<username>/delete', methods=['GET'])
@@ -53,14 +53,15 @@ def view_user(username, user_repo = Provide['user_repo'], post_repo = Provide['p
 def delete(username, auth = Provide['auth'], user_repo = Provide['user_repo']):
     """Delete user"""
     if username == 'admin':
-        flash("Admin cannot be deleted")
+        flash("Admin cannot be deleted", "error")
     else:
         try:
             user_repo.delete(username)
-            flash("User deleted")
-            auth.logout()
+            flash("User deleted")            
+            if username != 'admin':
+                auth.logout()
         except Exception:
-            flash("Delete user's posts first")
+            flash("Delete user's posts first", "error")
     return redirect(url_for('blog.home'))
 
 @bp.route('/users/<username>/edit', methods=['GET', 'POST'])
@@ -72,7 +73,7 @@ def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], has
     user = user_repo.get(username)
     img_id = user.img_id
     if user.username != auth.logged_user() and auth.logged_user() != 'admin':
-        print('Only the User cand edit their post')
+        flash('Only the User cand edit their post', "error")
         return redirect(url_for('blog.home'))
 
     if request.method == 'POST':
@@ -87,15 +88,11 @@ def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], has
                 if user_img.allowed_file(image.filename):
                     img_id = user_img.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
                     return redirect(url_for('auth.sign_up'))            
 
-        error = None
         if password != confirm_password:
-            error = "Password must match"
-        if error is not None:
-            print(error)
-            flash(error)
+            flash("Password must match", "error")
         else:
             if not name:
                 name = user.name
@@ -134,7 +131,7 @@ def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_re
                 if user_img.allowed_file(image.filename):
                     img_id = user_img.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
                     return redirect(url_for('auth.sign_up'))     
 
         error = None
@@ -147,7 +144,7 @@ def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_re
         if not name:
             error = "Name is required"
         if error is not None:
-            flash(error)
+            flash(error, "error")
         else:
             user_repo.update(username, name, email, img_id, hasher.hash(password))
             flash("User profile has been modified")

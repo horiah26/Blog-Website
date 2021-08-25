@@ -1,6 +1,6 @@
 """Blog blueprint"""
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, session
+    Blueprint, flash, redirect, render_template, request, url_for, session, abort
 )
 from dependency_injector.wiring import inject, Provide
 
@@ -62,7 +62,7 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
                 if img_repo.allowed_file(image.filename):
                     img_id = img_repo.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
                     return redirect(url_for('blog.create'))
 
 
@@ -72,7 +72,7 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
         if not text:
             error = "Text is required"
         if error is not None:
-            flash(error)
+            flash(error, "error")
         else:
             post_id = post_repo.next_id()
 
@@ -84,8 +84,13 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
 
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
-def show(post_id):
+@inject
+def show(post_id, post_repo = Provide['post_repo']):
     """Route to show post by id"""
+    post = post_repo.get(post_id)
+    if post is None:        
+        flash("Post not found")
+        return redirect(url_for('blog.home'))
     return render_template('api/api_post.html', post_id = post_id)
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
@@ -106,7 +111,7 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
                 if img_repo.allowed_file(image.filename):
                     img_id = img_repo.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
                     return redirect(url_for('blog.update', post_id = post_id))
 
         if not title:

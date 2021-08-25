@@ -22,11 +22,11 @@ def permission_required(f):
         auth = get_auth()
         if 'username' in kwargs:
             if 'username' not in session or auth.logged_user() != kwargs['username'] and auth.logged_user() != 'admin':
-                flash("You don't have permission to modify this profile")
+                flash("You don't have permission to modify this profile", "error")
                 return redirect(url_for('blog.home'))
         if 'post_id' in kwargs:
             if 'username' not in session or auth.logged_user() != get_post_repo().get(kwargs['post_id'])[0].owner and auth.logged_user() != 'admin':
-                flash("You don't have permission to modify this post")
+                flash("You don't have permission to modify this post", "error")
                 return redirect(url_for('blog.home'))
         return f(*args, **kwargs)
     return wrapped

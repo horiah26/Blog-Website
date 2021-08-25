@@ -25,7 +25,7 @@ def setup_requirements(f):
         """decorator"""
         if get_config().config_file_exists():
             if get_auth().logged_user() != 'admin' and get_config_db().db_up_to_date():
-                flash("Only admin can access this page")
+                flash("Only admin can access this page", "error")
                 return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return wrapped

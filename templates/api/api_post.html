@@ -3,8 +3,8 @@
 {% block title %} Lorem Ipsum {% endblock %}
 
 {% block content %}
-<body onload="onClick({{post_id}})">
-    <h1 id="api-title" class="crud-title" ></h1>
+<body onload="onLoad({{post_id}})">
+    <h1 id="api-title" class="crud-title"></h1>
     <div class="view-post">
         <div class="view-post-controls">
             <h1 id="api-title" class="crud-title"></h1>
@@ -23,38 +23,7 @@
 
     </div>
 
-    <script>
-        function onClick(post_id) {
-            base_url = 'http://127.0.0.1:5000/api/post/'
-            post_id_string = base_url.concat(post_id)
-            fetch(post_id_string)
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log(data)
-                    document.getElementById('api-title').innerHTML = data.title
-                    document.getElementById('api-author-link').setAttribute("href", "http://127.0.0.1:5000" + "/users/" + data.owner)
-                    document.getElementById('api-post-owner-name').innerHTML = data.display_name
-                    document.getElementById('api-created').innerHTML = "Written on: " + data.date_created
-                    document.getElementById('api-modified').innerHTML = "Last edited on: " + data.date_modified
-                    document.getElementById('api-post-text').innerHTML = data.text
 
-                    var del = document.getElementById("api-delete");
-                    var edit = document.getElementById("api-edit");
-
-                    if (data.active_user == data.owner) {
-                        del.style.display = "block";
-                        del.setAttribute("href", "http://127.0.0.1:5000/" + data.post_id + "/delete")
-
-                        edit.style.display = "block";
-                        edit.setAttribute("href", "http://127.0.0.1:5000/" + data.post_id + "/update")
-                    } else {
-                        del.style.display = "none";
-                        edit.style.display = "none";
-                    }
-                })
-                .catch((error) => console.log(error))
-        }
-
-    </script>
+    <script src="{{url_for('static', filename="js/load_post_from_json.js")}}"></script>
 </body>
     {% endblock %}

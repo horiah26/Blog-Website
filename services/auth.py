@@ -38,7 +38,7 @@ class Authentication():
         if not username:
             error = "Username is required"
         if error is not None:
-            flash(error)
+            flash(error, "error")
             return redirect(url_for('auth.sign_up'))
         self.user_repo.insert(User(username, name, email, hasher.hash(password), img_id))
         flash("You have signed up")
@@ -48,11 +48,11 @@ class Authentication():
         """Logs user in"""
         user = self.user_repo.get(username)
         if user is None or not hasher.check_password(user, password):
-            flash('Invalid username or password')
+            flash('Invalid username or password', "error")
             return redirect(url_for('auth.login'))
         session['username'] = user.username
         if '@temporary.com' in user.email:
-            flash('This user has been imported and must be updated')
+            flash('This user has been imported and must be updated', "error")
             return redirect(url_for('users.edit_required', username = user.username))
         flash("You are logged in")
         return redirect(url_for('blog.home'))

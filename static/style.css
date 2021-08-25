@@ -680,3 +680,17 @@ margin-top:10px;
 #api-delete, #api-edit {
     display: none;
 }
+
+.error {
+    list-style-type: none;
+    -moz-animation: cssAnimation 0s ease-in 6s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 6s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 6s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 6s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    color: #ff2e2e;
+}

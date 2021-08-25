@@ -11,7 +11,7 @@ def edit_required_once(f):
     def wrapped(user_repo = Provide['user_repo'], *args, **kwargs):
         """decorator"""
         if '@temporary.com' not in user_repo.get(session['username']).email:
-            flash("User profile cannot be initialized")
+            flash("User profile cannot be initialized", "error")
             return redirect(url_for('blog.home'))
         return f(*args, **kwargs)
     return wrapped

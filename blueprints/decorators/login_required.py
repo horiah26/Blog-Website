@@ -15,10 +15,10 @@ def login_required(f):
         """decorator"""
         try:
             if not get_auth().logged_user():
-                flash("You must be logged in to do this")
+                flash("You must be logged in to do this", "error")
                 return redirect(url_for('auth.login'))
         except Exception:
-            flash("You must be logged in to do this")
+            flash("You must be logged in to do this", "error")
             return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return wrapped

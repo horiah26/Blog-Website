@@ -26,7 +26,7 @@ def sign_up(auth = Provide['auth'], user_img = Provide['profile_img_repo']):
                 if user_img.allowed_file(image.filename):
                     img_id = user_img.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
                     return redirect(url_for('auth.sign_up'))
 
         return auth.sign_up(username, name, email, password, confirm_password, img_id)

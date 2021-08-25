@@ -14,7 +14,7 @@ def admin_required(f):
     def wrapped(*args, **kwargs):
         """decorator"""
         if get_auth().logged_user() != 'admin':
-            flash("Only admin has access to this page")
+            flash("Only admin has access to this page", "error")
             return redirect(url_for('blog.home'))
         return f(*args, **kwargs)
     return wrapped

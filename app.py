@@ -10,7 +10,7 @@ from services.init_injection import InitInjection
 
 def create_app():
     """Creates app"""
-    database_type = "db"
+    database_type = "memory"
 
     container = InitInjection(database_type).get_container()
 
