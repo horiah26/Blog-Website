@@ -11,3 +11,13 @@ class Post:
         self.owner = owner
         self.img_id = img_id
         self.date = date
+
+    def get_dict(self):
+        return {'post_id': self.post_id,
+                'title': self.title,
+                'text': self.text,
+                'owner': self.owner,
+                'img_id': self.img_id,
+                'date_created': self.date.created,
+                'date_modified': self.date.modified
+                }

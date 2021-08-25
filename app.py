@@ -4,6 +4,7 @@ from blueprints import setup
 from blueprints import users
 from blueprints import blog
 from blueprints import auth
+from blueprints import api
 
 from services.init_injection import InitInjection
 
@@ -29,5 +30,6 @@ def create_app():
     app.register_blueprint(users.bp)
     app.register_blueprint(blog.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(api.bp)
 
     return app

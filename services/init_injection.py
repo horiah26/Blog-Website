@@ -14,6 +14,7 @@ from config import config
 from blueprints import setup
 from blueprints import users
 from blueprints import blog
+from blueprints import api
 from blueprints import auth as bp_auth
 from blueprints.decorators import setup_requirements
 from blueprints.decorators import permission_required
@@ -63,7 +64,8 @@ class InitInjection():
                                         user_repo_memory,
                                         config,
                                         image_repo,
-                                        statistics])
+                                        statistics,
+                                        api])
 
     def get_container(self):
         """Returns container"""

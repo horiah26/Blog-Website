@@ -84,14 +84,9 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
 
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
-@inject
-def show(post_id, post_repo = Provide['post_repo']):
+def show(post_id):
     """Route to show post by id"""
-    post_and_display_name = post_repo.get(post_id)
-    if post_and_display_name:
-        return render_template('blog/show_post.html', post = post_and_display_name[0], display_name = post_and_display_name[1])
-    flash('Post not found')
-    return redirect(url_for('blog.home'))
+    return render_template('api/api_post.html', post_id = post_id)
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
 @redirect_to_setup
