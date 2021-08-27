@@ -57,7 +57,7 @@ def delete(username, auth = Provide['auth'], user_repo = Provide['user_repo']):
     else:
         try:
             user_repo.delete(username)
-            flash("User deleted")            
+            flash("User deleted")
             if username != 'admin':
                 auth.logout()
         except Exception:
@@ -89,7 +89,7 @@ def edit(username, auth = Provide['auth'], user_repo = Provide['user_repo'], has
                     img_id = user_img.save(image)
                 else:
                     flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
-                    return redirect(url_for('auth.sign_up'))            
+                    return redirect(url_for('auth.sign_up'))
 
         if password != confirm_password:
             flash("Password must match", "error")
@@ -132,7 +132,7 @@ def edit_required(username, auth = Provide['auth'], user_repo = Provide['user_re
                     img_id = user_img.save(image)
                 else:
                     flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
-                    return redirect(url_for('auth.sign_up'))     
+                    return redirect(url_for('auth.sign_up'))
 
         error = None
         if password != confirm_password:

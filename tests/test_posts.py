@@ -1,5 +1,4 @@
 """Post tests"""
-from datetime import datetime
 from werkzeug.datastructures import FileStorage
 from conftest import login, logout
 
@@ -15,10 +14,10 @@ def test_homepage_works(client):
 def test_statistics_page_works(client):
     """Tests that statistics are shown correctly"""
     login(client, 'admin', 'admin')
-    
+
     rv = client.get('/statistics')
 
-    assert(b"""    <tr>
+    assert b"""    <tr>
         <td class="month">2021-8</td>
         <td class="posts">3</td>
     </tr>
@@ -36,11 +35,11 @@ def test_statistics_page_works(client):
     <tr>
         <td class="month">2020-5</td>
         <td class="posts">2</td>
-    </tr>""") in rv.data
+    </tr>""" in rv.data
 
 def test_cannot_access_statistics_if_not_logged_in(client):
     """Tests cannot access statistics unless admin"""
-    logout(client)    
+    logout(client)
     rv = client.get('/statistics', follow_redirects=True)
     assert b'You must be logged in to do this' in rv.data
 

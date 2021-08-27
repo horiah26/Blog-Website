@@ -1,6 +1,6 @@
 """Blog blueprint"""
 from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for, session, abort
+    Blueprint, flash, redirect, render_template, request, url_for, session
 )
 from dependency_injector.wiring import inject, Provide
 
@@ -8,7 +8,6 @@ from repos.post.methods import post_misc_generator as gen
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
 from blueprints.decorators.permission_required import permission_required
 from blueprints.decorators.login_required import login_required
-from blueprints.decorators.admin_required import admin_required
 
 from models.post import Post
 
@@ -65,7 +64,6 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
                     flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
                     return redirect(url_for('blog.create'))
 
-
         error = None
         if not title:
             error = "Title is required"
@@ -87,8 +85,7 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
 @inject
 def show(post_id, post_repo = Provide['post_repo']):
     """Route to show post by id"""
-    post = post_repo.get(post_id)
-    if post is None:        
+    if post_repo.get(post_id) is None:
         flash("Post not found")
         return redirect(url_for('blog.home'))
     return render_template('api/api_post.html', post_id = post_id)

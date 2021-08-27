@@ -1,6 +1,6 @@
 """Blueprint for authentication management"""
 from flask import (
-    Blueprint, redirect, render_template, request, url_for, session
+    Blueprint, redirect, render_template, request, url_for, session, flash
 )
 from dependency_injector.wiring import inject, Provide
 from blueprints.decorators.redirect_to_setup import redirect_to_setup
@@ -20,7 +20,7 @@ def sign_up(auth = Provide['auth'], user_img = Provide['profile_img_repo']):
         password = request.form['password'].strip()
         confirm_password = request.form['confirm_password'].strip()
 
-        if 'img' in request.files:          
+        if 'img' in request.files:
             image = request.files['img']
             if image.filename != '':
                 if user_img.allowed_file(image.filename):

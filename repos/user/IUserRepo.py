@@ -16,7 +16,7 @@ class IUserRepo (ABC):
         """Add user"""
 
     @abstractmethod
-    def update(self, username, name, email, password):
+    def update(self, username, name, email, img_id, password):
         """Update user"""
 
     @abstractmethod

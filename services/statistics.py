@@ -1,8 +1,8 @@
 """Handles post statistics"""
 
 from datetime import datetime
-from dependency_injector.wiring import inject, Provide
 from collections import Counter
+from dependency_injector.wiring import inject, Provide
 
 class Statistics():
     """Handles post statistics"""
@@ -11,6 +11,7 @@ class Statistics():
         self.auth = auth
 
     def get(self):
+        """Returns dict with statistics"""
         dates = []
         for post in self.posts:
             if self.auth.logged_user() == post.owner or self.auth.logged_user() == 'admin':

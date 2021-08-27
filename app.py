@@ -10,7 +10,7 @@ from services.init_injection import InitInjection
 
 def create_app():
     """Creates app"""
-    database_type = "memory"
+    database_type = "db"
 
     container = InitInjection(database_type).get_container()
 
@@ -19,9 +19,9 @@ def create_app():
         SECRET_KEY = "secret key",
         UPLOAD_FOLDER = 'static/uploads',
         DB_TYPE = database_type)
-    app.container = container    
+    app.container = container
     app.app_context().push()
-    
+
     if database_type in ["db", "alchemy"]:
         db = container.database()
         db.create_update_tables()

@@ -13,6 +13,7 @@ class Post:
         self.date = date
 
     def get_dict(self):
+        """Returns instance of Post as dictionary"""
         return {'post_id': self.post_id,
                 'title': self.title,
                 'text': self.text,

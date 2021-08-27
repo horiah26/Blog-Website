@@ -11,7 +11,7 @@ class Database():
 
     def create_update_tables(self):
         """Creates the posts table"""
-        if self.config.config_file_exists() and not self.config_db.db_up_to_date():                     
+        if self.config.config_file_exists() and not self.config_db.db_up_to_date():
             try:
                 conn = self.get_connection()
                 cur = conn.cursor()
@@ -30,7 +30,7 @@ class Database():
                 print("Database version has not been updated")
     @inject
     def hash_passwords(self, hasher = Provide['hasher'], user_repo = Provide['user_repo']):
-        user_repo = user_repo
+        """Hashes passwords of users that have been imported from another database"""
         for user in user_repo.get_all():
             if user.password == user.username:
                 user_repo.update(user.username, user.name, user.email, hasher.hash(user.password))

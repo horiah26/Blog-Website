@@ -73,11 +73,20 @@ def test_signup_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
     assert b'<input type="submit" value="Submit">' in redirected.data
 
-
 @mock.patch("config.config.Config.config_file_exists", return_value = False)
 def test_edit_required_redirects_to_setup_if_no_db_config(mock_config_exists, client):
     """Tests if article at index redirects if no db_config"""
     redirected = client.get('/users/username1/edit_required', follow_redirects=True)
+
+    assert b'<label class="crud_label" for="database"> Database </label> <br>' in redirected.data
+    assert b'<input type="text" class="form-title" name="database"><br>' in redirected.data
+    assert b'<input type="password" class="form-title" name="password"><br>' in redirected.data
+    assert b'<input type="submit" value="Submit">' in redirected.data
+
+@mock.patch("config.config.Config.config_file_exists", return_value = False)
+def test_users_list_redirects_to_setup_if_no_db_config(mock_config_exists, client):
+    """Tests if article at index redirects if no db_config"""
+    redirected = client.get('/users', follow_redirects=True)
 
     assert b'<label class="crud_label" for="database"> Database </label> <br>' in redirected.data
     assert b'<input type="text" class="form-title" name="database"><br>' in redirected.data

@@ -16,7 +16,7 @@ class IPostRepo (ABC):
         "Insert post"
 
     @abstractmethod
-    def update(self, post_id, title, text):
+    def update(self, post_id, title, text, img_id):
         """Update post"""
 
     @abstractmethod
@@ -24,5 +24,5 @@ class IPostRepo (ABC):
         """Delete post"""
 
     @abstractmethod
-    def get_previews(self, username = None):
+    def get_previews(self, username = None, per_page = 6, page_num = 1):
         """Returns preview of all posts"""

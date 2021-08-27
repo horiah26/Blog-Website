@@ -1,10 +1,4 @@
 """Handles images for user profiles"""
-import os
-from os import listdir
-from os.path import isfile, join
-
-from flask import current_app
-from dependency_injector.wiring import inject, Provide
 
 class ProfileImageRepo():
     """Handles images for posts"""

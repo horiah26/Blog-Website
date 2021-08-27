@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 
 def admin_required(f):
     """Only and admin has permission"""
-    
+
     @inject
     def get_auth(auth = Provide['auth']):
         return auth

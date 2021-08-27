@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 
 def login_required(f):
     """decorator"""
-    
+
     @inject
     def get_auth(auth = Provide['auth']):
         return auth

@@ -2,12 +2,12 @@
 
 import math
 from datetime import datetime
-from static import constant
-
 from sqlalchemy.sql import func
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from static import constant
 
 from models.post import Post
 from models.date import Date
@@ -81,11 +81,11 @@ class RepoPostsAlchemy(IPostRepo):
         total_pages = math.ceil(total_posts / per_page)
 
         if username:
-            for post_id, title, prev_text, name, username, img_id, profile_id, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.img_id, self.User.img_id, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).filter(self.User.username == username).order_by(self.Post.post_id.desc()).slice(offset_nr, offset_nr + per_page):
-                previews.append(PostPreview(post_id, title, prev_text, name, username, img_id, profile_id, Date(date_created, date_modified)))
+            for post_id, title, prev_text, name, user_name, img_id, profile_id, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.img_id, self.User.img_id, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).filter(self.User.username == username).order_by(self.Post.post_id.desc()).slice(offset_nr, offset_nr + per_page):
+                previews.append(PostPreview(post_id, title, prev_text, name, user_name, img_id, profile_id, Date(date_created, date_modified)))
         else:
-            for post_id, title, prev_text, name, username, img_id, profile_id, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.img_id, self.User.img_id, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).order_by(self.Post.post_id.desc()).limit(per_page).offset(offset_nr):
-                previews.append(PostPreview(post_id, title, prev_text, name, username, img_id, profile_id, Date(date_created, date_modified)))
+            for post_id, title, prev_text, name, user_name, img_id, profile_id, date_created, date_modified in self.session.query(self.Post.post_id, self.Post.title, func.substr(self.Post.text, 0, constant.PREVIEW_LENGTH), self.User.name, self.Post.owner, self.Post.img_id, self.User.img_id, self.Post.date_created, self.Post.date_modified).join(self.User, self.User.username == self.Post.owner).order_by(self.Post.post_id.desc()).limit(per_page).offset(offset_nr):
+                previews.append(PostPreview(post_id, title, prev_text, name, user_name, img_id, profile_id, Date(date_created, date_modified)))
 
         return (previews, total_pages)
 

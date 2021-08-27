@@ -1,7 +1,4 @@
 """Handles images for posts"""
-import os
-from flask import current_app
-from dependency_injector.wiring import inject, Provide
 
 class ImageRepoMemory():
     """Handles images for posts"""
@@ -27,5 +24,5 @@ class ImageRepoMemory():
             return 0
         return max(self.images) + 1
 
-    def delete_unused(self, post_repo = Provide['post_repo']):
-        pass
+    def delete_unused(self):
+        """Unused, deleting unused images is not tested"""
