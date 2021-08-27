@@ -16,7 +16,7 @@ bp = Blueprint('blog', __name__)
 @bp.route('/', methods=['GET', 'POST'])
 @redirect_to_setup
 @inject
-def home(post_repo = Provide['post_repo'], user_repo = Provide['user_repo']):
+def home(post_repo=Provide['post_repo'], user_repo=Provide['user_repo']):
     """Route to home + pagination + filter by user"""
     if 'filter_user' not in session:
         session['filter_user'] = None
@@ -80,15 +80,14 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
             return redirect(url_for('blog.home'))
     return render_template('blog/create_post.html')
 
+
 @bp.route('/<int:post_id>/', methods=['GET'])
 @redirect_to_setup
 @inject
-def show(post_id, post_repo = Provide['post_repo']):
+def show(post_id):
     """Route to show post by id"""
-    if post_repo.get(post_id) is None:
-        flash("Post not found")
-        return redirect(url_for('blog.home'))
-    return render_template('api/api_post.html', post_id = post_id)
+    return render_template('api/api_post.html', post_id=post_id)
+
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])
 @redirect_to_setup
