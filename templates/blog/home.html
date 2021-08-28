@@ -9,8 +9,8 @@
     </div>
 </div>
 
-<form method="POST" class="crud_form">
-    <label class="crud_label" for="username">Filter posts by username</label> <br>
+<form method="POST" class="crud_form searchbar">
+    <label class="crud_label" for="username">Filter posts by user</label> <br>
     <select name=user method="GET" action="/">
         {% for user in users %}
         <option value="{{user.username}}">{{user.name}}</option>"

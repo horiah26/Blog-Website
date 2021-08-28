@@ -5,6 +5,7 @@ Statistics
 {% endblock %}
 
 {% block content %}
+{% if statistics.items() %}
 <table id="statistics">
 
     <tr>
@@ -19,4 +20,7 @@ Statistics
     {% endfor %}
 </table>
 
+{% else %}
+<h1 class="crud-title">You have no posts yet</h1>
+{% endif %}
 {% endblock %}
