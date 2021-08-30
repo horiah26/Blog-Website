@@ -38,16 +38,16 @@ def test_statistics_page_works(client):
     </tr>""" in rv.data
     
 def test_cannot_access_statistics_if_not_logged_in(client):
-    """Tests cannot access statistics unless admin"""
+    """Tests cannot access statistics if not logged in"""
     logout(client)
     rv = client.get('/statistics', follow_redirects=True)
     assert b'You must be logged in to do this' in rv.data
 
 def test_shows_mesage_on_statistics_page_if_user_has_no_posts(client):
     """Shows message if you have no posts yet on statistics page"""
-    logout(client)
+    login(client, 'username2', 'password2')
     rv = client.get('/statistics', follow_redirects=True)
-    assert b'Shows message if you have no posts yet on statistics page' in rv.data
+    assert b'You have no posts yet' in rv.data
 
 def test_post_default_image_shown(client):
     """Tests if posts show default image 0.png"""

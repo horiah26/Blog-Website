@@ -48,7 +48,7 @@ def test_shows_info_on_user_profile(client):
     assert bytes(f"Profile last modified: {time_now}", 'utf-8') in rv.data
 
 def test_user_can_edit_own_profile(client):
-    """Does not update an article if the input is an empty title"""
+    """User cand edit their own profile"""
     logout(client)
     login(client, 'username4','password4')
     before = client.get('/users/username4/')
@@ -65,7 +65,7 @@ def test_user_can_edit_own_profile(client):
     assert b'Ugly text for test sdhsdjherj3eh12k;op4' in after.data
 
 def test_user_can_delete_own_profile(client):
-    """Does user can delete own profile"""
+    """Tests user can delete own profile"""
     logout(client)
     login(client, 'username4','password4')
     before = client.get('/users/username4/')
