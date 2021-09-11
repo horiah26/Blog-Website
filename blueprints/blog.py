@@ -90,7 +90,7 @@ def create(auth=Provide['auth'], post_repo=Provide['post_repo'], img_repo=Provid
 @inject
 def show(post_id):
     """Route to show post by id"""
-    return render_template('api/api_post.html', post_id=post_id)
+    return render_template('blog/show_post.html', post_id=post_id)
 
 
 @bp.route('/<int:post_id>/update', methods=['GET', 'POST'])

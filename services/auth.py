@@ -54,6 +54,7 @@ class Authentication:
             flash('Invalid username or password', "error")
             return redirect(url_for('auth.login'))
         session['username'] = user.username
+        session['display_name'] = user.name
         if '@temporary.com' in user.email:
             flash('This user has been imported and must be updated', "error")
             return redirect(url_for('users.edit_required', username=user.username))
@@ -63,6 +64,7 @@ class Authentication:
     def logout(self):
         """Logs user out"""
         session.pop('username', None)
+        session.pop('display_name', None)
         flash("You are logged out")
 
     def logged_user(self):

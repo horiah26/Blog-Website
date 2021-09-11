@@ -1,27 +1,11 @@
 """Handles injection preparation for flask app"""
-from repos.post import post_repo_db
-from repos.post import post_repo_alchemy
-from repos.post import post_repo_memory
-from repos.user import user_repo_db
-from repos.user import user_repo_alchemy
-from repos.user import user_repo_memory
-from repos.user import seed as user_seed
-from repos.post import image_repo
+from blueprints import setup, users, blog, api, auth as bp_auth
+from blueprints.decorators import setup_requirements, permission_required, admin_required, login_required, edit_required_once, redirect_to_setup
+from repos.post import post_repo_db, post_repo_alchemy, post_repo_memory, image_repo
+from repos.user import user_repo_db, user_repo_alchemy, user_repo_memory, seed as user_seed
 from database import database
-from services import auth
-from services import statistics
+from services import auth, statistics
 from config import config
-from blueprints import setup
-from blueprints import users
-from blueprints import blog
-from blueprints import api
-from blueprints import auth as bp_auth
-from blueprints.decorators import setup_requirements
-from blueprints.decorators import permission_required
-from blueprints.decorators import admin_required
-from blueprints.decorators import login_required
-from blueprints.decorators import edit_required_once
-from blueprints.decorators import redirect_to_setup
 
 from containers.container_db import ContainerDB
 from containers.container_memory import ContainerMemory

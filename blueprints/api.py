@@ -13,7 +13,7 @@ def show_post(post_id, post_repo=Provide['post_repo']):
     """Returns a jsonified dict that contains post data, logged user and display name"""
     post = post_repo.get(post_id)
     if post is None:
-        return abort(404)
+        abort(404)
     dictionary = post[0].get_dict()
 
     if 'username' in session:

@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %}{{user.name}}'s Profile{% endblock %}
+{% block title %}{{user.name}}{% endblock %}
 
-{% block header %}<h1 class="crud-title">{{user.name}}'s Profile</h1>{% endblock %}
+{% block header %}<h1 class="crud-title">{{user.name}}</h1>{% endblock %}
 
 {% block content %}
 
                   <div class="edit-delete">
                       {% if session['username'] == user.username or session['username'] == 'admin' %}
                       <a class="action" href="{{url_for('users.edit', username = user.username)}}">Edit</a>
-                      <a class="action" href="{{url_for('users.delete', username = user.username)}}" onclick="return confirm('ee you want to delete this item?');">Delete</a>
+                      <a class="action" href="{{url_for('users.delete', username = user.username)}}" onclick="return confirm('Do you want to delete this item?');">Delete</a>
                       {% endif %}
                   </div>
 
                   <div class="user-info">
-                      <img src="/static/uploads/profile/{{user.img_id}}.png" width="300" />
+                      <img src="/static/uploads/profile/{{user.img_id}}.png" width="300" class="main-profile-img" />
                       <h3>Username: {{user.username}}</h3>
                       <h3>Email: {{user.email}}</h3>
                       <h3>Date joined: {{user.date.created}}</h3>
