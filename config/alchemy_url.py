@@ -1,6 +1,7 @@
 """Creates the url for engine configuration in alchemy repos"""
 
-class AlchURL():
+
+class AlchURL:
     """Creates the url for engine configuration in alchemy repos"""
     def __init__(self, config_db):
         self.db_auth = config_db.get_db_auth().json

@@ -16,6 +16,7 @@ from repos.user.user_repo_db import RepoUserDB
 from repos.user.seed import get as user_seed
 from repos.user.profile_image_repo import ProfileImageRepo
 
+
 class ContainerDB(containers.DeclarativeContainer):
     """Database container"""
 
@@ -39,31 +40,31 @@ class ContainerDB(containers.DeclarativeContainer):
 
     database = providers.Factory(
         Database,
-        config = config,
-        config_db = config_db
+        config=config,
+        config_db=config_db
     )
 
     post_repo = providers.Singleton(
         RepoPostsDB,
-        db = database,
-        seed = post_seed()
+        db=database,
+        seed=post_seed()
     )
 
     user_repo = providers.Singleton(
         RepoUserDB,
-        db = database,
-        seed = user_seed()
+        db=database,
+        seed=user_seed()
     )
 
     auth = providers.Factory(
         Authentication,
-        user_repo = user_repo
+        user_repo=user_repo
     )
 
     statistics = providers.Factory(
         Statistics,
-        post_repo = post_repo)
-    
+        post_repo=post_repo)
+
     profile_img_repo = providers.Factory(
         ProfileImageRepo
     )

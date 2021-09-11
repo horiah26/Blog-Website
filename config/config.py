@@ -5,7 +5,8 @@ import os
 import json
 from flask import current_app
 
-class Config():
+
+class Config:
     """Used to interact with the config.ini file"""
     def __init__(self):
         self.CONFIG_PATH = 'config/config.json'

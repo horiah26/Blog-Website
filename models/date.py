@@ -1,9 +1,11 @@
 """Class that handles creation and modification date for posts and users"""
 from datetime import datetime
 
+
 class Date:
     """Class that handles creation and modification date for posts and users"""
-    def __init__(self, created = None, modified = None):
+
+    def __init__(self, created=None, modified=None):
         if created is None and modified is None:
             self.created = datetime.now().strftime("%B %d %Y - %H:%M")
             self.modified = datetime.now().strftime("%B %d %Y - %H:%M")

@@ -8,10 +8,11 @@ from blueprints.decorators.setup_requirements import setup_requirements
 
 bp = Blueprint('setup', __name__)
 
+
 @bp.route('/setup', methods=['GET', 'POST'])
 @setup_requirements
 @inject
-def setup_db(db = Provide['database'], config_db = Provide['config_db']):
+def setup_db(db=Provide['database'], config_db=Provide['config_db']):
     """Route to setting up database"""
     if request.method == 'POST':
         database = request.form['database'].strip()

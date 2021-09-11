@@ -4,7 +4,7 @@ from flask import redirect, url_for
 from dependency_injector.wiring import inject, Provide
 
 def redirect_to_setup(f):
-    """Added so app could be inserted as a parameter in the other wrapper"""
+    """Redirects to setup page if db not configured"""
 
     @inject
     def get_config(config = Provide['config']):
@@ -16,7 +16,7 @@ def redirect_to_setup(f):
 
     @wraps(f)
     def redirect_if_no_db(*args, **kwargs):
-        """Redirects to setup page if db not configured"""
+        """Decorator"""
         if not get_config().config_file_exists():
             return redirect(url_for('setup.setup_db'))
 

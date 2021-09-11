@@ -1,7 +1,9 @@
 """Handles images for posts"""
 
-class ImageRepoMemory():
+
+class ImageRepoMemory:
     """Handles images for posts"""
+
     def __init__(self):
         self.extension = '.png'
         self.images = [0]
@@ -16,7 +18,7 @@ class ImageRepoMemory():
 
     def allowed_file(self, filename):
         """Checks the image file has the correct extension"""
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif', 'bmp'}
 
     def get_id(self):
         """Returns id for new uploaded picture"""

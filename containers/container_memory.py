@@ -17,6 +17,7 @@ from repos.user.user_repo_memory import RepoUserMemory
 from repos.user.seed import get as user_seed
 from repos.user.profile_image_repo_memory import ProfileImageRepo
 
+
 class ContainerMemory(containers.DeclarativeContainer):
     """General purpose container"""
 
@@ -36,7 +37,7 @@ class ContainerMemory(containers.DeclarativeContainer):
 
     user_repo = providers.Singleton(
         RepoUserMemory,
-        seed = user_seed()
+        seed=user_seed()
     )
 
     img_repo = providers.Singleton(
@@ -45,24 +46,24 @@ class ContainerMemory(containers.DeclarativeContainer):
 
     post_repo = providers.Singleton(
         RepoPostsMemory,
-        seed = post_seed(),
-        user_repo = user_repo
+        seed=post_seed(),
+        user_repo=user_repo
     )
 
     auth = providers.Factory(
         Authentication,
-        user_repo = user_repo
+        user_repo=user_repo
     )
 
     database = providers.Factory(
         Database,
-        config = config,
-        config_db = config_db
+        config=config,
+        config_db=config_db
     )
 
     statistics = providers.Factory(
         Statistics,
-        post_repo = post_repo
+        post_repo=post_repo
     )
 
     profile_img_repo = providers.Factory(

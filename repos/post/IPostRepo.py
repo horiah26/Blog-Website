@@ -1,8 +1,10 @@
 """Abstract class for posts repo"""
 from abc import ABC, abstractmethod
 
-class IPostRepo (ABC):
+
+class IPostRepo(ABC):
     """Abstract class for posts repo"""
+
     @abstractmethod
     def get(self, post_id):
         """Get post by id"""
@@ -13,7 +15,7 @@ class IPostRepo (ABC):
 
     @abstractmethod
     def insert(self, post):
-        "Insert post"
+        """Insert post"""
 
     @abstractmethod
     def update(self, post_id, title, text, img_id):
@@ -24,5 +26,5 @@ class IPostRepo (ABC):
         """Delete post"""
 
     @abstractmethod
-    def get_previews(self, username = None, per_page = 6, page_num = 1):
-        """Returns preview of all posts"""
+    def get_previews(self, username=None, per_page=6, page_num=1):
+        """Returns preview of posts"""

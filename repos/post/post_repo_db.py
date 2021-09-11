@@ -12,10 +12,12 @@ from .IPostRepo import IPostRepo
 
 class RepoPostsDB(IPostRepo):
     """Repository for posts that communicates with the database"""
-    def __init__(self, db, seed = None):
+
+    def __init__(self, db, seed=None):
         """Initializes class and adds posts from seed if present"""
         self.db = db
-        if seed is not None and db.config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
+        if seed is not None and db.config.config_file_exists() and self.get_all() is not None and len(
+                self.get_all()) == 0:
             for post in seed:
                 self.insert(post)
 
@@ -38,7 +40,9 @@ class RepoPostsDB(IPostRepo):
         """Returns post by id"""
         conn = self.db.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT post_id, title, text, owner, posts.img_id, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;", (post_id,))
+        cur.execute(
+            "SELECT post_id, title, text, owner, posts.img_id, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;",
+            (post_id,))
         post = cur.fetchone()
 
         conn.commit()
@@ -48,7 +52,7 @@ class RepoPostsDB(IPostRepo):
         if post is None:
             print("ERROR: Post not found, incorrect id")
         else:
-            return (Post(post[0], post[1], post[2], post[3], post[4], Date(post[5], post[6])), post[7])
+            return Post(post[0], post[1], post[2], post[3], post[4], Date(post[5], post[6])), post[7]
 
     def delete(self, post_id):
         """Deletes post by id"""
@@ -85,22 +89,26 @@ class RepoPostsDB(IPostRepo):
             posts.append(Post(row[0], row[1], row[2], row[3], row[6], Date(row[4], row[5])))
         return posts
 
-    def get_previews(self, username = None, per_page = 6, page_num = 1):
+    def get_previews(self, username=None, per_page=6, page_num=1):
         """Returns previews of posts posts"""
         conn = self.db.get_connection()
         cur = conn.cursor()
         offset_nr = (page_num - 1) * per_page
 
         if username:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
+            cur.execute(
+                "SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;",
+                [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
         else:
-            cur.execute("SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;", [constant.PREVIEW_LENGTH, offset_nr, per_page])
+            cur.execute(
+                "SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;",
+                [constant.PREVIEW_LENGTH, offset_nr, per_page])
         previews = cur.fetchall()
 
         if username:
-            cur.execute ("SELECT COUNT(*) FROM posts WHERE owner = %s", [username])
+            cur.execute("SELECT COUNT(*) FROM posts WHERE owner = %s", [username])
         else:
-            cur.execute ("SELECT COUNT(*) FROM posts")
+            cur.execute("SELECT COUNT(*) FROM posts")
 
         total_posts = cur.fetchone()[0]
         total_pages = math.ceil(total_posts / per_page)

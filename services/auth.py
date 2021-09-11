@@ -3,12 +3,14 @@ from flask import flash, redirect, url_for, session
 from dependency_injector.wiring import inject, Provide
 from models.user import User
 
-class Authentication():
+
+class Authentication:
     """Class that handles authentication"""
+
     def __init__(self, user_repo):
         self.user_repo = user_repo
 
-    def sign_up(self, username, name, email, password, confirm_password, img_id, hasher = Provide['hasher']):
+    def sign_up(self, username, name, email, password, confirm_password, img_id, hasher=Provide['hasher']):
         """Signs user up"""
 
         user = self.user_repo.get(username)
@@ -43,8 +45,9 @@ class Authentication():
         self.user_repo.insert(User(username, name, email, hasher.hash(password), img_id))
         flash("You have signed up")
         return redirect(url_for('blog.home'))
+
     @inject
-    def login(self, username, password, hasher = Provide['hasher']):
+    def login(self, username, password, hasher=Provide['hasher']):
         """Logs user in"""
         user = self.user_repo.get(username)
         if user is None or not hasher.check_password(user, password):
@@ -53,7 +56,7 @@ class Authentication():
         session['username'] = user.username
         if '@temporary.com' in user.email:
             flash('This user has been imported and must be updated', "error")
-            return redirect(url_for('users.edit_required', username = user.username))
+            return redirect(url_for('users.edit_required', username=user.username))
         flash("You are logged in")
         return redirect(url_for('blog.home'))
 
@@ -67,4 +70,3 @@ class Authentication():
         if 'username' in session:
             return session['username']
         return False
-        

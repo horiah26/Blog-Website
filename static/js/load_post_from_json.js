@@ -26,6 +26,6 @@ function onLoad(post_id) {
 
         })
         .catch((error)=>{
-
                 document.getElementById('api-title').innerHTML = "ERROR 404 - Post not found"
         })
+}

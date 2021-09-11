@@ -1,11 +1,13 @@
-"""Conects to the database"""
+"""Handles database operations"""
 import psycopg2
 from dependency_injector.wiring import inject, Provide
 
-class Database():
+
+class Database:
     """Handles database operations"""
+
     @inject
-    def __init__(self, config = Provide['config'], config_db = Provide['config_db']):
+    def __init__(self, config=Provide['config'], config_db=Provide['config_db']):
         self.config = config
         self.config_db = config_db
 
@@ -28,20 +30,21 @@ class Database():
             except (Exception, psycopg2.DatabaseError) as error:
                 print(error)
                 print("Database version has not been updated")
+
     @inject
-    def hash_passwords(self, hasher = Provide['hasher'], user_repo = Provide['user_repo']):
+    def hash_passwords(self, hasher=Provide['hasher'], user_repo=Provide['user_repo']):
         """Hashes passwords of users that have been imported from another database"""
         for user in user_repo.get_all():
             if user.password == user.username:
                 user_repo.update(user.username, user.name, user.email, hasher.hash(user.password))
 
     def get_connection(self):
-        """Conects to the database"""
+        """Connects to the database"""
         db_config = self.config_db.get_db_auth().json
         try:
-            return psycopg2.connect(database = db_config['database'],
-                                user = db_config['user'],
-                                password = db_config['password'],
-                                host = db_config['host'])
+            return psycopg2.connect(database=db_config['database'],
+                                    user=db_config['user'],
+                                    password=db_config['password'],
+                                    host=db_config['host'])
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)

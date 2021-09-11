@@ -122,9 +122,9 @@ def test_opens_last_post_from_seed(client):
     """Can open the last post from seed"""
     assert client.get('/14/').status_code == 200
 
-def test_shows_message_if_post_not_found(client):
-    """Can open the last post from seed"""
-    assert b'Post not found' in client.get('/100/', follow_redirects=True).data
+def test_404_if_post_not_found(client):
+    """status code 404 if post not found"""
+    assert client.get('/100/').status_code == 404
 
 def test_write_article(client):
     """Writes a new article"""

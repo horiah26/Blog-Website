@@ -1,12 +1,8 @@
 """Creates instance of Flask app"""
 from flask import Flask
-from blueprints import setup
-from blueprints import users
-from blueprints import blog
-from blueprints import auth
-from blueprints import api
-
+from blueprints import setup, users, blog, auth, api
 from services.init_injection import InitInjection
+
 
 def create_app():
     """Creates app"""
@@ -16,9 +12,9 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_mapping(
-        SECRET_KEY = "secret key",
-        UPLOAD_FOLDER = 'static/uploads',
-        DB_TYPE = database_type)
+        SECRET_KEY="secret key",
+        UPLOAD_FOLDER='static/uploads',
+        DB_TYPE=database_type)
     app.container = container
     app.app_context().push()
 

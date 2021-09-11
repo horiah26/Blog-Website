@@ -4,9 +4,11 @@ from datetime import datetime
 from collections import Counter
 from dependency_injector.wiring import inject, Provide
 
-class Statistics():
+
+class Statistics:
     """Handles post statistics"""
-    def __init__(self, post_repo = Provide['post_repo'], auth = Provide['auth']):
+
+    def __init__(self, post_repo=Provide['post_repo'], auth=Provide['auth']):
         self.posts = post_repo.get_all()
         self.auth = auth
 

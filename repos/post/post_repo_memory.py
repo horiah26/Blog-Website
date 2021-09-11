@@ -9,8 +9,10 @@ from models.post_preview import PostPreview
 from static import constant
 from .IPostRepo import IPostRepo
 
+
 class RepoPostsMemory(IPostRepo):
     """Repos for posts in memory"""
+
     def __init__(self, seed, user_repo):
         self.posts = seed
         self.user_repo = user_repo
@@ -26,7 +28,7 @@ class RepoPostsMemory(IPostRepo):
                     display_name = user.name
                     break
 
-            return (post, display_name)
+            return post, display_name
 
     def get_all(self):
         """Returns all posts"""
@@ -60,7 +62,7 @@ class RepoPostsMemory(IPostRepo):
             post_id = max(post.post_id for post in self.posts) + 1
         return post_id
 
-    def get_previews(self, username = None, per_page = 6, page_num = 1):
+    def get_previews(self, username=None, per_page=6, page_num=1):
         """Returns previews of posts posts"""
         posts = self.get_all()
         previewed_posts = []
@@ -69,17 +71,23 @@ class RepoPostsMemory(IPostRepo):
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username == username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, user.img_id, Date(post.date.created, post.date.modified)))
+                        previewed_posts.append(
+                            PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name,
+                                        user.username, post.img_id, user.img_id,
+                                        Date(post.date.created, post.date.modified)))
                         break
 
         else:
             for post in posts[::-1]:
                 for user in users:
                     if post.owner == user.username:
-                        previewed_posts.append(PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name, user.username, post.img_id, user.img_id, Date(post.date.created, post.date.modified)))
+                        previewed_posts.append(
+                            PostPreview(post.post_id, post.title, post.text[0:constant.PREVIEW_LENGTH], user.name,
+                                        user.username, post.img_id, user.img_id,
+                                        Date(post.date.created, post.date.modified)))
                         break
 
         total_posts = len(previewed_posts)
         total_pages = math.ceil(total_posts / per_page)
 
-        return (previewed_posts[(page_num - 1) * per_page : (page_num) * per_page], total_pages)
+        return previewed_posts[(page_num - 1) * per_page: (page_num) * per_page], total_pages

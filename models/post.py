@@ -2,9 +2,11 @@
 
 from models.date import Date
 
+
 class Post:
     """Defines the post attributes"""
-    def __init__(self, post_id, title, text, owner, img_id, date = Date()):
+
+    def __init__(self, post_id, title, text, owner, img_id, date=Date()):
         self.post_id = post_id
         self.title = title
         self.text = text

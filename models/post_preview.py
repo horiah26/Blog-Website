@@ -1,7 +1,9 @@
 """Defines the PostPreview class that contains only first 200 characters of text"""
 
+
 class PostPreview:
     """Defines the post attributes"""
+
     def __init__(self, post_id, title, text, owner, owner_username, img_id, profile_id, date):
         self.post_id = post_id
         self.title = title

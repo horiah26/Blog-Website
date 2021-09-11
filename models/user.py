@@ -2,9 +2,11 @@
 
 from models.date import Date
 
-class User():
+
+class User:
     """The user class"""
-    def __init__(self, username, name, email, password, img_id, date = Date()):
+
+    def __init__(self, username, name, email, password, img_id, date=Date()):
         self.username = username
         self.name = name
         self.email = email

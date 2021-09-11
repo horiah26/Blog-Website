@@ -1,4 +1,4 @@
-"""General purpose container"""
+"""SQLAlchemy container"""
 from dependency_injector import containers, providers
 
 from config.config_db import ConfigDB
@@ -17,8 +17,9 @@ from repos.user.user_repo_alchemy import RepoUserAlchemy
 from repos.user.seed import get as user_seed
 from repos.user.profile_image_repo import ProfileImageRepo
 
+
 class ContainerAlchemy(containers.DeclarativeContainer):
-    """General purpose container"""
+    """SQLAlchemy container"""
 
     config = providers.Configuration()
 
@@ -36,7 +37,7 @@ class ContainerAlchemy(containers.DeclarativeContainer):
 
     alch_url = providers.Factory(
         AlchURL,
-        config_db = config_db
+        config_db=config_db
     )
 
     img_repo = providers.Singleton(
@@ -45,33 +46,33 @@ class ContainerAlchemy(containers.DeclarativeContainer):
 
     post_repo = providers.Singleton(
         RepoPostsAlchemy,
-        config = config,
-        seed = post_seed(),
-        alch_url = alch_url
+        config=config,
+        seed=post_seed(),
+        alch_url=alch_url
     )
 
     user_repo = providers.Singleton(
         RepoUserAlchemy,
-        config = config,
-        seed = user_seed(),
-        alch_url = alch_url
+        config=config,
+        seed=user_seed(),
+        alch_url=alch_url
     )
 
     auth = providers.Factory(
         Authentication,
-        user_repo = user_repo
+        user_repo=user_repo
     )
 
     database = providers.Factory(
         Database,
-        config = config,
-        config_db = config_db
+        config=config,
+        config_db=config_db
     )
 
     statistics = providers.Factory(
         Statistics,
-        post_repo = post_repo)
-    
+        post_repo=post_repo)
+
     profile_img_repo = providers.Factory(
         ProfileImageRepo
     )

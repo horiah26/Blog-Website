@@ -13,6 +13,7 @@ from models.post import Post
 
 bp = Blueprint('blog', __name__)
 
+
 @bp.route('/', methods=['GET', 'POST'])
 @redirect_to_setup
 @inject
@@ -37,18 +38,20 @@ def home(post_repo=Provide['post_repo'], user_repo=Provide['user_repo']):
     previews = previews_pages[0]
     total_pages = previews_pages[1]
 
-    pages = range (1, total_pages + 1)
+    pages = range(1, total_pages + 1)
 
     if page_num not in pages:
         page_num = 1
 
-    return render_template('blog/home.html', posts = previews, users = user_repo.get_users_with_posts(), page_num = page_num, pages = pages, generator=gen)
+    return render_template('blog/home.html', posts=previews, users=user_repo.get_users_with_posts(), page_num=page_num,
+                           pages=pages, generator=gen)
+
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 @redirect_to_setup
 @inject
-def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = Provide['img_repo']):
+def create(auth=Provide['auth'], post_repo=Provide['post_repo'], img_repo=Provide['img_repo']):
     """Route to creating new posts"""
     if request.method == 'POST':
         title = request.form['title'].strip()
@@ -61,7 +64,8 @@ def create(auth = Provide['auth'], post_repo = Provide['post_repo'], img_repo = 
                 if img_repo.allowed_file(image.filename):
                     img_id = img_repo.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp",
+                          "error")
                     return redirect(url_for('blog.create'))
 
         error = None
@@ -93,7 +97,7 @@ def show(post_id):
 @redirect_to_setup
 @permission_required
 @inject
-def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_repo']):
+def update(post_id, post_repo=Provide['post_repo'], img_repo=Provide['img_repo']):
     """Route to update existing posts"""
     post = post_repo.get(post_id)[0]
     img_id = post.img_id
@@ -107,8 +111,9 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
                 if img_repo.allowed_file(image.filename):
                     img_id = img_repo.save(image)
                 else:
-                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp", "error")
-                    return redirect(url_for('blog.update', post_id = post_id))
+                    flash("File format not supported. Format must be one of the following: png, jpg, jpeg, gif, bmp",
+                          "error")
+                    return redirect(url_for('blog.update', post_id=post_id))
 
         if not title:
             title = post.title
@@ -121,21 +126,23 @@ def update(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_re
             return redirect(url_for('blog.home'))
     return render_template('blog/update_post.html', post=post)
 
+
 @bp.route('/<int:post_id>/delete', methods=['GET'])
 @redirect_to_setup
 @permission_required
 @inject
-def delete(post_id, post_repo = Provide['post_repo'], img_repo = Provide['img_repo']):
+def delete(post_id, post_repo=Provide['post_repo'], img_repo=Provide['img_repo']):
     """Route to delete posts"""
     post_repo.delete(post_id)
     img_repo.delete_unused()
     flash("Post has been deleted")
     return redirect(url_for('blog.home'))
 
+
 @bp.route('/statistics', methods=['GET'])
 @login_required
 @redirect_to_setup
 @inject
-def statistics(statistics = Provide['statistics']):
+def statistics(statistics=Provide['statistics']):
     """Route to delete posts"""
     return render_template('blog/statistics.html', statistics=statistics.get())

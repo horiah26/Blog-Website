@@ -6,9 +6,10 @@ from dependency_injector.wiring import inject, Provide
 
 bp = Blueprint('api', __name__)
 
+
 @bp.route('/api/post/<int:post_id>')
 @inject
-def show_post(post_id, post_repo = Provide['post_repo']):
+def show_post(post_id, post_repo=Provide['post_repo']):
     """Returns a jsonified dict that contains post data, logged user and display name"""
     post = post_repo.get(post_id)
     if post is None:

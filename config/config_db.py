@@ -15,7 +15,7 @@ class ConfigDB(Config):
         try:
             json_data = super().load()
             return DbAuth(json_data['database'], json_data['host'], json_data['user'], json_data['password'])
-        except Exception:
+        except:
             print("Couldn't load database configuration data. Check config.json file")
 
     def db_up_to_date(self):
