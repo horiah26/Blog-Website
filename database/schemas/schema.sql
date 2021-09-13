@@ -46,6 +46,8 @@ ALTER TABLE users ALTER COLUMN date_created SET NOT NULL;
 ALTER TABLE users ALTER COLUMN date_modified SET NOT NULL;
 
 
+SELECT setval(pg_get_serial_sequence('posts', 'post_id'), (SELECT MAX(post_id) FROM posts)+1);
+
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'posts_owner_fkey') THEN

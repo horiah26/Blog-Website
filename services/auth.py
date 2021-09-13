@@ -26,7 +26,7 @@ class Authentication:
         if user:
             error = "Username is already in use"
         if email_taken:
-            error = "Email adress is already in use"
+            error = "Email address is already in use"
         if password != confirm_password:
             error = "Your password must match"
         if not password:

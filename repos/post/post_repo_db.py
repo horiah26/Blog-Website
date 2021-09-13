@@ -27,7 +27,6 @@ class RepoPostsDB(IPostRepo):
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT setval(pg_get_serial_sequence('posts', 'post_id'), (SELECT MAX(post_id) FROM posts)+1);
             INSERT INTO posts (title, text, owner, img_id, date_created, date_modified) \
             VALUES(%s, %s, %s, %s, %s, %s)""",
             (post.title, post.text, post.owner, post.img_id, post.date.created, post.date.modified))
