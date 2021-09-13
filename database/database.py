@@ -36,7 +36,7 @@ class Database:
         """Hashes passwords of users that have been imported from another database"""
         for user in user_repo.get_all():
             if user.password == user.username:
-                user_repo.update(user.username, user.name, user.email, hasher.hash(user.password))
+                user_repo.update(user.username, user.name, user.email, user.img_id, hasher.hash(user.password))
 
     def get_connection(self):
         """Connects to the database"""
