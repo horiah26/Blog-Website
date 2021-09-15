@@ -29,7 +29,7 @@ def home(user_repo=Provide['user_repo'], post_repo=Provide['post_repo']):
         if request.form['action'] == 'Search':
             session['filter_user'] = request.form['user'].strip()
             page_num = 1
-        if request.form['action'] == 'Reset':
+        if request.form['action'] == 'Show all':
             session['filter_user'] = None
             page_num = 1
 

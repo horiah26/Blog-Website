@@ -15,7 +15,8 @@ class RepoUserDB(IUserRepo):
         self.db = db
         if seed is not None and db.config.config_file_exists() and len(self.get_all()) <= 1:
             for user in seed:
-                self.insert(user)
+                if user.username != 'admin':
+                    self.insert(user)
 
     def insert(self, user):
         """Add a new user"""

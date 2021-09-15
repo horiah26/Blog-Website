@@ -30,8 +30,9 @@ class RepoUserAlchemy(IUserRepo):
         self.User = base.classes.users
 
         if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) <= 1:
-            for post in seed:
-                self.insert(post)
+            for user in seed:
+                if user.username != 'admin':
+                    self.insert(user)
 
     def insert(self, user):
         """Add a new user"""

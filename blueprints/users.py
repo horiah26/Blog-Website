@@ -65,7 +65,7 @@ def delete(username, auth=Provide['auth'], user_repo=Provide['user_repo']):
             if username != 'admin':
                 auth.logout()
         except:
-            flash("Delete user's posts first", "error")
+            flash("You must delete user's posts first", "error")
     return redirect(url_for('blog.home'))
 
 

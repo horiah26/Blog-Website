@@ -4,8 +4,10 @@ from blueprints import setup, users, blog, auth, api
 from services.init_injection import InitInjection
 
 
-def create_app(database_type):
+def create_app():
     """Creates app"""
+
+    database_type = "db"
 
     container = InitInjection(database_type).get_container()
 
