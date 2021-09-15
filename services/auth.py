@@ -39,7 +39,7 @@ class Authentication:
             error = "Your name is required"
         if not username:
             error = "Username is required"
-        if error is not None:
+        if error:
             flash(error, "error")
             return redirect(url_for('auth.sign_up'))
         self.user_repo.insert(User(username, name, email, hasher.hash(password), img_id))

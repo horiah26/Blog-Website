@@ -6,8 +6,10 @@ from os.path import isfile, join
 from flask import current_app
 from dependency_injector.wiring import inject, Provide
 
-class ProfileImageRepo():
+
+class ProfileImageRepo:
     """Handles images for posts"""
+
     def __init__(self):
         self.extension = '.png'
         self.images = []
@@ -38,12 +40,14 @@ class ProfileImageRepo():
     def update_image_list(self):
         """Reads all images from upload folders and keeps their names as integers in a list"""
         self.images = []
-        files_in_uploads = [f.rsplit('.', 1)[0] for f in listdir(self.path) if isfile(join(self.path, f)) and self.allowed_file(f)]
+        files_in_uploads = [f.rsplit('.', 1)[0] for f in listdir(self.path) if
+                            isfile(join(self.path, f)) and self.allowed_file(f)]
         for image_nr in files_in_uploads:
             if image_nr:
                 self.images.append(int(image_nr))
+
     @inject
-    def delete_unused(self, user_repo = Provide['user_repo']):
+    def delete_unused(self, user_repo=Provide['user_repo']):
         """Deletes unused images from uploads folder"""
         if current_app.config['DB_TYPE'] in ['db', 'alchemy']:
             self.update_image_list()

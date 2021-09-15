@@ -7,9 +7,11 @@ from models.user import User
 from models.date import Date
 from .IUserRepo import IUserRepo
 
+
 class RepoUserDB(IUserRepo):
     """Repo for posts in memory"""
-    def __init__(self, db, seed = None):
+
+    def __init__(self, db, seed=None):
         self.db = db
         if seed is not None and db.config.config_file_exists() and len(self.get_all()) == 0:
             for user in seed:

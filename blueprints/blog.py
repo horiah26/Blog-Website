@@ -19,6 +19,7 @@ bp = Blueprint('blog', __name__)
 @inject
 def home(post_repo=Provide['post_repo'], user_repo=Provide['user_repo']):
     """Route to home + pagination + filter by user"""
+
     if 'filter_user' not in session:
         session['filter_user'] = None
 

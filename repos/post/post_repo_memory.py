@@ -90,4 +90,4 @@ class RepoPostsMemory(IPostRepo):
         total_posts = len(previewed_posts)
         total_pages = math.ceil(total_posts / per_page)
 
-        return previewed_posts[(page_num - 1) * per_page: (page_num) * per_page], total_pages
+        return previewed_posts[(page_num - 1) * per_page: page_num * per_page], total_pages

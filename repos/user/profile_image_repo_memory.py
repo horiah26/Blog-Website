@@ -1,7 +1,9 @@
 """Handles images for user profiles"""
 
-class ProfileImageRepo():
+
+class ProfileImageRepo:
     """Handles images for posts"""
+
     def __init__(self):
         self.extension = '.png'
         self.images = [0]

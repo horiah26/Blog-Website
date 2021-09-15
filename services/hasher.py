@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from models.user import User
 
 
-class Hasher():
+class Hasher:
     """Handles password hashing"""
 
     def __init__(self):

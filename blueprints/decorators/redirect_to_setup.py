@@ -3,6 +3,7 @@ from functools import wraps
 from flask import redirect, url_for
 from dependency_injector.wiring import inject, Provide
 
+
 def redirect_to_setup(f):
     """Redirects to setup page if db not configured"""
 

@@ -40,7 +40,8 @@ class RepoPostsDB(IPostRepo):
         conn = self.db.get_connection()
         cur = conn.cursor()
         cur.execute(
-            "SELECT post_id, title, text, owner, posts.img_id, posts.date_created, posts.date_modified, name FROM posts JOIN users ON owner = username WHERE post_id = %s;",
+            """SELECT post_id, title, text, owner, posts.img_id, posts.date_created, posts.date_modified, name FROM 
+            posts JOIN users ON owner = username WHERE post_id = %s;""",
             (post_id,))
         post = cur.fetchone()
 
@@ -96,11 +97,15 @@ class RepoPostsDB(IPostRepo):
 
         if username:
             cur.execute(
-                "SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s ORDER BY post_id DESC OFFSET %s LIMIT %s;",
+                """SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, 
+                posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username WHERE username = %s 
+                ORDER BY post_id DESC OFFSET %s LIMIT %s;""",
                 [constant.PREVIEW_LENGTH, username, offset_nr, per_page])
         else:
             cur.execute(
-                "SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username ORDER BY post_id DESC OFFSET %s LIMIT %s;",
+                """SELECT post_id, title, LEFT(text, %s), name, users.username, posts.img_id, users.img_id, 
+                posts.date_created, posts.date_modified FROM posts JOIN users ON owner = username 
+                ORDER BY post_id DESC OFFSET %s LIMIT %s;""",
                 [constant.PREVIEW_LENGTH, offset_nr, per_page])
         previews = cur.fetchall()
 
@@ -118,7 +123,7 @@ class RepoPostsDB(IPostRepo):
 
         for row in previews:
             posts.append(PostPreview(row[0], row[1], row[2], row[3], row[4], row[5], row[6], Date(row[7], row[8])))
-        return (posts, total_pages)
+        return posts, total_pages
 
     def next_id(self):
         """Created to be compatible with post_repo_memory.

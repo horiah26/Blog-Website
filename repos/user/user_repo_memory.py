@@ -4,9 +4,11 @@ from dependency_injector.wiring import inject, Provide
 from models.user import User
 from .IUserRepo import IUserRepo
 
+
 class RepoUserMemory(IUserRepo):
     """Repo for posts in memory"""
-    def __init__(self, seed = None):
+
+    def __init__(self, seed=None):
         if seed is None:
             self.users = []
         else:
@@ -43,8 +45,9 @@ class RepoUserMemory(IUserRepo):
             if user.username == username:
                 del self.users[i]
                 break
+
     @inject
-    def get_users_with_posts(self, post_repo = Provide['post_repo']):
+    def get_users_with_posts(self, post_repo=Provide['post_repo']):
         """Returns all users that have at least one active post"""
         posts = post_repo.get_all()
         users_with_posts = []

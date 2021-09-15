@@ -27,6 +27,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS img_id int NOT NULL DEFAULT 0;
 INSERT INTO users (username)
 SELECT DISTINCT owner FROM posts WHERE owner NOT IN(SELECT username FROM users);
 
+INSERT INTO users (username) VALUES ('admin') ON CONFLICT DO NOTHING;
 
 UPDATE users
 SET name = username, 

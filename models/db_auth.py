@@ -9,6 +9,7 @@ class DbAuth:
         self.host = host
         self.user = user
         self.password = password
+
         self.json = {
             "database": database,
             "host": host,

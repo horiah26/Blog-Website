@@ -4,6 +4,7 @@
 from models.db_auth import DbAuth
 from .config import Config
 
+
 class ConfigDB(Config):
     """Used to interact with the config.ini file"""
     def __init__(self):

@@ -13,6 +13,7 @@ from containers.container_alchemy import ContainerAlchemy
 
 import app
 
+
 class InitInjection:
     """Handles injection preparation for flask app"""
 

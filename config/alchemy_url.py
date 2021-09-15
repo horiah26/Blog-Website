@@ -9,5 +9,6 @@ class AlchURL:
 
     def get_url(self):
         """Creates the url for engine configuration in alchemy repos"""
-        url = 'postgresql://' + self.db_auth['user'] + ':' + self.db_auth['password'] + '@' + self.db_auth['host'] + ':' + self.port + '/' + self.db_auth['database']
+        url = 'postgresql://' + self.db_auth['user'] + ':' + self.db_auth['password'] + '@' + self.db_auth['host'] \
+              + ':' + self.port + '/' + self.db_auth['database']
         return url
