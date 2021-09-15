@@ -29,7 +29,7 @@ class RepoUserAlchemy(IUserRepo):
         self.Post = base.classes.posts
         self.User = base.classes.users
 
-        if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
+        if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) <= 1:
             for post in seed:
                 self.insert(post)
 

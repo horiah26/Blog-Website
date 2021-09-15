@@ -13,7 +13,7 @@ class RepoUserDB(IUserRepo):
 
     def __init__(self, db, seed=None):
         self.db = db
-        if seed is not None and db.config.config_file_exists() and len(self.get_all()) == 0:
+        if seed is not None and db.config.config_file_exists() and len(self.get_all()) <= 1:
             for user in seed:
                 self.insert(user)
 

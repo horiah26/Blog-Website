@@ -17,7 +17,7 @@ bp = Blueprint('blog', __name__)
 @bp.route('/', methods=['GET', 'POST'])
 @redirect_to_setup
 @inject
-def home(post_repo=Provide['post_repo'], user_repo=Provide['user_repo']):
+def home(user_repo=Provide['user_repo'], post_repo=Provide['post_repo']):
     """Route to home + pagination + filter by user"""
 
     if 'filter_user' not in session:

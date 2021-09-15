@@ -26,11 +26,11 @@ class RepoPostsAlchemy(IPostRepo):
         session = sessionmaker(db)
         self.session = session()
 
-        base = automap_base()
-        base.prepare(db, reflect=True)
+        Base = automap_base()
+        Base.prepare(db, reflect=True)
 
-        self.Post = base.classes.posts
-        self.User = base.classes.users
+        self.Post = Base.classes.posts
+        self.User = Base.classes.users
 
         if seed is not None and config.config_file_exists() and self.get_all() is not None and len(self.get_all()) == 0:
             for post in seed:
