@@ -20,8 +20,6 @@ from repos.user.profile_image_repo import ProfileImageRepo
 class ContainerDB(containers.DeclarativeContainer):
     """Database container"""
 
-    config = providers.Configuration()
-
     hasher = providers.Factory(
         Hasher
     )

@@ -19,9 +19,7 @@ from repos.user.profile_image_repo_memory import ProfileImageRepo
 
 
 class ContainerMemory(containers.DeclarativeContainer):
-    """General purpose container"""
-
-    config = providers.Configuration()
+    """Memory container for tests"""
 
     hasher = providers.Factory(
         Hasher

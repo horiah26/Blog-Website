@@ -8,7 +8,7 @@ class PostPreview:
         self.post_id = post_id
         self.title = title
         self.text = self.format_preview(text)
-        self.owner = owner
+        self.owner_display_name = owner
         self.owner_username = owner_username
         self.img_id = img_id
         self.profile_id = profile_id

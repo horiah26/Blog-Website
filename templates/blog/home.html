@@ -58,7 +58,7 @@
                          src="/static/uploads/profile/{{preview.profile_id}}.png" />
                     <div class="card-profile-info">
                         <h6 class="owner">
-                            {{preview.owner}}
+                            {{preview.owner_display_name}}
                         </h6>
                         <h6 class="date-created">
                             {% if preview.date.modified[16:] == preview.date.created[12:] %}

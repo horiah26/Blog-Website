@@ -21,8 +21,6 @@ from repos.user.profile_image_repo import ProfileImageRepo
 class ContainerAlchemy(containers.DeclarativeContainer):
     """SQLAlchemy container"""
 
-    config = providers.Configuration()
-
     hasher = providers.Factory(
         Hasher
     )
